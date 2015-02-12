@@ -1,0 +1,343 @@
+/* global getPermissions getEmployee rowClear */
+var eCounter = 0, i = 0;
+$(function() {
+  getPermissions();
+  $('#addemployeeButton').click(function() {
+    var $dialog = $('#dialog-timecard');
+    $dialog.attr('title','Add Employees');
+    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name</th><th>First Name</th><th>Company Code</th><th>Department Code</th><th>ADP ID</th><th>Email Address</th><th>Start Date</th></tr><tr class="e-0"><td><input class="userLast e-0"/></td><td><input class="userFirst e-0"/></td><td><select class="userDepartment e-0"><option value="Q56">Hart Management Group</option></select></td><td><select class="userDepartment e-0"><option value="100">Accounting (100)</option></select></td><td><input class="userADPID e-0" /></td><td><input class="userEmail e-0" /></td><td><input class="userStart e-0" /></td></tr></table></form>');
+    var dialog = $dialog.dialog({
+      modal: true,
+      draggable: false,
+      width: $(window).width() * 0.9,
+      height: 'auto',
+      resizable: false,
+      buttons: {
+        'Add Employees': function() {
+          var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter,
+              isEverythingGood = true,
+              aToAdd = [],
+              dataString = '',
+              aTempEmployee = [];
+          // is everything set?
+          for (i = 0; i < toThis; i++) {
+            $('input.e-' + i + ',select.e-' + i).each(function() {
+              if ($(this).val() === null || !$(this).val().length) {
+                // we allow userEmail and userStart to be empty because they have default values
+                // userStart will be today, and userEmail will be their immediate superior's email
+                if ($(this).hasClass('userEmail') || $(this).hasClass('userStart')) {
+                  if ($(this).val().length) {
+                    if ($(this).hasClass('userEmail')) {
+                      if (!validateEmail($(this).val())) {
+                        isEverythingGood = false;
+                        return false;
+                      }
+                    } else {
+                      if (!validMoment($(this).val())) {
+                        isEverythingGood = false;
+                        return false;
+                      }
+                    }
+                  }
+                } else {
+                  isEverythingGood = false;
+                  return false;
+                }
+              } else {
+                aTempEmployee.push($(this).val());
+              }
+              return true;
+            });
+            aToAdd.push(aTempEmployee);
+          }
+          if (!isEverythingGood) {
+            return false;
+          }
+          // First we need to gather up all of that information!  If we hit the max number of rows, we want to test if
+          // the last row is empty.  If so, we only want the first 9, otherwise we will take the 10th.  If eCounter is
+          // NOT full, we will just use eCounter because the first eCounter - 1 rows will not be clear, but the last
+          // one will always be.
+          // We can't do anything if it is empty
+          if (!aToAdd.length) {
+            return false;
+          }
+          // Now we have to form the string:
+          for (i = 0; i < aToAdd.length; i++) {
+            dataString += (i + '=' + JSON.stringify(aToAdd[i]));
+            if (i < aToAdd.length - 1) {
+              dataString += '&';
+            }
+          }
+          console.log(dataString);
+          $.ajax({
+            type: 'POST',
+            url: 'insert_user.php',
+            data: dataString,
+            success: function(data) {
+              console.log(data);
+            }
+          });
+          $(this).dialog('close');
+        },
+        'Cancel': function() {$(this).dialog('close');}
+      }
+    });
+  });
+  /*
+  $(document).on('click', '#employeeButton', function() {
+    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter,
+        isEverythingGood = true,
+        aToAdd = [],
+        dataString = '',
+        aTempEmployee = [];
+    for (i = 0; i < toThis; i++) {
+      $('input.e-' + i + ',select.e-' + i).each(function() {
+        if ($(this).val() === null || !$(this).val().length) {
+          isEverythingGood = false;
+          return false;
+        }
+      });
+    }
+    if (!isEverythingGood) {
+      return false;
+    }
+    // todo: make sure that all the things are set
+    // First we need to gather up all of that information!
+    // If we hit the max number of rows, we want to test if the last
+    // row is empty.  If so, we only want the first 9,
+    // otherwise we will take the 10th.  If eCounter is NOT full,
+    // we will just use eCounter because the first eCounter - 1
+    // rows will not be clear, but the last one will always be.
+    for (i = 0; i < toThis; i++) {
+      $('input.e-' + i + ', select.e-' + i).each(function() {
+        aTempEmployee.push($(this).val());
+      });
+      aToAdd.push(aTempEmployee);
+    }
+    // We can't do anything if it is empty
+    if (!aToAdd.length) {
+      return false;
+    }
+    // Now we have to form the string:
+    for (i = 0; i < aToAdd.length; i++) {
+      dataString += (i + '=' + JSON.stringify(aToAdd[i]));
+      if (i < aToAdd.length - 1) {
+        dataString += '&';
+      }
+    }
+    // I'm really playing with fire here,
+    // because I'm not checking if everything is valid... :/
+    $.ajax({
+      type: 'POST',
+      url: 'insert_user.php',
+      data: dataString
+    });
+  });
+  */
+  $(document).on('change', '[class|="e"]', function() {
+    var myeclass = $(this).attr('class').match(/e-[0-9][\w-]*\b/);
+    myeclass = parseInt(myeclass[0].substr(2), 10);
+    for (i = 0; i < eCounter + 1; i++) {
+      if (!rowClear('e-' + i)) {
+        $('.e-' + i).each(function() {
+          // This on 'if' took me like 5 minutes to figure out.  I AM EXHAUSTED.  Like I could fall asleep right here...
+          // 5:43pm on February 11th 2015
+          if (!($(this).hasClass('userEmail') || $(this).hasClass())) {
+            if ($(this).val() !== null && $(this).val().length) {
+              $(this).removeClass('ui-state-error');
+            } else {
+              $(this).addClass('ui-state-error');
+            }
+          }
+        });
+      }
+    }
+    if (myeclass === eCounter && eCounter < 10) {
+      eCounter++;
+      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"/></td><td><input class="userFirst e-' + eCounter + '"/></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><input class="userADPID e-' + eCounter + '" /></td><td><input class="userEmail e-' + eCounter + '" /></td><td><input class="userStart e-' + eCounter + '" /></td></tr>');
+      // After adding a new row, we want to make sure we resize the dialog
+      var $dialog = $('#dialog-timecard');
+      $dialog.dialog('option','position',$dialog.dialog('option','position'));
+    }
+  });
+  $(document).on('change', '#range', function() {
+    var userId = $('#timecard').attr('user-id');
+    if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
+      $('#r').datepicker('show');
+    } else if ($(this).val() === 'w2d') {
+      getEmployee(userId, 'w2d');
+    } else {
+      getEmployee(userId);
+    }
+  });
+  $(document).on('click', 'input.addButton', function() {
+    var timestamp, $thisParent = $(this).parent();
+    if ($thisParent.prev().children(':first-child').is('input')) {
+      timestamp = $thisParent.prev().children(':first-child').val();
+    } else if ($thisParent.next().children(':first-child").is("input')) {
+      timestamp = $thisParent.next().children(':first-child').val();
+    }
+    var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp,
+        userId = $('#timecard').attr('user-id'),
+        trueTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a').format('X'));
+    createStamp(userId, trueTime);
+  });
+  $(document).on('focus', 'input.times', function() {
+    $(this).select();
+  });
+  $(document).on('keyup', 'input[type=text].times', function(e) {
+    e.preventDefault();
+    if (e.keyCode === 13) {
+      $(this).blur();
+    } else {
+      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -0500';
+      $(this).css('color', moment(validTimestamp).isValid() ? 'inherit' : 'red');
+    }
+  });
+  $(document).on('keydown', '.times', function(e) {
+    if (e.keyCode === 9) {
+      e.preventDefault();
+      $(this).parent().next('td').children('input.times').focus();
+    }
+  });
+  $(document).on('blur', 'input[type=text].times', function() {
+    var fieldContents = $(this).val(),
+        me = $(this),
+        stampId = $(this).attr('stamp-id'),
+        userId = $('#timecard').attr('user-id'),
+        defaultTime = $(this).attr('default-time');
+    if (fieldContents.length) {
+      if (fieldContents !== defaultTime) {
+        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -0500';
+        if (!moment(validTimestamp).isValid()) {
+          return;
+        }
+        var trueTime = (Date.parse(validTimestamp) / SECOND);
+        $.ajax({
+          type: 'POST',
+          url: 'timeEdit/change_stamp.php',
+          data: 'sid=' + stampId + '&time=' + trueTime + '&dtime=' + defaultTime,
+          success: function() {
+            getEmployee(userId);
+          }
+        });
+      }
+    } else {
+      //noinspection JSUnusedGlobalSymbols
+      $('#dialog-confirm').dialog({
+        dialogClass: 'no-close',
+        resizable: false,
+        modal: true,
+        buttons: {
+          'Delete Timestamp': function() {
+            $.ajax({
+              type: 'POST',
+              url: 'timeEdit/delete_stamp.php',
+              data: 'sid=' + stampId + '&dtime=' + defaultTime,
+              success: function() {
+                getEmployee(userId);
+              }
+            });
+            $(this).dialog('close');
+          },
+          Cancel: function() {
+            me.val(defaultTime);
+            $(this).dialog('close');
+          }
+        }
+      });
+    }
+  });
+  //noinspection JSUnusedGlobalSymbols
+  $.contextMenu({
+    selector: '.context-menu',
+    className: 'timeMenu',
+    build: function($trigger) {
+      return {
+        className: 'mod' + $trigger.attr('id'),
+        items: {
+          'department-transfer': {
+            name: 'Department',
+            className: 'department-transfer',
+            type: 'text',
+            value: $trigger.parent().attr('department-special'),
+            events: {
+              keyup: function(e) {
+                if (e.keyCode === 13) {
+                  var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
+                  var userId = $('#timecard').attr('user-id');
+                  $.ajax({
+                    type: 'POST',
+                    url: 'timeEdit/change_department.php',
+                    data: 'sid=' + stampId + '&modifier=' + $(this).val(),
+                    success: function() {
+                      getEmployee(userId);
+                    }
+                  });
+                }
+              }
+            }
+          },
+          separator: '-----',
+          'noModifier': {
+            name: '(none)',
+            type: 'radio',
+            radio: 'specialModifier',
+            value: '',
+            selected: ($trigger.attr('alt') === '')
+          },
+          'vacationModifier': {
+            name: 'Vacation (V)',
+            type: 'radio',
+            radio: 'specialModifier',
+            value: 'V',
+            selected: ($trigger.attr('alt') === 'V')
+          },
+          'sickModifier': {
+            name: 'Sick (S)',
+            type: 'radio',
+            radio: 'specialModifier',
+            value: 'S',
+            selected: ($trigger.attr('alt') === 'S')
+          },
+          'sadnessModifier': {
+            name: 'Bereavement (F)',
+            type: 'radio',
+            radio: 'specialModifier',
+            value: 'F',
+            selected: ($trigger.attr('alt') === 'F')
+          },
+          'holidayModifier': {
+            name: 'Holiday (H)',
+            type: 'radio',
+            radio: 'specialModifier',
+            value: 'H',
+            selected: ($trigger.attr('alt') === 'H')
+          }
+        }
+      };
+    }
+  });
+  $(document).on('click', 'li.context-menu-item label input[type=radio]', function() {
+    // This is *insane*
+    var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1],
+        modifier = $(this).val(),
+        userId = $('#timecard').attr('user-id');
+    // We need to traverse the row to find more stamps
+    var stampString = '' + stampId;
+    $('#' + stampId).parent().parent().children().each(function() {
+      var hopefulInput = $(this).children(':first-child');
+      if (hopefulInput.is('input') && hopefulInput.attr('stamp-id') && hopefulInput.attr('stamp-id') !== stampId) {
+        stampString += ',' + hopefulInput.attr('stamp-id');
+      }
+    });
+    $.ajax({
+      type: 'POST',
+      url: 'timeEdit/change_modifier.php',
+      data: 'sids=' + stampString + '&modifier=' + modifier,
+      success: function() {
+        getEmployee(userId);
+      }
+    });
+  });
+});

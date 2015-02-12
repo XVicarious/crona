@@ -1,0 +1,60 @@
+body {
+    height:100%;
+    background:#ccc
+}
+#submitbutton {
+    width:100%
+}
+#loginform {
+    background:#fff;
+    border:solid thin #000;
+    table-layout:fixed
+}
+#copy {
+    font-size:50%;
+    margin:0
+}
+#bestdiv {
+    display:block;
+    left:calc(50% - 185px);
+    position:absolute;
+    top:calc(50% - 69px)
+}
+
+/*#bestDiv
+{
+    display: block;
+    left: calc(50% - 140px);
+    position: absolute;
+    top: calc(50% - 54px)
+}
+
+#copy
+{
+    font-size: 50%;
+    margin: 0
+}
+
+#loginForm
+{
+    background: #fff;
+    border: solid thin #000;
+    table-layout: fixed
+}
+
+#submitButton
+{
+    width: 100%
+}
+
+body.login
+{
+    background: #ccc
+}
+
+
+h3
+{
+    margin: 0
+}
+*/
