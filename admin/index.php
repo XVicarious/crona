@@ -14,7 +14,7 @@ $_SESSION["lastAction"] = time();
 		<link rel="stylesheet" href="../css/style.css" type="text/css">
 		<link rel="stylesheet" href="../css/jquery-ui.css">
         <link rel="stylesheet" href="../css/jquery-ui.theme.css">
-		<link rel="stylesheet" href="../css/backgrid.min.css">
+		<link rel="stylesheet" href="../css/backgrid.css">
 		<script src="../js/lib/jquery.js"></script>
 		<script src="../js/lib/underscore.js"></script>
 		<script src="../js/lib/backbone.js"></script>
