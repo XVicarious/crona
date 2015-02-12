@@ -25,9 +25,10 @@
             </form>
         </div>
         <link rel="stylesheet" href="css/login.css"/>
-        <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.min.css" />
-        <script defer src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-        <script defer src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <link rel="stylesheet" href="css/jquery-ui.css" />
+        <link rel="stylesheet" href="css/jquery-ui.theme.css">
+        <script defer src="js/lib/jquery.js"></script>
+        <script defer src="js/lib/jquery-ui.js"></script>
         <script defer src="./js/timeSubmit.js"></script>
     </body>
 </html>
