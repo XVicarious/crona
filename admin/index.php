@@ -12,19 +12,19 @@ $_SESSION["lastAction"] = time();
         <title></title>
 		<link rel="shortcut icon" href="../favicon.ico"/>
 		<link rel="stylesheet" href="../css/style.css" type="text/css">
-		<link rel="stylesheet" href="../css/jquery-ui.min.css">
+		<link rel="stylesheet" href="../css/jquery-ui.css">
+        <link rel="stylesheet" href="../css/jquery-ui.theme.css">
 		<link rel="stylesheet" href="../css/backgrid.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.7.0/underscore.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/backgrid.js/0.3.5/backgrid.min.js"></script>
+		<script src="../js/lib/jquery.js"></script>
+		<script src="../js/lib/underscore.js"></script>
+		<script src="../js/lib/backbone.js"></script>
+		<script src="../js/lib/backgrid.min.js"></script>
         <script src="../js/lib/backbone.paginator.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/lunr.js/0.5.7/lunr.min.js"></script>
-		<script src="../js/lib/backgrid-extension.min.js"></script>
-		<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-contextmenu/1.6.5/jquery.contextMenu.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.9.0/moment.min.js"></script>
-		<script src="../js/lib/spin.min.js"></script>
+		<script src="../js/lib/backgrid-filter.js"></script>
+		<script src="../js/lib/jquery-ui.js"></script>
+		<script src="../js/lib/jquery.contextMenu.js"></script>
+		<script src="../js/lib/moment.js"></script>
+		<script src="../js/lib/spin.js"></script>
 		<script src="../js/lib/jquery.spin.js"></script>
 		<script src="../js/admin/functions.async.js"></script>
         <script src="../js/admin/employee_list.js"></script>
