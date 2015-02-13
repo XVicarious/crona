@@ -123,7 +123,7 @@ if (sessionCheck()) {
         $timeTotal = round($timeTotal / 3600, 2);
         $echoMe.= '<td class="dailyHours" colspan"99%">';
         $echoMe.= number_format($timeTotal, 2);
-        $echoMe.= ' hours</td></tr>';
+        $echoMe.= '</td></tr>';
         $runningTotal+= $timeTotal;
     }
     $ot = '';
@@ -134,7 +134,7 @@ if (sessionCheck()) {
     }
     $echoMe.= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"></td></td><tr class="dataRow"><td colspan="15"></td><td '.$ot.' class="dailyHours">';
     $echoMe.= number_format($runningTotal, 2);
-    $echoMe.= ' hours</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
+    $echoMe.= '</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
     mysqli_close($sqlConnection);
     echo $echoMe;
 }
