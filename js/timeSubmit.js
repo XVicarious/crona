@@ -18,7 +18,7 @@ $(function() {
       }
       return false;
     }
-    var dataString = 'uname=' + username.val() + '&drowp=' + password + '&loginType=' +
+    var dataString = 'uname=' + username.val() + '&drowp=' + password.val() + '&loginType=' +
                      $('input[name=loginType]:checked').val();
     $.ajax({
       type: 'POST',
@@ -35,8 +35,8 @@ $(function() {
         }
       }
     });
+    return true;
   });
   $centerDiv.css('left', 'calc(50% - ' + $centerDiv.width() / 2 + ')')
             .css('top', 'calc(50% - ' + $centerDiv.height() / 2 + ')');
-  return true;
 });
