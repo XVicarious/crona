@@ -134,4 +134,7 @@ body {
 a.sideNavigationCell:hover {
 	background-color:#CFCFCF;
 }
+select#range {
+    float: right;
+}
 

@@ -49,7 +49,7 @@ if (sessionCheck()) {
     }
 
     $addAfter = date($dateFormat, strtotime($timestamps[count($timestamps) - 1]['date'] . ' 00:00:00 +1 days'));
-    $echoMe = "<table id=\"timecard\" user-start=\"$userstart\" user-id=\"$employeeId\"><tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userfirst $userlast's Timecard</th></tr><tr id=\"headings\"><th></th><th>Date<input id=\"r\" size=\"1\" style=\"width:0;height:0;display:none\"/><input id=\"r2\" size=\"1\" style=\"width:0;height:0;display:none\"/><select id=\"range\"><option value=\"last\">Previous Period</option><option value=\"this\" selected>Current Period</option><option value=\"next\">Next Period</option><option class=\"sp\" value=\"specificDate\">Specific Date</option><option value=\"w2d\">Week to Date</option><option value=\"special\">Specific Period</option></select></th><th colspan=\"100%\"></th></tr>";
+    $echoMe = "<table id=\"timecard\" user-start=\"$userstart\" user-id=\"$employeeId\"><tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userfirst $userlast's Timecard<select id=\"range\"><option value=\"last\">Previous Period</option><option value=\"this\" selected>Current Period</option><option value=\"next\">Next Period</option><option class=\"sp\" value=\"specificDate\">Specific Date</option><option value=\"w2d\">Week to Date</option><option value=\"special\">Specific Period</option></select></th></tr><tr id=\"headings\"><th></th><th>Date<input id=\"r\" size=\"1\" style=\"width:0;height:0;display:none\"/><input id=\"r2\" size=\"1\" style=\"width:0;height:0;display:none\"/></th><th colspan=\"100%\"></th></tr>";
     $rowNumber = 0;
     $runningTotal = 0;
     foreach($timestamps as $timestamp) {
