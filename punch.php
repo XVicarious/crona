@@ -17,16 +17,6 @@ if ($_POST) {
 			if (validateLogin($_POST['drowp'], substr($upas, 8), $salt)) {
 				$passwordSetLapse = time() - strtotime($udate);
 				if ($passwordSetLapse >= 15742080) {
-					/*$url = 'http://xvss.net/time/resetutil.php';
-					$data = array('email'=>$uemail,'function'=>'sendEmail');
-					$options = array('http'=>array(
-						'header'=>'Content-type: application/x-www-form-urlencoded\r\n',
-						'method'=>'POST',
-						'content'=>http_build_query($data)
-					));
-					$context = stream_context_create($options);
-					file_get_contents($url,false,$context);*/
-					//http_post_fields('http://xvss.net/time/resetutil.php',['email'=>$uemail,'function'=>'sendEmail']);
 					$data = http_build_query(['function'=>'sendEmail','email'=>$uemail]);
 					$opts = array('http'=>array('method'=>'POST','content'=>$data));
 					$st = stream_context_create($opts);

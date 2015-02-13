@@ -19,7 +19,7 @@
                                 <input type=radio name="loginType" value="cardAdmin" id="admnTimestamp"><label for="admnTimestamp">Administer</label>
                             </div>
                     </td></tr>
-                    <tr><th colspan="2"><input id="submitButton" type="submit" value="Submit" /></th></tr>
+                    <tr><th colspan="2"><input id="submitButton" type="button" value="Submit" /></th></tr>
                 </table>
                 <p id="copy">written by: Brian Maurer and XVicarious Software Solutions</p>
             </form>
