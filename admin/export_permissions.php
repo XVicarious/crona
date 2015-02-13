@@ -27,7 +27,7 @@ if (isset($administrativeId)) {
         echo '<select id="companyCode">';
         foreach($ak_companyCodes as $c) {
             $t_name = $companyCodes[$c];
-            echo "<option value=\"$c\">[$c] $t_name</option>";
+            echo "<option value=\"$c\">[$c] ".substr($t_name,0,11)."...</option>";
         }
         echo '</select>';
     }
