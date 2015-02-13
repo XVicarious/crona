@@ -49,7 +49,7 @@ table#timecard {
 	text-align: left;
 	width: 100%
 }
-table#timecard, .addButton, .times, .newDate {
+table#timecard, .addButton, .times, .newDate, #range {
     font-family: monospace !important
 }
 table#timecard td {
