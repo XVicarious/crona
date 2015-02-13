@@ -49,6 +49,9 @@ table#timecard {
 	text-align: left;
 	width: 100%
 }
+table#timecard, .addButton, .times, .newDate {
+    font-family: monospace !important
+}
 table#timecard td {
 	background: inherit
 }
