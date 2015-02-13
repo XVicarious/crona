@@ -54,7 +54,9 @@ function createStamp(userId, stamp) {
     type: 'POST',
     url: 'timeEdit/create_stamp.php',
     data: 'user=' + userId + '&date=' + stamp,
-    success: getEmployee(userId)
+    success: function() {
+      getEmployee(userId);
+    }
   });
 }
 function bindNewDate() {
