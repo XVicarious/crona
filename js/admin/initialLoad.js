@@ -1,11 +1,18 @@
 /* global getPermissions getEmployee rowClear */
-var eCounter = 0, i = 0;
+var eCounter = 0,
+    i = 0,
+    companyCodes = [["48N","HNB Venture Ptrs LLC"],["49C","Hampton Inn Boston/Natick"],["49D","Crowne Plaza Boston"],["49E","Holiday Inn Somervil"],["7IS","Skybokx 109 Natick"],["9NI","Hart Hotels DLC, LLC"],["ANY","FLH Development, LLC"],["FB1","Madison Beach Hotel"],["GE3","Distinctive Hospitality Group"],["GG8","Seneca Market 1"],["H4G","DDH Hotel Mystic LLC"],["HUG","ATA Associates"],["HXH","Portland Harbor Hotel"],["KZH","Clayton Harbor Hotel"],["L99","Lenroc, L.P."],["NPJ","WPH Midtown Associates"],["NPM","WPH Airport Associates"],["PPP","Golden Triangle Associates"],["Q56","Hart Management Group"],["RK3","HBK Restaurant LLC"],["ZVT","Twenty Flint Rd LLC"]];
 $(function() {
   getPermissions();
   $('#addemployeeButton').click(function() {
     var $dialog = $('#dialog-timecard');
     $dialog.attr('title','Add Employees');
-    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name</th><th>First Name</th><th>Company Code</th><th>Department Code</th><th>ADP ID</th><th>Email Address</th><th>Start Date</th></tr><tr class="e-0"><td><input class="userLast e-0"/></td><td><input class="userFirst e-0"/></td><td><select class="userDepartment e-0"><option value="Q56">Hart Management Group</option></select></td><td><select class="userDepartment e-0"><option value="100">Accounting (100)</option></select></td><td><input class="userADPID e-0" /></td><td><input class="userEmail e-0" /></td><td><input class="userStart e-0" /></td></tr></table></form>');
+    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name</th><th>First Name</th><th>Company Code</th><th>Department Code</th><th>ADP ID</th><th>Email Address</th><th>Start Date</th></tr><tr class="e-0"><td><input class="userLast e-0"/></td><td><input class="userFirst e-0"/></td><td><select class="userCompany e-0"></select></td><td><select class="userDepartment e-0"><option value="100">Accounting (100)</option></select></td><td><input class="userADPID e-0" maxlength="6" size="6" /></td><td><input class="userEmail e-0" /></td><td><input maxlength="10" size="10" class="userStart e-0" /></td></tr></table></form>');
+    var optionString = '<option value="">(none)</option>';
+    for (i = 0; i < companyCodes.length; i++) {
+      optionString += '<option value="'+companyCodes[i][0]+'">['+companyCodes[i][0]+'] '+companyCodes[i][1].substring(0,11)+'...</option>';
+    }
+    $('.userCompany.e-0').html(optionString);
     var dialog = $dialog.dialog({
       modal: true,
       draggable: false,
@@ -142,7 +149,7 @@ $(function() {
         $('.e-' + i).each(function() {
           // This on 'if' took me like 5 minutes to figure out.  I AM EXHAUSTED.  Like I could fall asleep right here...
           // 5:43pm on February 11th 2015
-          if (!($(this).hasClass('userEmail') || $(this).hasClass())) {
+          if (!($(this).hasClass('userEmail') || $(this).hasClass('userStart'))) {
             if ($(this).val() !== null && $(this).val().length) {
               $(this).removeClass('ui-state-error');
             } else {
@@ -154,7 +161,12 @@ $(function() {
     }
     if (myeclass === eCounter && eCounter < 10) {
       eCounter++;
-      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"/></td><td><input class="userFirst e-' + eCounter + '"/></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><input class="userADPID e-' + eCounter + '" /></td><td><input class="userEmail e-' + eCounter + '" /></td><td><input class="userStart e-' + eCounter + '" /></td></tr>');
+      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"/></td><td><input class="userFirst e-' + eCounter + '"/></td><td><select class="userCompany e-' + eCounter + '"></select></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" /></td><td><input class="userEmail e-' + eCounter + '" /></td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" /></td></tr>');
+      var optionString = '<option value="">(none)</option>';
+      for (var j = 0; j < companyCodes.length; j++) {
+        optionString += '<option value="'+companyCodes[j][0]+'">['+companyCodes[j][0]+'] '+companyCodes[j][1].substring(0,11)+'...</option>';
+      }
+      $('.userCompany.e-'+i).html(optionString);
       // After adding a new row, we want to make sure we resize the dialog
       var $dialog = $('#dialog-timecard');
       $dialog.dialog('option','position',$dialog.dialog('option','position'));
