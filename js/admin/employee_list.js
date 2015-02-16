@@ -46,7 +46,6 @@ $(function() {
     onClick: function() {Backbone.trigger('rowclicked', this.model);}
   });
   Backbone.on('rowclicked', function(model) {
-    if (window.location.hash !== '#addEmployee') {
       var $timeDiv = $('#timecardDiv');
       $timeDiv.empty();
       $timeDiv.spin('large', '#000');
@@ -66,7 +65,6 @@ $(function() {
         var $dialogTC = $('#dialog-timecard');
         $dialogTC.dialog('option', 'position', $dialogTC.dialog('option', 'position'));
       });
-    }
   });
   //noinspection JSLint
   var pageableGrid = new Backgrid.Grid({
