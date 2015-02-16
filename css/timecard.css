@@ -68,3 +68,7 @@ table#timecard input[type=text].times, table#timecard input[type=button].addButt
     height: 100%;
     width: 100%
 }
+
+table#timecard input[type=text].times {
+    text-align: center
+}
