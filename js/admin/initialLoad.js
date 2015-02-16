@@ -90,57 +90,6 @@ $(function() {
       }
     });
   });
-  /*
-  $(document).on('click', '#employeeButton', function() {
-    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter,
-        isEverythingGood = true,
-        aToAdd = [],
-        dataString = '',
-        aTempEmployee = [];
-    for (i = 0; i < toThis; i++) {
-      $('input.e-' + i + ',select.e-' + i).each(function() {
-        if ($(this).val() === null || !$(this).val().length) {
-          isEverythingGood = false;
-          return false;
-        }
-      });
-    }
-    if (!isEverythingGood) {
-      return false;
-    }
-    // todo: make sure that all the things are set
-    // First we need to gather up all of that information!
-    // If we hit the max number of rows, we want to test if the last
-    // row is empty.  If so, we only want the first 9,
-    // otherwise we will take the 10th.  If eCounter is NOT full,
-    // we will just use eCounter because the first eCounter - 1
-    // rows will not be clear, but the last one will always be.
-    for (i = 0; i < toThis; i++) {
-      $('input.e-' + i + ', select.e-' + i).each(function() {
-        aTempEmployee.push($(this).val());
-      });
-      aToAdd.push(aTempEmployee);
-    }
-    // We can't do anything if it is empty
-    if (!aToAdd.length) {
-      return false;
-    }
-    // Now we have to form the string:
-    for (i = 0; i < aToAdd.length; i++) {
-      dataString += (i + '=' + JSON.stringify(aToAdd[i]));
-      if (i < aToAdd.length - 1) {
-        dataString += '&';
-      }
-    }
-    // I'm really playing with fire here,
-    // because I'm not checking if everything is valid... :/
-    $.ajax({
-      type: 'POST',
-      url: 'insert_user.php',
-      data: dataString
-    });
-  });
-  */
   $(document).on('change', '[class|="e"]', function() {
     var myeclass = $(this).attr('class').match(/e-[0-9][\w-]*\b/);
     myeclass = parseInt(myeclass[0].substr(2), 10);
