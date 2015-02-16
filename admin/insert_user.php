@@ -36,7 +36,8 @@ if (sessionCheck()) {
             echo "none :/";
             break;
         }
-        $a_postUser = unserialize($_POST[$i]);
+        $a_postUser = json_decode($_POST["$i"]);
+        echo $a_postUser;
         $userLast = $a_postUser[0];
         $userFirst = $a_postUser[1];
         $userEmail = $a_postUser[5];
@@ -48,7 +49,21 @@ if (sessionCheck()) {
         $salt = randomSalt();
         $userPassword = $salt.sha1($salt.$userPassword);
         $username = generateUsername($sqlConnection, substr($userFirst,0,1).$userLast);
-        mysqli_query($sqlConnection, "INSERT INTO employee_list (user_name,user_adpid,user_companycode,user_department,user_password,user_first,user_last,user_emails,user_start) VALUES ('$username',$userADPID,'$userCompany',$userDepartment,'$userPassword','$userFirst','$userLast','$userEmail',$userStart)");
+        $query = 'INSERT INTO employee_list (user_name,user_adpid,user_companycode,user_department,user_password,user_first,user_last';
+        $queryPartTwo = "VALUES ('$username',$userADPID,'$userCompany',$userDepartment,'$userPassword','$userFirst','$userLast'";
+        if (isset($userEmail)) {
+            $query .= ',user_emails';
+            $queryPartTwo .= ",'$userEmail'";
+        }
+        if (isset($userStart)) {
+            $query .= ',user_start';
+            $queryPartTwo .= ",'$userStart'";
+        }
+        $query .= ') ';
+        $queryPartTwo .= ')';
+        $query .= $queryPartTwo;
+        echo $query;
+        mysqli_query($sqlConnection, $query);
     }
     mysqli_close($sqlConnection);
 }
