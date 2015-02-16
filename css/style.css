@@ -7,7 +7,7 @@
 */
 
 body {  /*login.css*/
-	height:100%;
+	height:100%
 }
 body.tc {
 	background: #fefbf7;
@@ -27,18 +27,14 @@ div#head {
 h3 {
 	margin: 0
 }
-
-input[type=text].times,input[type=text]#searchbar {
-	text-align: center
-}
 body {
-	height:100%;
+	height:100%
 }
 #navigation {
 	float: left;
 	width:15%;
 	height:100%;
-	background-color:#DDDDDD;
+	background-color:#DDDDDD
 }
 #container #ajaxDiv {
 	float:left;
@@ -57,12 +53,12 @@ body {
 	user-select:none
 }
 .row {
-	display:table-row;
+	display:table-row
 }
 a.sideNavigationCell:hover {
-	background-color:#CFCFCF;
+	background-color:#CFCFCF
 }
 
 input[class|="e"], select[class|="e"] {
-    font-family: monospace;
+    font-family: monospace
 }
