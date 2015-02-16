@@ -1,0 +1,16 @@
+table#timecard td.F {
+    box-shadow: inset 0 0 10px #000
+}
+table#timecard td.H {
+    box-shadow: inset 0 0 10px #00f
+}
+table#timecard td.missingTime {
+    box-shadow: inset 0 0 10px #600;
+    color: #600
+}
+table#timecard td.S {
+    box-shadow: inset 0 0 10px #003200
+}
+table#timecard td.V {
+    box-shadow: inset 0 0 10px #ff0
+}

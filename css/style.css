@@ -5,10 +5,7 @@
 	font-family: monospace
 }
 */
-.newDate .after {
-	height: 20px;
-	width: 100%!important
-}
+
 body {  /*login.css*/
 	height:100%;
 }
@@ -30,78 +27,9 @@ div#head {
 h3 {
 	margin: 0
 }
-input[type=button].newDate {
-	padding-left: 2px;
-	padding-right: 2px
-}
-input[type=text].times,input[type=button].addButton,input[type=button].newDate {
-	background: none;
-	border: none;
-	height: 100%;
-	width: 100%
-}
+
 input[type=text].times,input[type=text]#searchbar {
 	text-align: center
-}
-table#timecard {
-	border-collapse: collapse;
-	font-size: 125%;
-	text-align: left;
-	width: 100%
-}
-table#timecard, .addButton, .times, .newDate, #range, input, select {
-    font-family: monospace !important
-}
-table#timecard td {
-	background: inherit
-}
-table#timecard td.addButton,input[type=button].addButton {
-	height: 100%;
-	padding: 0;
-	width: 23px
-}
-table#timecard td.F {
-	box-shadow: inset 0 0 10px #000
-}
-table#timecard td.H {
-	box-shadow: inset 0 0 10px #00f
-}
-table#timecard td.missingTime {
-	box-shadow: inset 0 0 10px #600;
-	color: #600
-}
-table#timecard td.newDate,input[type=button].newDate {
-	height: 100%;
-	padding: 0;
-	width: 27px
-}
-table#timecard td.overflow {
-	border: none
-}
-table#timecard td.S {
-	box-shadow: inset 0 0 10px #003200
-}
-table#timecard td.times,table#timecard td.addButton {
-	padding: 0
-}
-table#timecard td.V {
-	box-shadow: inset 0 0 10px #ff0
-}
-table#timecard tr#topTR {
-	background: #ccc
-}
-table#timecard tr.dataRow {
-	background: #ddd
-}
-table#timecard tr.employeeData:hover {
-	background: #add8e6;
-	cursor: pointer
-}
-table#timecard tr.odd {
-	background: #eee
-}
-table#timecard,table#timecard tr,table#timecard td,table#timecard th {
-	border: thin solid #000
 }
 body {
 	height:100%;
@@ -134,10 +62,7 @@ body {
 a.sideNavigationCell:hover {
 	background-color:#CFCFCF;
 }
-select#range {
-    float: right;
-}
+
 input[class|="e"], select[class|="e"] {
     font-family: monospace;
 }
-
