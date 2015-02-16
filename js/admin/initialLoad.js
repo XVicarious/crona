@@ -75,14 +75,10 @@ $(function() {
               dataString += '&';
             }
           }
-          console.log(dataString);
           $.ajax({
             type: 'POST',
             url: 'insert_user.php',
-            data: dataString,
-            success: function(data) {
-              console.log(data);
-            }
+            data: dataString
           });
           $(this).dialog('close');
         },
