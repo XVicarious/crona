@@ -12,7 +12,9 @@ if (sessionCheck()) {
     $a_masterSchedule = [];
     if (mysqli_num_rows($scheduleResult) !== 0) {
         while (list($scheduleDay, $scheduleIn, $scheduleOut, $scheduleDepartment) = mysqli_fetch_row($scheduleResult)) {
-            array_push($a_masterSchedule, ["day" => $scheduleDay, "in" => $scheduleIn, "out" => $scheduleOut,
+            array_push($a_masterSchedule, ["day" => $scheduleDay,
+                                           "in" => $scheduleIn,
+                                           "out" => $scheduleOut,
                                            "department" => $scheduleDepartment]);
         }
     }
