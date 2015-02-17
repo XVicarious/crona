@@ -1,1 +1,0 @@
-[11-Feb-2015 19:48:05 America/Chicago] PHP Fatal error:  Call to undefined function randomSalt() in /home2/bmaurer/public_html/xvss.net/time/admin/insert_user.php on line 38
