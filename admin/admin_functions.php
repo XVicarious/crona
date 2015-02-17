@@ -1,6 +1,7 @@
 <?php
 
-function sessionCheck() {
+function sessionCheck()
+{
     session_start();
     if ($_SESSION['lastAction'] + 10 * 60 < time()) {
         session_destroy();
@@ -11,7 +12,8 @@ function sessionCheck() {
     return true;
 }
 
-function getPermissions($sqlConnection) {
+function getPermissions($sqlConnection)
+{
     if (session_status() === PHP_SESSION_NONE) {
         sessionCheck();
     }
@@ -25,7 +27,8 @@ function getPermissions($sqlConnection) {
     return [];
 }
 
-function createSql() {
+function createSql()
+{
     $sql_server = 'localhost';
     $sql_username = 'bmaurer_pciven';
     $sql_password = '3al12of4ut25';
@@ -33,7 +36,8 @@ function createSql() {
     return mysqli_connect($sql_server, $sql_username, $sql_password, $sql_database);
 }
 
-function logTransaction($sqlConnection, $stampId ,$type, $originalValue, $newValue) {
+function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newValue)
+{
     $transactionArray = [$stampId ,$type, $originalValue, $newValue];
     $transactionArray = serialize($transactionArray);
     $adminId = $_SESSION['userId'];
@@ -41,7 +45,8 @@ function logTransaction($sqlConnection, $stampId ,$type, $originalValue, $newVal
     mysqli_query($sqlConnection, $query);
 }
 
-function findExceptions($sqlConnection) {
+function findExceptions($sqlConnection)
+{
     $counter = mysqli_query($sqlConnection, 'SELECT COUNT(*) AS id FROM employee_list');
     $n = mysqli_fetch_array($counter);
     $count = $n['id'];

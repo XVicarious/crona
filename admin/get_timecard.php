@@ -11,20 +11,22 @@ if (sessionCheck()) {
     if ($range === 'last') {
         $date0 = date($dateFormat, strtotime('last sunday -1 weeks'));
         $date1 = date($dateFormat, strtotime('last sunday -1 days 23:59:59'));
-    } else if ($range === 'next') {
+    } elseif ($range === 'next') {
         $date0 = date($dateFormat, strtotime('next sunday'));
         $date1 = date($dateFormat, strtotime("next saturday 23:59:59 +1 weeks"));
-    } else if ($range === 'specificDate') {
+    } elseif ($range === 'specificDate') {
         $date0 = date($dateFormat, $_POST['date0']);
         $date1 = date($dateFormat, $_POST['date1']);
-    } else if ($range === 'w2d') {
+    } elseif ($range === 'w2d') {
         $date0 = date($dateFormat, strtotime('monday 00:00:00'));
         $date1 = date($dateFormat, strtotime('today 23:59:59'));
     }
     $rangeQuery = "AND timestamp_list.datetime BETWEEN '$date0' AND '$date1'";
     $query = "SELECT timestamp_list.stamp_id,timestamp_list.datetime,timestamp_list.stamp_special,timestamp_list.stamp_department FROM timestamp_list WHERE timestamp_list.user_id_stamp = $employeeId " . $rangeQuery . ' ORDER BY timestamp_list.datetime';
     $queryResult = mysqli_query($sqlConnection, $query);
-    if ($queryResult === false) { return; }
+    if ($queryResult === false) {
+        return;
+    }
     $timestamps = [];
     while (list($stampId, $timestamp, $modifier, $depart) = mysqli_fetch_row($queryResult)) {
         $lastTimestamp = end($timestamps);
@@ -52,7 +54,7 @@ if (sessionCheck()) {
     $echoMe = "<table id=\"timecard\" user-start=\"$userstart\" user-id=\"$employeeId\"><tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userfirst $userlast's Timecard<select id=\"range\"><option value=\"last\">Previous Period</option><option value=\"this\" selected>Current Period</option><option value=\"next\">Next Period</option><option class=\"sp\" value=\"specificDate\">Specific Date</option><option value=\"w2d\">Week to Date</option><option value=\"special\">Specific Period</option></select></th></tr><tr id=\"headings\"><th></th><th>Date<input id=\"r\" size=\"1\" style=\"width:0;height:0;display:none\"/><input id=\"r2\" size=\"1\" style=\"width:0;height:0;display:none\"/></th><th colspan=\"100%\"></th></tr>";
     $rowNumber = 0;
     $runningTotal = 0;
-    foreach($timestamps as $timestamp) {
+    foreach ($timestamps as $timestamp) {
         $rowNumber++;
         $day = $timestamp['date'];
         $addBefore = date($dateFormat, strtotime($day . ' 00:00:00 -1 days'));
@@ -63,7 +65,7 @@ if (sessionCheck()) {
         $timeOuts = [];
         $matchingSpecial = true;
         $chosenModifier = '';
-        foreach($timestamp as $t) {
+        foreach ($timestamp as $t) {
             if ($t[2] != $chosenModifier) {
                 $matchingSpecial = false;
                 $chosenModifier = $t[2];
@@ -88,10 +90,10 @@ if (sessionCheck()) {
             if ($t_mod === 'S') {
                 $val = 'SICK';
                 $disabled = 'readonly disabled';
-            } else if ($t_mod === 'F') {
+            } elseif ($t_mod === 'F') {
                 $val = 'BEREAVEMENT';
                 $disabled = 'readonly disabled';
-            } else if ($t_mod === 'V') {
+            } elseif ($t_mod === 'V') {
                 $val = 'VACATION';
                 $disabled = 'readonly disabled';
             } else {

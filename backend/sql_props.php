@@ -1,4 +1,4 @@
-<?
+<?php
 $sql_server = 'localhost';
 $sql_username = 'bmaurer_pciven';
 $sql_password = '3al12of4ut25';

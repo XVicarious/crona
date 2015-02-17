@@ -4,6 +4,5 @@ $sqlConnection = createSql();
 if (sessionCheck()) {
     $regexString = $_POST['requires'];
     $passwordLength = $_POST['minLength'];
-    $a_rules = explode(',',$regexString);
-
+    $a_rules = explode(',', $regexString);
 }

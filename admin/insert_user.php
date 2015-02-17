@@ -1,5 +1,6 @@
 <?php
-function randomSalt($useSpecial = true, $len = 8) {
+function randomSalt($useSpecial = true, $len = 8)
+{
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_+-=";
     $l = strlen($chars) - 1;
     if (!$useSpecial) {
@@ -11,7 +12,8 @@ function randomSalt($useSpecial = true, $len = 8) {
     }
     return $str;
 }
-function generateUsername($sqlConnection, $baseUsername, $number=0) {
+function generateUsername($sqlConnection, $baseUsername, $number = 0)
+{
     $username = $number ? $baseUsername.$number : $baseUsername;
     $result = mysqli_query($sqlConnection, "SELECT user_name FROM employee_list WHERE user_name = '$username'");
     if (mysqli_num_rows($result) !== 0) {
@@ -32,14 +34,14 @@ if (sessionCheck()) {
         $userLast = $a_postUser[0];
         $userFirst = $a_postUser[1];
         $userEmail = $a_postUser[5];
-        $userStart = isset($a_postUser[6]) ? $a_postUser[6] : date("Y-m-d",time());
+        $userStart = isset($a_postUser[6]) ? $a_postUser[6] : date("Y-m-d", time());
         $userCompany = $a_postUser[2];
         $userDepartment = $a_postUser[3];
         $userADPID = $a_postUser[4];
         $userPassword = randomSalt(false);
         $salt = randomSalt();
         $userPassword = $salt.sha1($salt.$userPassword);
-        $username = generateUsername($sqlConnection, substr($userFirst,0,1).$userLast);
+        $username = generateUsername($sqlConnection, substr($userFirst, 0, 1).$userLast);
         $query = 'INSERT INTO employee_list (user_name,user_adpid,user_companycode,user_department,user_password,user_first,user_last';
         $queryPartTwo = "VALUES ('$username',$userADPID,'$userCompany',$userDepartment,'$userPassword','$userFirst','$userLast'";
         if (isset($userEmail)) {
