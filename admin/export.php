@@ -15,7 +15,7 @@ if (isset($administrativeId)) {
         $exportCompany = $_POST['companyCode'];
         echo $exportCompany;
         // To prevent spoofing, make sure the person has permissions, if not end it
-        if ($sa_adminperms !== "all" && !in_array($exportCompany,$a_codes)) {
+        if ($sa_adminperms !== "all" && !in_array($exportCompany, $a_codes)) {
             return;
         }
         $peopleResults = mysqli_query($sqlConnection, "SELECT user_id,user_adpid FROM employee_list WHERE user_companycode = '$exportCompany'");
@@ -25,8 +25,8 @@ if (isset($administrativeId)) {
         $whereDate = "AND datetime BETWEEN '$date0' AND '$date1'";
         if (mysqli_num_rows($peopleResults) !== 0) {
             $a_people = [];
-            while(list($userId,$adpId) = mysqli_fetch_row($peopleResults)) {
-                array_push($a_people,[$userId,$adpId]);
+            while (list($userId,$adpId) = mysqli_fetch_row($peopleResults)) {
+                array_push($a_people, [$userId,$adpId]);
             }
             // Now that we have a list of people, we need their timestamps
             $whereUserId = 'WHERE (';
@@ -43,18 +43,18 @@ if (isset($administrativeId)) {
             $timestampResults = mysqli_query($sqlConnection, $query);
             if (mysqli_num_rows($timestampResults) !== 0) {
                 $a_timestamps = [];
-                while(list($userId,$datetime,$modifier,$changeDepartment) = mysqli_fetch_row($timestampResults)) {
+                while (list($userId,$datetime,$modifier,$changeDepartment) = mysqli_fetch_row($timestampResults)) {
                     // Push the timestamps into an array
                     // Index of the stamp will be the user's id number from the database
                     if ($a_timestamps[$userId] === null) {
                         $a_timestamps[$userId] = [];
                     }
                     // push an array of timestamps
-                    array_push($a_timestamps[$userId],[$datetime,$modifier,$changeDepartment]);
+                    array_push($a_timestamps[$userId], [$datetime,$modifier,$changeDepartment]);
                 }
                 $a_userHours = [];
                 // Headers for the CSV file
-                array_push($a_userHours,['Co Code','Batch ID','File #','Reg. Hours','O/T Hours','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Earnings 3 Code','Earnings 3 Amount','Earnings 3 Code','Earnings 3 Amount']);
+                array_push($a_userHours, ['Co Code','Batch ID','File #','Reg. Hours','O/T Hours','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Hours 4 Code','Hours 4 Amount','Earnings 3 Code','Earnings 3 Amount','Earnings 3 Code','Earnings 3 Amount']);
                 foreach ($a_people as $user) {
                     $userKey = $user[0];
                     $totalHours = 0;
@@ -73,13 +73,13 @@ if (isset($administrativeId)) {
                             if ($t_timestamp[1] === "H") {
                                 $totalHolidayHours += $t_hours;
                             }
-                        } else if ($t_timestamp[1] === "S" && $t_timestamp_2[1] === "S") {
+                        } elseif ($t_timestamp[1] === "S" && $t_timestamp_2[1] === "S") {
                             $totalSickHours += $t_hours;
-                        } else if ($t_timestamp[1] === "V" && $t_timestamp_2[1] === "V") {
+                        } elseif ($t_timestamp[1] === "V" && $t_timestamp_2[1] === "V") {
                             $totalVacationHours += $t_hours;
-                        } else if ($t_timestamp[1] === "P" && $t_timestamp_2[1] === "P") {
+                        } elseif ($t_timestamp[1] === "P" && $t_timestamp_2[1] === "P") {
                             $totalPersonalHours += $t_hours;
-                        } else if ($t_timestamp[1] === "F" && $t_timestamp_2[1] === "F") {
+                        } elseif ($t_timestamp[1] === "F" && $t_timestamp_2[1] === "F") {
                             $totalSadHours += $t_hours;
                         }
                     }
@@ -91,9 +91,9 @@ if (isset($administrativeId)) {
                     array_push($a_userHours, [$exportCompany,50,$user[1],$totalHours,$overtimeHours,'S',round($totalSickHours, 2),'V',round($totalVacationHours, 2),'P',round($totalPersonalHours, 2),'H',round($totalHolidayHours / 3600, 2),'F',round($totalSadHours, 2),'B',0,'T',0]);
                 }
                 $fileName = "tmp/$exportCompany-".time().'.csv';
-                $csv = fopen($fileName,'w');
-                foreach($a_userHours as $fields) {
-                    fputcsv($csv,$fields);
+                $csv = fopen($fileName, 'w');
+                foreach ($a_userHours as $fields) {
+                    fputcsv($csv, $fields);
                 }
                 fclose($csv);
                 echo "<script>window.open(\"http://xvss.net/time/admin/$fileName\")</script>";
