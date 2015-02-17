@@ -20,7 +20,18 @@ $_SESSION["lastAction"] = time();
 $userId = $_SESSION['userId'];
 if (isset($userId)) {
     // Please add to the END of this list to not screw everyone up
-    $a_securityQuestions = ["What city was your mother born in?", "What is the name of the street you grew up on?", "What is then name of your first grade teacher?", "What is your father's middle name?", "What is your favorite color?", "What is your favorite food?", "What was the make and model of your first car?", "What was the name of your childhood best friend?", "What was the name of your first pet?", "What was your first phone number?", "Where did you go to primary school?", "Where did you grow up?", "Who was your first boss?"];
+    $a_securityQuestions = ["What city was your mother born in?",
+                            "What is the name of the street you grew up on?",
+                            "What is then name of your first grade teacher?",
+                            "What is your father's middle name?",
+                            "What is your favorite color?",
+                            "What is your favorite food?",
+                            "What was the make and model of your first car?",
+                            "What was the name of your childhood best friend?",
+                            "What was the name of your first pet?",
+                            "What was your first phone number?",
+                            "Where did you go to primary school?",
+                            "Where did you grow up?", "Who was your first boss?"];
     require 'admin/admin_functions.php';
     $sqlConnection = createSql();
     /*if ($_GET['s'] === 'partial') {
