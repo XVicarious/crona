@@ -70,14 +70,12 @@ $(function() {
       $dialogTC.dialog('option', 'position', $dialogTC.dialog('option', 'position'));
     });
   });
-  //noinspection JSLint
   var pageableGrid = new Backgrid.Grid({
     row: ClickableRow,
     columns: columns,
     collection: employeeListPageable
   }), $employeeList = $('#ajaxDiv');
   $employeeList.html(pageableGrid.render().el);
-  //noinspection JSLint
   //var filter = new Backgrid.Extension.ClientSideFilter({
   //  collection: employeeListPageable,
   //  fields: ['name', 'adpid', 'companycode', 'departmentcode']
