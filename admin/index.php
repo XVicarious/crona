@@ -27,6 +27,7 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/jquery-ui.js"></script>
     <script src="../js/lib/jquery.contextMenu.js"></script>
     <script src="../js/lib/moment.js"></script>
+    <script src="../js/lib/backgrid-moment-cell.js"></script>
     <script src="../js/lib/spin.js"></script>
     <script src="../js/lib/jquery.spin.js"></script>
     <script src="../js/admin/functions.async.js"></script>
@@ -47,7 +48,7 @@ $_SESSION["lastAction"] = time();
                 <a id="timecardButton" class="sideNavigationCell" href="#viewTimecards">Timecards</a>
             </div>
             <div class="row">
-                <a id="scheduleButton" class="sideNavigationCell" href="#schedulePeople">Schedules</a>
+                <a id="scheduleButton" class="sideNavigationCell" onclick="mode = 'schedule'">Schedules</a>
             </div>
             <div class="row">
                 <a id="addemployeeButton" class="sideNavigationCell" href="#addEmployee">Add Employees</a>
