@@ -52,7 +52,11 @@ $(function() {
     $timeDiv.empty();
     $timeDiv.spin('large', '#000');
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
-    getEmployee(model.id, 'this');
+    if (mode === 'schedule') {
+      fetchSchedule(model.id, 1, 2015);
+    } else {
+      getEmployee(model.id, 'this');
+    }
     var dialog = $('#dialog-timecard').dialog({
       modal: true,
       draggable: false,
