@@ -1,26 +1,25 @@
 body {
-    height:100%;
-    background:#ccc
+    height: 100%;
+    background: #CCC
 }
 #submitbutton {
-    width:100%
+    width: 100%
 }
 #loginform {
-    background:#fff;
-    border:solid thin #000;
-    table-layout:fixed
+    background: #FFF;
+    border: solid thin #000;
+    table-layout: fixed
 }
 #copy {
-    font-size:50%;
-    margin:0
+    font-size: 50%;
+    margin: 0
 }
 #bestdiv {
-    display:block;
-    left:calc(50% - 185px);
-    position:absolute;
-    top:calc(50% - 69px)
+    display: block;
+    left: calc(50% - 185px);
+    position: absolute;
+    top: calc(50% - 69px)
 }
-
 /*#bestDiv
 {
     display: block;

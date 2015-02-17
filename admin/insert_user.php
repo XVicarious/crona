@@ -2,25 +2,27 @@
 function randomSalt($useSpecial = true, $len = 8)
 {
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_+-=";
-    $l = strlen($chars) - 1;
+    $stringLength = strlen($chars) - 1;
     if (!$useSpecial) {
-        $l = strlen($chars - 16) - 1;
+        $stringLength = strlen($chars - 16) - 1;
     }
     $str = '';
     for ($i = 0; $i < $len; ++$i) {
-        $str .= $chars[rand(0, $l)];
+        $str .= $chars[rand(0, $stringLength)];
     }
     return $str;
 }
+
 function generateUsername($sqlConnection, $baseUsername, $number = 0)
 {
-    $username = $number ? $baseUsername.$number : $baseUsername;
+    $username = $number ? $baseUsername . $number : $baseUsername;
     $result = mysqli_query($sqlConnection, "SELECT user_name FROM employee_list WHERE user_name = '$username'");
     if (mysqli_num_rows($result) !== 0) {
         $username = generateUsername($sqlConnection, $baseUsername, ++$number);
     }
     return strtolower($username);
 }
+
 require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
@@ -40,10 +42,12 @@ if (sessionCheck()) {
         $userADPID = $a_postUser[4];
         $userPassword = randomSalt(false);
         $salt = randomSalt();
-        $userPassword = $salt.sha1($salt.$userPassword);
-        $username = generateUsername($sqlConnection, substr($userFirst, 0, 1).$userLast);
-        $query = 'INSERT INTO employee_list (user_name,user_adpid,user_companycode,user_department,user_password,user_first,user_last';
-        $queryPartTwo = "VALUES ('$username',$userADPID,'$userCompany',$userDepartment,'$userPassword','$userFirst','$userLast'";
+        $userPassword = $salt . sha1($salt . $userPassword);
+        $username = generateUsername($sqlConnection, substr($userFirst, 0, 1) . $userLast);
+        $query = 'INSERT INTO employee_list (user_name,user_adpid,user_companycode,user_department,user_password,
+                  user_first,user_last';
+        $queryPartTwo = "VALUES ('$username',$userADPID,'$userCompany',$userDepartment,'$userPassword','$userFirst',
+                         '$userLast'";
         if (isset($userEmail)) {
             $query .= ',user_emails';
             $queryPartTwo .= ",'$userEmail'";

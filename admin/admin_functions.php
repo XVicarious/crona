@@ -3,7 +3,8 @@
 function sessionCheck()
 {
     session_start();
-    if ($_SESSION['lastAction'] + 10 * 60 < time()) {
+    $lastAction = $_SESSION['lastAction'];
+    if ($lastAction + 10 * 60 < time()) {
         session_destroy();
         echo '<script>$(location).attr("href","http://xvss.net/time?timeout=1")</script>';
         return false;
@@ -19,7 +20,8 @@ function getPermissions($sqlConnection)
     }
     $adminId = $_SESSION['userId'];
     if (isset($adminId)) {
-        $permissionResult = mysqli_query($sqlConnection, "SELECT user_admin_perms FROM employee_list WHERE user_id = $adminId");
+        $permissionResult = mysqli_query($sqlConnection, "SELECT user_admin_perms FROM employee_list
+                                                          WHERE user_id = $adminId");
         list($sa_permissions) = mysqli_fetch_row($permissionResult);
         // permission "all" is a:1:{i:0;s:3:"all";}
         return unserialize($sa_permissions);
@@ -38,7 +40,7 @@ function createSql()
 
 function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newValue)
 {
-    $transactionArray = [$stampId ,$type, $originalValue, $newValue];
+    $transactionArray = [$stampId, $type, $originalValue, $newValue];
     $transactionArray = serialize($transactionArray);
     $adminId = $_SESSION['userId'];
     $query = "INSERT INTO change_list (change_userid,change_from_to) VALUES ($adminId, '$transactionArray');";
@@ -47,9 +49,9 @@ function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newVal
 
 function findExceptions($sqlConnection)
 {
-    $counter = mysqli_query($sqlConnection, 'SELECT COUNT(*) AS id FROM employee_list');
-    $n = mysqli_fetch_array($counter);
-    $count = $n['id'];
+    //$counter = mysqli_query($sqlConnection, 'SELECT COUNT(*) AS id FROM employee_list');
+    //$n = mysqli_fetch_array($counter);
+    //$count = $n['id'];
     // Exceptions are for only missing punches right now
     $timestamp_list = mysqli_query($sqlConnection, 'SELECT stamp_id,user_id_stamp,datetime FROM timestamp_list');
     $userStamps = [];

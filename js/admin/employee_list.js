@@ -43,28 +43,32 @@ $(function() {
   }];
   var ClickableRow = Backgrid.Row.extend({
     events: {'click': 'onClick'},
-    onClick: function() {Backbone.trigger('rowclicked', this.model);}
+    onClick: function() {
+      Backbone.trigger('rowclicked', this.model);
+    }
   });
   Backbone.on('rowclicked', function(model) {
-      var $timeDiv = $('#timecardDiv');
-      $timeDiv.empty();
-      $timeDiv.spin('large', '#000');
-      $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
-      getEmployee(model.id, 'this');
-      var dialog = $('#dialog-timecard').dialog({
-        modal: true,
-        draggable: false,
-        width: $(window).width() * 0.9,
-        height: 'auto',
-        resizable: false,
-        buttons: {
-          'Close': function(){$(this).dialog('close');}
+    var $timeDiv = $('#timecardDiv');
+    $timeDiv.empty();
+    $timeDiv.spin('large', '#000');
+    $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
+    getEmployee(model.id, 'this');
+    var dialog = $('#dialog-timecard').dialog({
+      modal: true,
+      draggable: false,
+      width: $(window).width() * 0.9,
+      height: 'auto',
+      resizable: false,
+      buttons: {
+        'Close': function() {
+          $(this).dialog('close');
         }
-      });
-      $(document).ajaxComplete(function() {
-        var $dialogTC = $('#dialog-timecard');
-        $dialogTC.dialog('option', 'position', $dialogTC.dialog('option', 'position'));
-      });
+      }
+    });
+    $(document).ajaxComplete(function() {
+      var $dialogTC = $('#dialog-timecard');
+      $dialogTC.dialog('option', 'position', $dialogTC.dialog('option', 'position'));
+    });
   });
   //noinspection JSLint
   var pageableGrid = new Backgrid.Grid({

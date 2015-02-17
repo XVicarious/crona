@@ -20,7 +20,7 @@ $_SESSION["lastAction"] = time();
 $userId = $_SESSION['userId'];
 if (isset($userId)) {
     // Please add to the END of this list to not screw everyone up
-    $a_securityQuestions = ["What city was your mother born in?","What is the name of the street you grew up on?","What is then name of your first grade teacher?","What is your father's middle name?","What is your favorite color?","What is your favorite food?","What was the make and model of your first car?","What was the name of your childhood best friend?","What was the name of your first pet?","What was your first phone number?","Where did you go to primary school?","Where did you grow up?","Who was your first boss?"];
+    $a_securityQuestions = ["What city was your mother born in?", "What is the name of the street you grew up on?", "What is then name of your first grade teacher?", "What is your father's middle name?", "What is your favorite color?", "What is your favorite food?", "What was the make and model of your first car?", "What was the name of your childhood best friend?", "What was the name of your first pet?", "What was your first phone number?", "Where did you go to primary school?", "Where did you grow up?", "Who was your first boss?"];
     require 'admin/admin_functions.php';
     $sqlConnection = createSql();
     /*if ($_GET['s'] === 'partial') {
@@ -38,10 +38,10 @@ if (isset($userId)) {
     $h_sel3 = '<select id="s3" name="securityQuestion3">';
     $html_select = '';
     for ($i = 0; $i < count($a_securityQuestions); ++$i) {
-        $html_select .= "<option value=\"$i\">".$a_securityQuestions[$i].'</option>';
+        $html_select .= "<option value=\"$i\">" . $a_securityQuestions[$i] . '</option>';
     }
     $html_select .= '</select>';
-    echo '<form id="changeSecurity">'.$h_sel1.$html_select.'<input id="s1i" name="s1i" type=password><input id="s1ic" name="s1ic" type=password><br>'.$h_sel2.$html_select.'<input id="s2i" name="s2i" type=password><input id="s2ic" name="s2ic" type=password><br>'.$h_sel3.$html_select.'<input id="s3i" name="s3i" type=password><input id="s3ic" name="s3ic" type=password><br><input id="submit" type=button value="Submit"></form>';
+    echo '<form id="changeSecurity">' . $h_sel1 . $html_select . '<input id="s1i" name="s1i" type=password><input id="s1ic" name="s1ic" type=password><br>' . $h_sel2 . $html_select . '<input id="s2i" name="s2i" type=password><input id="s2ic" name="s2ic" type=password><br>' . $h_sel3 . $html_select . '<input id="s3i" name="s3i" type=password><input id="s3ic" name="s3ic" type=password><br><input id="submit" type=button value="Submit"></form>';
     mysqli_close($sqlConnection);
 }
 ?>

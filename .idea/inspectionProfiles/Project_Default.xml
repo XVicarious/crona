@@ -2,10 +2,59 @@
   <profile version="1.0" is_locked="false">
     <option name="myName" value="Project Default" />
     <option name="myLocal" value="false" />
+    <inspection_tool class="CssConvertColorToHexInspection" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="DivideByZeroJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="EqualityComparisonWithCoercionJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="ForLoopThatDoesntUseLoopVariableJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="FunctionNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_regex" value="[a-z][A-Za-z]*" />
+      <option name="m_minLength" value="4" />
+      <option name="m_maxLength" value="32" />
+    </inspection_tool>
+    <inspection_tool class="InconsistentLineSeparators" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="JSHint" enabled="true" level="ERROR" enabled_by_default="true" />
-    <inspection_tool class="MessDetectorValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true" />
+    <inspection_tool class="LocalVariableNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_regex" value="[a-z][A-Za-z]*" />
+      <option name="m_minLength" value="1" />
+      <option name="m_maxLength" value="32" />
+    </inspection_tool>
+    <inspection_tool class="MessDetectorValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="CODESIZE" value="true" />
+      <option name="CONTROVERSIAL" value="true" />
+      <option name="DESIGN" value="true" />
+      <option name="UNUSEDCODE" value="true" />
+      <option name="NAMING" value="true" />
+    </inspection_tool>
+    <inspection_tool class="NegatedConditionalExpressionJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="NegatedIfStatementJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="NonShortCircuitBooleanExpressionJS" enabled="true" level="WARNING" enabled_by_default="true" />
+    <inspection_tool class="OverlyComplexBooleanExpressionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_limit" value="3" />
+    </inspection_tool>
+    <inspection_tool class="ParameterNamingConventionJS" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="m_regex" value="[a-z][A-Za-z]*" />
+      <option name="m_minLength" value="1" />
+      <option name="m_maxLength" value="32" />
+    </inspection_tool>
     <inspection_tool class="PhpCSValidationInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
       <option name="CODING_STANDARD" value="PSR2" />
+    </inspection_tool>
+    <inspection_tool class="QuirksModeInspectionTool" enabled="false" level="WARNING" enabled_by_default="false">
+      <option name="IE50" value="false" />
+      <option name="IE55" value="false" />
+      <option name="IE6" value="false" />
+      <option name="IE7" value="false" />
+      <option name="IE_MAC" value="false" />
+      <option name="MOZILLA" value="true" />
+      <option name="OPERA7" value="false" />
+      <option name="OPERA8" value="false" />
+      <option name="OPERA85" value="true" />
+      <option name="OPERA9" value="true" />
+      <option name="SAFARI" value="true" />
+    </inspection_tool>
+    <inspection_tool class="W3CssValidation" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="myCssVersion" value="css3" />
+      <option name="myIgnoreVendorSpecificProperties" value="false" />
     </inspection_tool>
   </profile>
 </component>

@@ -6,7 +6,7 @@ $(function() {
     //var digits = '/.*[0-9].*/';
     //var specials = '/.*[\`\~\!\@\#\$\%\^\&\*\(\)\_\+\-\=].*/';
     var requireData = 'minLength=' + $('#minLength').val() + '&requires=',
-        requireArray = [];
+      requireArray = [];
     $('.requires:checked').each(function() {
       requireArray.push($(this).val());
     });

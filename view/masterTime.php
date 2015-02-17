@@ -63,7 +63,7 @@ if (mysqli_num_rows($queryResult) !== false) {
         $addBefore = date($dateFormat, strtotime($day . ' 00:00:00 -1 days'));
         $isOdd = ($rowNumber % 2 ? "" : 'odd');
         $modDay = date('D m/d', strtotime($day));
-        $echoMe.= "<tr stamp-day=\"$day\" class=\"dataRow $isOdd\"><td class=\"dayCell\" id=\"$day\">$modDay</td>";
+        $echoMe .= "<tr stamp-day=\"$day\" class=\"dataRow $isOdd\"><td class=\"dayCell\" id=\"$day\">$modDay</td>";
         $timeIns = [];
         $timeOuts = [];
         $matchingSpecial = true;
@@ -89,7 +89,7 @@ if (mysqli_num_rows($queryResult) !== false) {
                 $miss = "missingTime";
             }
 
-            $echoMe.= "<td department-special=\"$t_dep\" class=\"tstable $t_mod $miss times\">";
+            $echoMe .= "<td department-special=\"$t_dep\" class=\"tstable $t_mod $miss times\">";
             if ($t_mod === 'S') {
                 $val = 'SICK';
                 $disabled = 'readonly disabled';
@@ -104,7 +104,7 @@ if (mysqli_num_rows($queryResult) !== false) {
                 $disabled = '';
             }
 
-            $echoMe.= "<input readonly disabled title=\"$t_mod\" alt=\"$t_mod\" class=\"times\" default-time=\"$t_tms\" stamp-id=\"$t_sid\" type=\"text\"  maxlength=\"11\" id=\"$t_sid\" value=\"" . $val . "\"></td>";
+            $echoMe .= "<input readonly disabled title=\"$t_mod\" alt=\"$t_mod\" class=\"times\" default-time=\"$t_tms\" stamp-id=\"$t_sid\" type=\"text\"  maxlength=\"11\" id=\"$t_sid\" value=\"" . $val . "\"></td>";
             if ($i % 2) {
                 array_push($timeOuts, strtotime($t_tms));
             } else {
@@ -116,23 +116,23 @@ if (mysqli_num_rows($queryResult) !== false) {
 
         $timeTotal = 0;
         for ($i = 0; $i < count($timeOuts); ++$i) {
-            $timeTotal+= ($timeOuts[$i] - $timeIns[$i]);
+            $timeTotal += ($timeOuts[$i] - $timeIns[$i]);
         }
 
         for ($i = 0; $i < 5 - $tyme; ++$i) {
-            $echoMe.= '<td colspan=2 class="overflow"></td>';
+            $echoMe .= '<td colspan=2 class="overflow"></td>';
         }
 
-        $timeTotal*= (($chosenModifier === 'H' && (strtotime($day . ' 00:00:00') - strtotime($userstart . ' 00:00:00')) >= 7776000) ? 2 : 1);
+        $timeTotal *= (($chosenModifier === 'H' && (strtotime($day . ' 00:00:00') - strtotime($userstart . ' 00:00:00')) >= 7776000) ? 2 : 1);
         $timeTotal = round($timeTotal / 3600, 2);
-        $echoMe.= '<td class="dailyHours" colspan"99%">';
-        $echoMe.= number_format($timeTotal, 2);
-        $echoMe.= ' hours</td></tr>';
-        $runningTotal+= $timeTotal;
+        $echoMe .= '<td class="dailyHours" colspan"99%">';
+        $echoMe .= number_format($timeTotal, 2);
+        $echoMe .= ' hours</td></tr>';
+        $runningTotal += $timeTotal;
     }
 
-    $echoMe.= '<tr class="dataRow"><td colspan="15"></td><td class="dailyHours">';
-    $echoMe.= number_format($runningTotal, 2);
-    $echoMe.= ' hours</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
+    $echoMe .= '<tr class="dataRow"><td colspan="15"></td><td class="dailyHours">';
+    $echoMe .= number_format($runningTotal, 2);
+    $echoMe .= ' hours</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
 }
 echo $echoMe;

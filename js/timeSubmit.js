@@ -4,7 +4,7 @@ $(function() {
   //noinspection FunctionWithMultipleReturnPointsJS
   $('#submitButton').button().click(function() {
     var username = $('#uname'),
-        password = $('input#drowp');
+      password = $('input#drowp');
     if (!(username.val().length && password.val().length)) {
       if (username.val().length) {
         username.removeClass('ui-state-error');
@@ -19,7 +19,7 @@ $(function() {
       return false;
     }
     var dataString = 'uname=' + username.val() + '&drowp=' + password.val() + '&loginType=' +
-                     $('input[name=loginType]:checked').val();
+      $('input[name=loginType]:checked').val();
     $.ajax({
       type: 'POST',
       url: 'punch.php',
@@ -38,5 +38,5 @@ $(function() {
     return true;
   });
   $centerDiv.css('left', 'calc(50% - ' + $centerDiv.width() / 2 + ')')
-            .css('top', 'calc(50% - ' + $centerDiv.height() / 2 + ')');
+    .css('top', 'calc(50% - ' + $centerDiv.height() / 2 + ')');
 });
