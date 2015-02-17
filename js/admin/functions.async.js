@@ -186,58 +186,64 @@ function validMoment(timestamp) {
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
-/*
- function fetchSchedule(userId, week, year) {
- // If the week or year isn't defined, get the current one
- week = week !== 'undefined' ? week : moment().week();
- year = year !== 'undefined' ? year : moment().year();
- // It is useless if we weren't provided a userId
- if (userId === 'undefined') {
- return false;
- }
- //noinspection JSLint
- var Schedule = Backbone.Model.extend({}),
- ScheduleList = Backbone.Collection.extend({
- model: Schedule,
- url: 'get_schedule.json.php?userId=' + userId +
- '&week=' + week + '&year=' + year
- }),
- columns = [{
- id: 'day',
- label: 'Day',
- editable: false,
- cell: 'string'
- //formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
- //  fromRaw: function(rawValue) {
- // Parse the values from this fetch to display a proper date
- //   var myMoment = moment(year + ' ' +
- //                         week + ' ' + rawValue, 'YYYY WW E');
- //   return myMoment.format('ddd MM/DD');
- // }
- // })
- }, {
- name: 'in',
- label: 'In',
- cell: Backgrid.Extension.MomentCell.extend({
- modelFormat: 'HH:mm'
- })
- }, {
- name: 'out',
- label: 'Out',
- cell: Backgrid.Extension.MomentCell.extend({
- modelFormat: 'HH:mm'
- })
- }, {
- name: 'department',
- label: 'Department',
- cell: 'integer'
- }],
- grid = new Backgrid.Grid({
- columns: columns,
- collection: ScheduleList
- }),
- $schedule = $('#schedule');
- $schedule.html(grid.render().el);
- ScheduleList.fetch({reset: true});
- return true;
- }*/
+
+function fetchSchedule(userId, week, year) {
+  // It is useless if we weren't provided a userId
+  if (userId === 'undefined') {
+    return false;
+  }
+  // If the week or year isn't defined, get the current one
+  week = week === 'undefined' ? moment().week() : week;
+  year = year === 'undefined' ? moment().year() : year;
+  var Schedule = Backbone.Model.extend({});
+  var ScheduleList = Backbone.Collection.extend({
+        model: Schedule,
+        url: 'get_schedule.php?userId=' + userId +
+        '&week=' + week + '&year=' + year
+      }),
+      columns = [{
+        id: 'day',
+        name: 'day',
+        label: 'Day',
+        editable: false,
+        cell: 'string',
+        formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
+          fromRaw: function(rawValue) {
+           //Parse the values from this fetch to display a proper date
+           moment.locale('en-US');
+           var myMoment = moment(year + ' ' + week + ' ' + --rawValue, 'YYYY WW E');
+           return myMoment.format('ddd MM/DD');
+        }
+        })
+      }, {
+        name: 'in',
+        label: 'In',
+        cell: Backgrid.Extension.MomentCell.extend({
+          modelFormat: 'X',
+          displayFormat: 'h:mm a',
+          displayInUTC: false
+        })
+      }, {
+        name: 'out',
+        label: 'Out',
+        cell: Backgrid.Extension.MomentCell.extend({
+          modelFormat: 'X',
+          displayFormat: 'h:mm a',
+          displayInUTC: false
+        })
+      }, {
+        name: 'department',
+        label: 'Department',
+        cell: 'integer'
+      }];
+  var scheduleDays = new ScheduleList();
+  var grid = new Backgrid.Grid({
+        columns: columns,
+        collection: scheduleDays
+      }),
+      $schedule = $('#timecardDiv');
+  grid.render().sort('day','ascending');
+  $schedule.html(grid.render().el);
+  scheduleDays.fetch({reset: true});
+  return true;
+}
