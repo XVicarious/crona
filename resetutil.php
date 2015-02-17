@@ -2,13 +2,14 @@
 function randomSalt($len = 8)
 {
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_+-=";
-    $l = strlen($chars) - 1;
+    $stringLength = strlen($chars) - 1;
     $str = '';
     for ($i = 0; $i < $len; ++$i) {
-        $str .= $chars[rand(0, $l)];
+        $str .= $chars[rand(0, $stringLength)];
     }
     return $str;
 }
+
 function createHash($string, $hashMethod = 'sha1', $saltLength = 8)
 {
     $salt = randomSalt($saltLength);
@@ -17,17 +18,19 @@ function createHash($string, $hashMethod = 'sha1', $saltLength = 8)
     }
     return sha1($salt . $string);
 }
+
 function randomString()
 {
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-    $l = strlen($chars) - 1;
+    $stringLength = strlen($chars) - 1;
     $str = '';
     for ($i = 0; $i < 32; ++$i) {
-        $str .= $chars[rand(0, $l)];
+        $str .= $chars[rand(0, $stringLength)];
     }
     return $str;
 }
-$a_securityQuestions = ["What city was your mother born in?","What is the name of the street you grew up on?","What is then name of your first grade teacher?","What is your father's middle name?","What is your favorite color?","What is your favorite food?","What was the make and model of your first car?","What was the name of your childhood best friend?","What was the name of your first pet?","What was your first phone number?","Where did you go to primary school?","Where did you grow up?","Who was your first boss?"];
+
+$a_securityQuestions = ["What city was your mother born in?", "What is the name of the street you grew up on?", "What is then name of your first grade teacher?", "What is your father's middle name?", "What is your favorite color?", "What is your favorite food?", "What was the make and model of your first car?", "What was the name of your childhood best friend?", "What was the name of your first pet?", "What was your first phone number?", "Where did you go to primary school?", "Where did you grow up?", "Who was your first boss?"];
 require 'admin/admin_functions.php';
 $sqlConnection = createSql();
 $function = $_POST['function'];
@@ -45,9 +48,9 @@ if (isset($function)) {
         $a_qa = unserialize($sa_qa);
         if (sha1($qanswer) === $a_qa[1]) {
             $salt = randomSalt();
-            $password = $salt.$password;
+            $password = $salt . $password;
             $password = sha1($password);
-            $password = $salt.$password;
+            $password = $salt . $password;
             $query = "UPDATE employee_list SET user_password = '$password', user_password_set = DEFAULT WHERE user_id = $userId";
             mysqli_query($sqlConnection, $query);
             $query = "DELETE FROM reset_list WHERE reset_string = '$resetId'";
@@ -80,7 +83,7 @@ if (isset($function)) {
     $query = "SELECT reset_uid,reset_string,reset_date FROM reset_list WHERE reset_string = '$resetId'";
     $result = mysqli_query($sqlConnection, $query);
     if (mysqli_num_rows($result) !== 0) {
-        list($uid,$resetId,$sdate) = mysqli_fetch_row($result);
+        list($uid, $resetId, $sdate) = mysqli_fetch_row($result);
         $difference = time() - strtotime($sdate);
         if ($difference >= 86400) {
             $query = "DELETE FROM reset_list WHERE reset_string = '$resetId'";
@@ -94,7 +97,7 @@ if (isset($function)) {
         $result = mysqli_query($sqlConnection, $query);
         list($sa_qa) = mysqli_fetch_row($result);
         $a_qa = unserialize($sa_qa);
-        echo '<div id="rpassword" style="position:absolute;display:block"><form style="background-color:white"><input id="uid" type=hidden name="user" value="'.$uid.'"><input type=hidden name="function" value="checkReset"><table id="loginForm" style="border:solid thin black;table-layout:fixed;font-family:monospace"><tr></tr><tr><td>'.$a_securityQuestions[$a_qa[0]]."</td><td><input id=\"answer\" name=\"answer\" type=password></td></tr><tr><td>New Password:<input type=hidden id=\"resetId\" name=\"resetId\" value=\"$resetId\"><input id=\"qid\" type=hidden name=\"qid\" value=\"$random\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td><td><input id=\"pwc\" type=password name=\"pword\"></td></tr><tr><th colspan=\"3\"><input id=\"subby\" style=\"width:100%\" type=submit value=\"Submit\"></th></tr></table></form></div>";
+        echo '<div id="rpassword" style="position:absolute;display:block"><form style="background-color:white"><input id="uid" type=hidden name="user" value="' . $uid . '"><input type=hidden name="function" value="checkReset"><table id="loginForm" style="border:solid thin black;table-layout:fixed;font-family:monospace"><tr></tr><tr><td>' . $a_securityQuestions[$a_qa[0]] . "</td><td><input id=\"answer\" name=\"answer\" type=password></td></tr><tr><td>New Password:<input type=hidden id=\"resetId\" name=\"resetId\" value=\"$resetId\"><input id=\"qid\" type=hidden name=\"qid\" value=\"$random\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td><td><input id=\"pwc\" type=password name=\"pword\"></td></tr><tr><th colspan=\"3\"><input id=\"subby\" style=\"width:100%\" type=submit value=\"Submit\"></th></tr></table></form></div>";
     } else {
         echo 'Invalid reset link.';
     }

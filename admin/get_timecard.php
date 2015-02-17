@@ -22,7 +22,9 @@ if (sessionCheck()) {
         $date1 = date($dateFormat, strtotime('today 23:59:59'));
     }
     $rangeQuery = "AND timestamp_list.datetime BETWEEN '$date0' AND '$date1'";
-    $query = "SELECT timestamp_list.stamp_id,timestamp_list.datetime,timestamp_list.stamp_special,timestamp_list.stamp_department FROM timestamp_list WHERE timestamp_list.user_id_stamp = $employeeId " . $rangeQuery . ' ORDER BY timestamp_list.datetime';
+    $query = "SELECT timestamp_list.stamp_id,timestamp_list.datetime,timestamp_list.stamp_special,
+              timestamp_list.stamp_department FROM timestamp_list WHERE timestamp_list.user_id_stamp = $employeeId " .
+              $rangeQuery . ' ORDER BY timestamp_list.datetime';
     $queryResult = mysqli_query($sqlConnection, $query);
     if ($queryResult === false) {
         return;
@@ -60,7 +62,7 @@ if (sessionCheck()) {
         $addBefore = date($dateFormat, strtotime($day . ' 00:00:00 -1 days'));
         $isOdd = ($rowNumber % 2 ? "" : 'odd');
         $modDay = date('D m/d', strtotime($day));
-        $echoMe.= "<tr stamp-day=\"$day\" class=\"dataRow $isOdd\"><td class=\"newDate\"><input class=\"newDate\" type=\"button\" value=\"<+\"></td><td class=\"dayCell\" id=\"$day\">$modDay</td>";
+        $echoMe .= "<tr stamp-day=\"$day\" class=\"dataRow $isOdd\"><td class=\"newDate\"><input class=\"newDate\" type=\"button\" value=\"<+\"></td><td class=\"dayCell\" id=\"$day\">$modDay</td>";
         $timeIns = [];
         $timeOuts = [];
         $matchingSpecial = true;
@@ -86,7 +88,7 @@ if (sessionCheck()) {
                 $miss = "missingTime";
             }
 
-            $echoMe.= "<td class=\"tstable addButton\"><input class=\"addButton\" type=\"button\" value=\"+\"></td><td department-special=\"$t_dep\" class=\"tstable $t_mod $miss times\">";
+            $echoMe .= "<td class=\"tstable addButton\"><input class=\"addButton\" type=\"button\" value=\"+\"></td><td department-special=\"$t_dep\" class=\"tstable $t_mod $miss times\">";
             if ($t_mod === 'S') {
                 $val = 'SICK';
                 $disabled = 'readonly disabled';
@@ -101,7 +103,7 @@ if (sessionCheck()) {
                 $disabled = '';
             }
 
-            $echoMe.= "<input $disabled title=\"$t_mod\" alt=\"$t_mod\" class=\"times context-menu\" default-time=\"$t_tms\" stamp-id=\"$t_sid\" type=\"text\"  maxlength=\"11\" id=\"$t_sid\" value=\"" . $val . "\"></td>";
+            $echoMe .= "<input $disabled title=\"$t_mod\" alt=\"$t_mod\" class=\"times context-menu\" default-time=\"$t_tms\" stamp-id=\"$t_sid\" type=\"text\"  maxlength=\"11\" id=\"$t_sid\" value=\"" . $val . "\"></td>";
             if ($i % 2) {
                 array_push($timeOuts, strtotime($t_tms));
             } else {
@@ -111,22 +113,22 @@ if (sessionCheck()) {
             $tyme = $i;
         }
 
-        $echoMe.= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
+        $echoMe .= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
         $timeTotal = 0;
         for ($i = 0; $i < count($timeOuts); ++$i) {
-            $timeTotal+= ($timeOuts[$i] - $timeIns[$i]);
+            $timeTotal += ($timeOuts[$i] - $timeIns[$i]);
         }
 
         for ($i = 0; $i < 5 - $tyme; ++$i) {
-            $echoMe.= '<td colspan=2 class="overflow"></td>';
+            $echoMe .= '<td colspan=2 class="overflow"></td>';
         }
 
-        $timeTotal*= (($chosenModifier === 'H' && (strtotime($day . ' 00:00:00') - strtotime($userstart . ' 00:00:00')) >= 7776000) ? 2 : 1);
+        $timeTotal *= (($chosenModifier === 'H' && (strtotime($day . ' 00:00:00') - strtotime($userstart . ' 00:00:00')) >= 7776000) ? 2 : 1);
         $timeTotal = round($timeTotal / 3600, 2);
-        $echoMe.= '<td class="dailyHours" colspan"99%">';
-        $echoMe.= number_format($timeTotal, 2);
-        $echoMe.= '</td></tr>';
-        $runningTotal+= $timeTotal;
+        $echoMe .= '<td class="dailyHours" colspan"99%">';
+        $echoMe .= number_format($timeTotal, 2);
+        $echoMe .= '</td></tr>';
+        $runningTotal += $timeTotal;
     }
     $ot = '';
     if ($runningTotal > 40) {
@@ -134,9 +136,9 @@ if (sessionCheck()) {
         $otHours = number_format($otHours, 2);
         $ot = "title=\"Normal Hours: 40&#xA;Overtime Hours: $otHours\"";
     }
-    $echoMe.= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"></td></td><tr class="dataRow"><td colspan="15"></td><td '.$ot.' class="dailyHours">';
-    $echoMe.= number_format($runningTotal, 2);
-    $echoMe.= '</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
+    $echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"></td></td><tr class="dataRow"><td colspan="15"></td><td ' . $ot . ' class="dailyHours">';
+    $echoMe .= number_format($runningTotal, 2);
+    $echoMe .= '</td></tr><tr><th colspan="100%">Timecard</th></tr></table><p style="margin:0;font-size:50%;">written by: Brian Maurer</p>';
     mysqli_close($sqlConnection);
     echo $echoMe;
 }

@@ -34,7 +34,9 @@ $_SESSION["lastAction"] = time();
     <script src="../js/admin/initialLoad.js"></script>
 </head>
 <body class="tc">
-<div id="head"><h2 style="padding:0;margin:0;text-align:center">Crona Timestamp</h2><h3 style="padding:0;margin:0;text-align:center">Administrative Console</h3></div>
+<div id="head"><h2 style="padding:0;margin:0;text-align:center">Crona Timestamp</h2>
+
+    <h3 style="padding:0;margin:0;text-align:center">Administrative Console</h3></div>
 <div id="container">
     <div id="navigation">
         <div class="sideNavigationTable">
@@ -54,13 +56,19 @@ $_SESSION["lastAction"] = time();
                 <a class="sideNavigationCell">System Management</a>
             </div>
             <div class="row">
-                <span class="sideNavigationCell">Export<form><div id="exportC"></div><br><input id="exportcsv" type=button value="Export CSV"></form><div id="exportScript"></div></span>
+                <span class="sideNavigationCell">Export<form>
+                        <div id="exportC"></div>
+                        <br><input id="exportcsv" type=button value="Export CSV"></form><div
+                        id="exportScript"></div></span>
             </div>
         </div>
     </div>
     <div id="ajaxDiv"></div>
 </div>
-<div id="dialog-confirm" class="ui-helper-hidden" title="Delete Timestamp?"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will delete the timestamp forever!  Are you sure you want to do this?</p></div>
-<div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard"><p><div id="timecardDiv"></div></p></div>
+<div id="dialog-confirm" class="ui-helper-hidden" title="Delete Timestamp?"><p><span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>This will delete the timestamp forever! Are you sure you want to do this?</p></div>
+<div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard"><p>
+
+    <div id="timecardDiv"></div>
+    </p></div>
 </body>
 </html>

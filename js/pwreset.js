@@ -44,7 +44,7 @@ $(function() {
             type: 'POST',
             url: 'resetutil.php',
             data: 'function=checkReset&resetId=' + $('#resetId').val() + '&pword=' + $pwc.val() + '&answer=' +
-                  $('#answer').val() + '&qid=' + $('#qid').val() + '&user=' + $('#uid').val(),
+            $('#answer').val() + '&qid=' + $('#qid').val() + '&user=' + $('#uid').val(),
             success: function(data) {
               $('#ajaxDiv').html(data);
             }

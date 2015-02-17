@@ -63,9 +63,9 @@ function bindNewDate() {
   var newDateClass = $('.newDate');
   newDateClass.each(function() {
     var $myGrandparent = $(this).parent().parent(),
-        earlierDay = $myGrandparent.prev().attr('stamp-day'),
-        thisDay = $myGrandparent.attr('stamp-day'),
-        userId = $('#timecard').attr('user-id');
+      earlierDay = $myGrandparent.prev().attr('stamp-day'),
+      thisDay = $myGrandparent.attr('stamp-day'),
+      userId = $('#timecard').attr('user-id');
     if (!earlierDay) {
       var thisThisDay = new Date(thisDay);
       $(this).datepicker({
@@ -122,9 +122,9 @@ function bindNewDate() {
   });
   newDateClass.click(function() {
     var twoParent = $(this).parent().parent(),
-        earlierDay = twoParent.prev().attr('stamp-day'),
-        thisDay = twoParent.attr('stamp-day'),
-        userId = $('#timecard').attr('user-id');
+      earlierDay = twoParent.prev().attr('stamp-day'),
+      thisDay = twoParent.attr('stamp-day'),
+      userId = $('#timecard').attr('user-id');
     if (earlierDay && thisDay) {
       earlierDay = new Date(earlierDay);
       thisDay = new Date(thisDay);
@@ -148,8 +148,8 @@ function bindNewDate() {
       if ($('#range').val() === 'specificDate') {
         date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
         var userId = $('#timecard').attr('user-id'),
-            date1 = date + 86399,
-            extraString = '&date0=' + date + '&date1=' + date1;
+          date1 = date + 86399,
+          extraString = '&date0=' + date + '&date1=' + date1;
         getEmployee(userId, 'specificDate', extraString);
       }
     },
@@ -164,9 +164,9 @@ function bindNewDate() {
     minDate: $.datepicker.parseDate('yy-mm-dd', rDate.val()),
     onSelect: function(date) {
       var userId = $('#timecard').attr('user-id'),
-          date0 = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', $('#r').val())) / SECOND,
-          date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + 86400,
-                  extraString = '&date0=' + date0 + '&date1=' + date1;
+        date0 = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', $('#r').val())) / SECOND,
+        date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + 86400,
+        extraString = '&date0=' + date0 + '&date1=' + date1;
       getEmployee(userId, 'specificDate', extraString);
     }
   });
@@ -178,66 +178,66 @@ function validateEmail(email) {
   return email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)[1];
 }
 function validMoment(timestamp) {
-  var validFormats = ['YYYY/MM/DD','YY/MM/DD','MM/DD/YYYY','MM/DD/YY','DD/MM/YYYY','DD/MM/YY'];
+  var validFormats = ['YYYY/MM/DD', 'YY/MM/DD', 'MM/DD/YYYY', 'MM/DD/YY', 'DD/MM/YYYY', 'DD/MM/YY'];
   var isValid = false; // we always assume they did it wrong
   for (var format in validFormats) {
-    isValid = isValid || moment(timestamp,format);
+    isValid = isValid || moment(timestamp, format);
   }
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
 /*
-function fetchSchedule(userId, week, year) {
-  // If the week or year isn't defined, get the current one
-  week = week !== 'undefined' ? week : moment().week();
-  year = year !== 'undefined' ? year : moment().year();
-  // It is useless if we weren't provided a userId
-  if (userId === 'undefined') {
-    return false;
-  }
-  //noinspection JSLint
-  var Schedule = Backbone.Model.extend({}),
-      ScheduleList = Backbone.Collection.extend({
-        model: Schedule,
-        url: 'get_schedule.json.php?userId=' + userId +
-             '&week=' + week + '&year=' + year
-      }),
-      columns = [{
-        id: 'day',
-        label: 'Day',
-        editable: false,
-        cell: 'string'
-        //formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
-        //  fromRaw: function(rawValue) {
-            // Parse the values from this fetch to display a proper date
-         //   var myMoment = moment(year + ' ' +
-         //                         week + ' ' + rawValue, 'YYYY WW E');
-         //   return myMoment.format('ddd MM/DD');
-         // }
-       // })
-      }, {
-        name: 'in',
-        label: 'In',
-        cell: Backgrid.Extension.MomentCell.extend({
-          modelFormat: 'HH:mm'
-        })
-      }, {
-        name: 'out',
-        label: 'Out',
-        cell: Backgrid.Extension.MomentCell.extend({
-          modelFormat: 'HH:mm'
-        })
-      }, {
-        name: 'department',
-        label: 'Department',
-        cell: 'integer'
-      }],
-      grid = new Backgrid.Grid({
-        columns: columns,
-        collection: ScheduleList
-      }),
-      $schedule = $('#schedule');
-  $schedule.html(grid.render().el);
-  ScheduleList.fetch({reset: true});
-  return true;
-}*/
+ function fetchSchedule(userId, week, year) {
+ // If the week or year isn't defined, get the current one
+ week = week !== 'undefined' ? week : moment().week();
+ year = year !== 'undefined' ? year : moment().year();
+ // It is useless if we weren't provided a userId
+ if (userId === 'undefined') {
+ return false;
+ }
+ //noinspection JSLint
+ var Schedule = Backbone.Model.extend({}),
+ ScheduleList = Backbone.Collection.extend({
+ model: Schedule,
+ url: 'get_schedule.json.php?userId=' + userId +
+ '&week=' + week + '&year=' + year
+ }),
+ columns = [{
+ id: 'day',
+ label: 'Day',
+ editable: false,
+ cell: 'string'
+ //formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
+ //  fromRaw: function(rawValue) {
+ // Parse the values from this fetch to display a proper date
+ //   var myMoment = moment(year + ' ' +
+ //                         week + ' ' + rawValue, 'YYYY WW E');
+ //   return myMoment.format('ddd MM/DD');
+ // }
+ // })
+ }, {
+ name: 'in',
+ label: 'In',
+ cell: Backgrid.Extension.MomentCell.extend({
+ modelFormat: 'HH:mm'
+ })
+ }, {
+ name: 'out',
+ label: 'Out',
+ cell: Backgrid.Extension.MomentCell.extend({
+ modelFormat: 'HH:mm'
+ })
+ }, {
+ name: 'department',
+ label: 'Department',
+ cell: 'integer'
+ }],
+ grid = new Backgrid.Grid({
+ columns: columns,
+ collection: ScheduleList
+ }),
+ $schedule = $('#schedule');
+ $schedule.html(grid.render().el);
+ ScheduleList.fetch({reset: true});
+ return true;
+ }*/
