@@ -196,12 +196,22 @@ function fetchSchedule(userId, week, year) {
   week = week === 'undefined' ? moment().week() : week;
   year = year === 'undefined' ? moment().year() : year;
   var Schedule = Backbone.Model.extend({});
+  /*
+  todo:
+  write custom formatter within the following parameters:
+  displays as 'h:mm a', in local timezone
+  toRaw: 'YYYY-WW-E h:mm a' -> X.  Collect the year, week, and day to make a proper timestamp
+  */
   var ScheduleList = Backbone.Collection.extend({
         model: Schedule,
         url: 'get_schedule.php?userId=' + userId +
         '&week=' + week + '&year=' + year
       }),
       columns = [{
+        name: 'id',
+        renderable: false,
+        cell: 'integer'
+      },{
         id: 'day',
         name: 'day',
         label: 'Day',
@@ -209,13 +219,15 @@ function fetchSchedule(userId, week, year) {
         cell: 'string',
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
           fromRaw: function(rawValue) {
-           //Parse the values from this fetch to display a proper date
-           moment.locale('en-US');
-           var myMoment = moment(year + ' ' + week + ' ' + --rawValue, 'YYYY WW E');
-           return myMoment.format('ddd MM/DD');
-        }
+            //Parse the values from this fetch to display a proper date
+            moment.locale('en-US');
+            // Have to subtract one from rawValue for a hotfix.  Unknown as to why it thinks Monday is the start of the
+            // week in the en-US locale.
+            var myMoment = moment(year + ' ' + week + ' ' + --rawValue, 'YYYY WW E');
+            return myMoment.format('ddd MM/DD');
+          }
         })
-      }, {
+      },{
         name: 'in',
         label: 'In',
         cell: Backgrid.Extension.MomentCell.extend({
@@ -223,7 +235,7 @@ function fetchSchedule(userId, week, year) {
           displayFormat: 'h:mm a',
           displayInUTC: false
         })
-      }, {
+      },{
         name: 'out',
         label: 'Out',
         cell: Backgrid.Extension.MomentCell.extend({
@@ -231,7 +243,7 @@ function fetchSchedule(userId, week, year) {
           displayFormat: 'h:mm a',
           displayInUTC: false
         })
-      }, {
+      },{
         name: 'department',
         label: 'Department',
         cell: 'integer'
@@ -242,6 +254,41 @@ function fetchSchedule(userId, week, year) {
         collection: scheduleDays
       }),
       $schedule = $('#timecardDiv');
+  grid.listenTo(scheduleDays, "backgrid:edited", function(model, column, command) {
+    if (column.attributes.name !== 'department') {
+      // we need in if out, and out if in
+      var siblingName = column.attributes.name === 'in' ? 'out' : 'in';
+      // the cells like to change the values to strings, make sure they're ints because we're about to work with them
+      var newValue = parseInt(model.attributes[column.attributes.name]);
+      var sibling = parseInt(model.attributes[siblingName]);
+      // todo: make sure to tell the user they're wrong
+      if (siblingName === 'in' && newValue < sibling) {
+        // throw an error, you can't leave before you get there
+        model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
+        return false;
+      } else if (siblingName === 'out' && sibling < newValue) {
+        // same thing, different sibling
+        model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
+        return false;
+      }
+    }
+    if (model.attributes.id) {
+      // todo: ajax to change what was edited
+      var dataString = 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name];
+      console.log(dataString);
+      $.ajax({
+        type: 'POST',
+        url: 'timeEdit/change_schedule.php',
+        data: dataString,
+        success: function(data) {
+          console.log(data);
+          scheduleDays.fetch({reset: true});
+        }
+      });
+    } else {
+      // todo: ajax to insert new schedule day
+    }
+  });
   grid.render().sort('day','ascending');
   $schedule.html(grid.render().el);
   scheduleDays.fetch({reset: true});
