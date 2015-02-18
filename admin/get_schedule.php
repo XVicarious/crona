@@ -6,13 +6,14 @@ if (sessionCheck()) {
     $employee = $_GET['userId'];
     $year = $_GET['year'];
     $week = $_GET['week'];
-    $q = "SELECT schedule_day,schedule_in,schedule_out,schedule_department FROM employee_schedule
+    $q = "SELECT schedule_id,schedule_day,schedule_in,schedule_out,schedule_department FROM employee_schedule
           WHERE employee_id = $employee AND schedule_week = $week AND schedule_year = $year";
     $scheduleResult = mysqli_query($sqlConnection, $q);
     $a_masterSchedule = [];
     if (mysqli_num_rows($scheduleResult) !== 0) {
-        while (list($scheduleDay,$scheduleIn,$scheduleOut,$scheduleDepartment) = mysqli_fetch_row($scheduleResult)) {
-            array_push($a_masterSchedule, ["day" => $scheduleDay,
+        while (list($scheduleId,$scheduleDay,$scheduleIn,$scheduleOut,$scheduleDepartment) = mysqli_fetch_row($scheduleResult)) {
+            array_push($a_masterSchedule, ["id" => $scheduleId,
+                                           "day" => $scheduleDay,
                                            "in" => $scheduleIn,
                                            "out" => $scheduleOut,
                                            "department" => $scheduleDepartment]);
