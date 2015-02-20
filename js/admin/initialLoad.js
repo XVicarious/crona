@@ -300,4 +300,14 @@ $(function() {
       }
     });
   });
+  $('#timecardButton').click(function() {
+    mode = 'timecard';
+    $('#scheduleButton').css('background-color','#ddd');
+    $(this).css('background-color','#f00');
+  });
+  $('#scheduleButton').click(function() {
+    mode = 'schedule';
+    $('#timecardButton').css('background-color','#ddd');
+    $(this).css('background-color','#f00');
+  });
 });
