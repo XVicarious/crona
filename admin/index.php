@@ -45,10 +45,10 @@ $_SESSION["lastAction"] = time();
                 <h3 class="sideNavigationCell">Options</h3>
             </div>
             <div class="row">
-                <a id="timecardButton" class="sideNavigationCell" href="#viewTimecards">Timecards</a>
+                <a id="timecardButton" class="sideNavigationCell">Timecards</a>
             </div>
             <div class="row">
-                <a id="scheduleButton" class="sideNavigationCell" onclick="mode = 'schedule'">Schedules</a>
+                <a id="scheduleButton" class="sideNavigationCell">Schedules</a>
             </div>
             <div class="row">
                 <a id="addemployeeButton" class="sideNavigationCell" href="#addEmployee">Add Employees</a>
