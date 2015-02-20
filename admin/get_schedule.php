@@ -3,6 +3,7 @@ require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
     // Use this to select the starting page
+    // todo: fringe cases where the year changes in the middle of the week.  These dates will not be fetched!
     $employee = $_GET['userId'];
     $year = $_GET['year'];
     $week = $_GET['week'];
