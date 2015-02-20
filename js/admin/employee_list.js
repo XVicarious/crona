@@ -53,7 +53,7 @@ $(function() {
     $timeDiv.spin('large', '#000');
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
     if (mode === 'schedule') {
-      fetchSchedule(model.id, 1, 2015);
+      fetchSchedule(model.id, moment().week(), moment().year());
     } else {
       getEmployee(model.id, 'this');
     }

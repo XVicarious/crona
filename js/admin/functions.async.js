@@ -196,12 +196,6 @@ function fetchSchedule(userId, week, year) {
   week = week === 'undefined' ? moment().week() : week;
   year = year === 'undefined' ? moment().year() : year;
   var Schedule = Backbone.Model.extend({});
-  /*
-  todo:
-  write custom formatter within the following parameters:
-  displays as 'h:mm a', in local timezone
-  toRaw: 'YYYY-WW-E h:mm a' -> X.  Collect the year, week, and day to make a proper timestamp
-  */
   var ScheduleList = Backbone.Collection.extend({
         model: Schedule,
         url: 'get_schedule.php?userId=' + userId +
@@ -234,6 +228,15 @@ function fetchSchedule(userId, week, year) {
           modelFormat: 'X',
           displayFormat: 'h:mm a',
           displayInUTC: false
+        }),
+        formatter: _.extend({}, Backgrid.Extension.MomentFormatter.prototype, {
+          toRaw: function(formattedValue, model) {
+            var day = model.attributes.day;
+            var builtString = year + ' ' + week + ' ' + --day + ' ' + formattedValue;
+            // Format that like I want to...
+            var mom = moment(builtString, 'YYYY WW E h:mm a');
+            return mom.format('X');
+          }
         })
       },{
         name: 'out',
@@ -242,6 +245,15 @@ function fetchSchedule(userId, week, year) {
           modelFormat: 'X',
           displayFormat: 'h:mm a',
           displayInUTC: false
+        }),
+        formatter: _.extend({}, Backgrid.Extension.MomentFormatter.prototype, {
+          toRaw: function(formattedValue, model) {
+            var day = model.attributes.day;
+            var builtString = year + ' ' + week + ' ' + --day + ' ' + formattedValue;
+            // Format that like I want to...
+            var mom = moment(builtString, 'YYYY WW E h:mm a');
+            return mom.format('X');
+          }
         })
       },{
         name: 'department',
@@ -273,20 +285,23 @@ function fetchSchedule(userId, week, year) {
       }
     }
     if (model.attributes.id) {
-      // todo: ajax to change what was edited
-      var dataString = 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name];
-      console.log(dataString);
       $.ajax({
         type: 'POST',
         url: 'timeEdit/change_schedule.php',
-        data: dataString,
-        success: function(data) {
-          console.log(data);
+        data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
+        success: function() {
           scheduleDays.fetch({reset: true});
         }
       });
     } else {
-      // todo: ajax to insert new schedule day
+      $.ajax({
+        type: 'POST',
+        url: 'timeEdit/add_schedule.php',
+        data: 'userId=' + userId + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
+        success: function() {
+          scheduleDays.fetch({reset:true});
+        }
+      });
     }
   });
   grid.render().sort('day','ascending');
