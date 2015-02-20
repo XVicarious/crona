@@ -30,7 +30,19 @@ function randomString()
     return $str;
 }
 
-$a_securityQuestions = ["What city was your mother born in?", "What is the name of the street you grew up on?", "What is then name of your first grade teacher?", "What is your father's middle name?", "What is your favorite color?", "What is your favorite food?", "What was the make and model of your first car?", "What was the name of your childhood best friend?", "What was the name of your first pet?", "What was your first phone number?", "Where did you go to primary school?", "Where did you grow up?", "Who was your first boss?"];
+$a_securityQuestions = ["What city was your mother born in?",
+                        "What is the name of the street you grew up on?",
+                        "What is then name of your first grade teacher?",
+                        "What is your father's middle name?",
+                        "What is your favorite color?",
+                        "What is your favorite food?",
+                        "What was the make and model of your first car?",
+                        "What was the name of your childhood best friend?",
+                        "What was the name of your first pet?",
+                        "What was your first phone number?",
+                        "Where did you go to primary school?",
+                        "Where did you grow up?",
+                        "Who was your first boss?"];
 require 'admin/admin_functions.php';
 $sqlConnection = createSql();
 $function = $_POST['function'];
@@ -51,7 +63,8 @@ if (isset($function)) {
             $password = $salt . $password;
             $password = sha1($password);
             $password = $salt . $password;
-            $query = "UPDATE employee_list SET user_password = '$password', user_password_set = DEFAULT WHERE user_id = $userId";
+            $query = "UPDATE employee_list SET user_password = '$password', user_password_set = DEFAULT
+                      WHERE user_id = $userId";
             mysqli_query($sqlConnection, $query);
             $query = "DELETE FROM reset_list WHERE reset_string = '$resetId'";
             mysqli_query($sqlConnection, $query);
