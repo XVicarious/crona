@@ -18,7 +18,9 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/backgrid.css">
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
+    <link rel="stylesheet" href="../css/materialize.css">
     <script src="../js/lib/jquery.js"></script>
+    <script src="../js/lib/materialize.js"></script>
     <script src="../js/lib/underscore.js"></script>
     <script src="../js/lib/backbone.js"></script>
     <script src="../js/lib/backgrid.js"></script>
@@ -35,36 +37,32 @@ $_SESSION["lastAction"] = time();
     <script src="../js/admin/initialLoad.js"></script>
 </head>
 <body class="tc">
-<div id="head"><h2 style="padding:0;margin:0;text-align:center">Crona Timestamp</h2>
-
-    <h3 style="padding:0;margin:0;text-align:center">Administrative Console</h3></div>
-<div id="container">
-    <div id="navigation">
-        <div class="sideNavigationTable">
-            <div class="row">
-                <h3 class="sideNavigationCell">Options</h3>
-            </div>
-            <div class="row">
-                <a id="timecardButton" class="sideNavigationCell">Timecards</a>
-            </div>
-            <div class="row">
-                <a id="scheduleButton" class="sideNavigationCell">Schedules</a>
-            </div>
-            <div class="row">
-                <a id="addemployeeButton" class="sideNavigationCell" href="#addEmployee">Add Employees</a>
-            </div>
-            <div class="row">
-                <a class="sideNavigationCell">System Management</a>
-            </div>
-            <div class="row">
-                <span class="sideNavigationCell">Export<form>
-                        <div id="exportC"></div>
-                        <br><input id="exportcsv" type=button value="Export CSV"></form><div
-                        id="exportScript"></div></span>
-            </div>
+<div id="head"><h2 style="padding:0;margin:0;text-align:center">Crona Timestamp</h2><h3 style="padding:0;margin:0;text-align:center">Administrative Console</h3></div>
+<div id="row">
+    <div class="col s3">
+        <div class="row">
+            <h3 class="sideNavigationCell">Options</h3>
+        </div>
+        <div class="row">
+            <a id="timecardButton" class="sideNavigationCell">Timecards</a>
+        </div>
+        <div class="row">
+            <a id="scheduleButton" class="sideNavigationCell">Schedules</a>
+        </div>
+        <div class="row">
+            <a id="addemployeeButton" class="sideNavigationCell" href="#addEmployee">Add Employees</a>
+        </div>
+        <div class="row">
+            <a class="sideNavigationCell">System Management</a>
+        </div>
+        <div class="row">
+            <span class="sideNavigationCell">Export<form>
+                    <div id="exportC"></div>
+                    <br><input id="exportcsv" type=button value="Export CSV"></form><div
+                    id="exportScript"></div></span>
         </div>
     </div>
-    <div id="ajaxDiv"></div>
+    <div id="col s9 ajaxDiv"></div>
 </div>
 <div id="dialog-confirm" class="ui-helper-hidden" title="Delete Timestamp?">
     <p>
