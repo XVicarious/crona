@@ -1,28 +1,4 @@
 <?php
-function randomSalt($useSpecial = true, $len = 8)
-{
-    $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_+-=";
-    $stringLength = strlen($chars) - 1;
-    if (!$useSpecial) {
-        $stringLength = strlen($chars - 16) - 1;
-    }
-    $str = '';
-    for ($i = 0; $i < $len; ++$i) {
-        $str .= $chars[rand(0, $stringLength)];
-    }
-    return $str;
-}
-
-function generateUsername($sqlConnection, $baseUsername, $number = 0)
-{
-    $username = $number ? $baseUsername . $number : $baseUsername;
-    $result = mysqli_query($sqlConnection, "SELECT user_name FROM employee_list WHERE user_name = '$username'");
-    if (mysqli_num_rows($result) !== 0) {
-        $username = generateUsername($sqlConnection, $baseUsername, ++$number);
-    }
-    return strtolower($username);
-}
-
 require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {

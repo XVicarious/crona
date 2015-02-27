@@ -1,13 +1,5 @@
 <?php
-
-function validateLogin($pass, $hashedPass, $salt, $hashMethod = 'sha1')
-{
-    if (function_exists('hash') && in_array($hashMethod, hash_algos())) {
-        return ($hashedPass === hash($hashMethod, $salt . $pass));
-    }
-    return ($hashedPass === sha1($salt . $pass));
-}
-
+require 'function.php';
 if ($_POST) {
     $conn = mysqli_connect("localhost", "bmaurer_pciven", "3al12of4ut25", "bmaurer_hhemployee");
     $myu = $_POST['uname'];
