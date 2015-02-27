@@ -52,7 +52,11 @@ if (isset($userId)) {
         $html_select .= "<option value=\"$i\">" . $a_securityQuestions[$i] . '</option>';
     }
     $html_select .= '</select>';
-    echo '<form id="changeSecurity">' . $h_sel1 . $html_select . '<input id="s1i" name="s1i" type=password><input id="s1ic" name="s1ic" type=password><br>' . $h_sel2 . $html_select . '<input id="s2i" name="s2i" type=password><input id="s2ic" name="s2ic" type=password><br>' . $h_sel3 . $html_select . '<input id="s3i" name="s3i" type=password><input id="s3ic" name="s3ic" type=password><br><input id="submit" type=button value="Submit"></form>';
+    echo '<form id="changeSecurity">' . $h_sel1 . $html_select .
+         '<input id="s1i" name="s1i" type=password><input id="s1ic" name="s1ic" type=password><br>' . $h_sel2 .
+         $html_select . '<input id="s2i" name="s2i" type=password><input id="s2ic" name="s2ic" type=password><br>' .
+         $h_sel3 . $html_select . '<input id="s3i" name="s3i" type=password><input id="s3ic" name="s3ic" type=password>
+         <br><input id="submit" type=button value="Submit"></form>';
     mysqli_close($sqlConnection);
 }
 ?>
