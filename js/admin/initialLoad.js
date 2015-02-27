@@ -183,27 +183,30 @@ $(function() {
         });
       }
     } else {
-      //noinspection JSUnusedGlobalSymbols
-      $('#dialog-confirm').dialog({
-        dialogClass: 'no-close',
-        resizable: false,
-        modal: true,
-        buttons: {
-          'Delete Timestamp': function() {
+      // todo: modal fires TWICE, why is this?
+      $('#modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
+      $('#modal-footer').html(
+        '<a href="#" id="modal-okay" class="waves-effect waves-light btn-flat modal-action modal-close">Okay</a>' +
+        '<a href="#" id="modal-cancel" class="waves-effect waves-light btn-flat modal-action modal-close">Cancel</a>'
+      );
+      $('#dialog').openModal({
+        dismissible: false,
+        ready: function() {
+          $('#modal-cancel').click(function() {
+            me.val(defaultTime);
+            $(this).closeModal();
+          });
+          $('#modal-okay').click(function() {
             $.ajax({
               type: 'POST',
               url: 'timeEdit/delete_stamp.php',
               data: 'sid=' + stampId + '&dtime=' + defaultTime,
               success: function() {
                 getEmployee(userId);
+                $(this).closeModal();
               }
             });
-            $(this).dialog('close');
-          },
-          Cancel: function() {
-            me.val(defaultTime);
-            $(this).dialog('close');
-          }
+          });
         }
       });
     }
@@ -300,7 +303,7 @@ $(function() {
       }
     });
   });
-  $('#timecardButton').click(function() {
+  /*$('#timecardButton').click(function() {
     mode = 'timecard';
     $('#scheduleButton').css('background-color','#ddd');
     $(this).css('background-color','#f00');
@@ -309,5 +312,5 @@ $(function() {
     mode = 'schedule';
     $('#timecardButton').css('background-color','#ddd');
     $(this).css('background-color','#f00');
-  });
+  });*/
 });

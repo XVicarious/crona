@@ -70,15 +70,17 @@ $_SESSION["lastAction"] = time();
     </nav>
     <div class="row">
         <div class="col l2 hide-on-med-and-down grey lighten-2">
-            <div class="nav-wrapper">
-                <ul>
-                    <li><a class="center-align" id="timecardButton">Timecards</a></li>
-                    <li><a class="center-align" id="scheduleButton">Schedules</a></li>
-                </ul>
-            </div>
-
-
-
+            <!-- This all becomes a 'mode'.  No longer consider separate 'tabs' -->
+            <form>
+            <p>
+                <input name="editWhat" type="radio" id="timecardButton" checked/>
+                <label for="timecardButton">Timecards</label>
+            </p>
+            <p>
+                <input name="editWhat" type="radio" id="scheduleButton"/>
+                <label for="scheduleButton">Schedules</label>
+            </p>
+            </form>
         </div>
         <div class="col s12 m12 l10 grey lighten-3">
             <div id="ajaxDiv"></div>
@@ -92,15 +94,15 @@ $_SESSION["lastAction"] = time();
         </div>
     </div>
 </footer>
-<div id="dialog-confirm" class="ui-helper-hidden" title="Delete Timestamp?">
-    <p>
-        <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-        This will delete the timestamp forever! Are you sure you want to do this?
-    </p>
+<div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard">
+    <p><div id="timecardDiv"></div></p>
 </div>
-<div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard"><p>
-
-    <div id="timecardDiv"></div>
-    </p></div>
+<div id="dialog" class="modal">
+    <div class="modal-content">
+        <h4 id="modal-title"></h4>
+        <p id="modal-text"></p>
+    </div>
+    <div id="modal-footer" class="modal-footer"></div>
+</div>
 </body>
 </html>
