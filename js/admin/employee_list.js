@@ -53,7 +53,7 @@ $(function() {
     $timeDiv.spin('large', '#000');
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
     if (mode === 'schedule') {
-      fetchSchedule(model.id, moment().week(), moment().year());
+      fetchSchedule(model.id);
     } else {
       getEmployee(model.id, 'this');
     }
@@ -75,6 +75,7 @@ $(function() {
     });
   });
   var pageableGrid = new Backgrid.Grid({
+    //className: "backgrid responsive-table",
     row: ClickableRow,
     columns: columns,
     collection: employeeListPageable

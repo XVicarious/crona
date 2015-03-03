@@ -103,20 +103,18 @@ function bindNewDate() {
       thisDay = new Date(thisDay);
       var difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
-      if (difference > DAY_LENGTH) {
-        if (difference > DAY_LENGTH * 2) {
-          $(this).datepicker({
-            dateFormat: 'yy-mm-dd',
-            showOtherMonths: true,
-            selectOtherMonths: true,
-            minDate: earlierDay,
-            maxDate: thisDay,
-            onSelect: function(date) {
-              date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
-              createStamp(userId, date);
-            }
-          });
-        }
+      if (difference > DAY_LENGTH * 2) {
+        $(this).datepicker({
+          dateFormat: 'yy-mm-dd',
+          showOtherMonths: true,
+          selectOtherMonths: true,
+          minDate: earlierDay,
+          maxDate: thisDay,
+          onSelect: function(date) {
+            date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
+            createStamp(userId, date);
+          }
+        });
       }
     }
   });
@@ -130,14 +128,12 @@ function bindNewDate() {
       thisDay = new Date(thisDay);
       var difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
-      if (difference > DAY_LENGTH) {
-        if (difference <= DAY_LENGTH * 2) {
-          thisDay = new Date(thisDay);
-          thisDay.setDate(thisDay.getDate() - 1);
-          thisDay = (thisDay.getTime() / SECOND) + 18000;
-          createStamp(userId, thisDay);
-          return false;
-        }
+      if (difference > DAY_LENGTH && difference <= DAY_LENGTH * 2) {
+        thisDay = new Date(thisDay);
+        thisDay.setDate(thisDay.getDate() - 1);
+        thisDay = (thisDay.getTime() / SECOND) + 18000;
+        createStamp(userId, thisDay);
+        return false;
       }
     }
   });
@@ -193,13 +189,13 @@ function fetchSchedule(userId, week, year) {
     return false;
   }
   // If the week or year isn't defined, get the current one
-  week = week === 'undefined' ? moment().week() : week;
-  year = year === 'undefined' ? moment().year() : year;
+  week = week || moment().week();
+  year = year || moment().year();
+  var data = {userId: userId, week: week, year: year};
   var Schedule = Backbone.Model.extend({});
   var ScheduleList = Backbone.Collection.extend({
         model: Schedule,
-        url: 'get_schedule.php?userId=' + userId +
-        '&week=' + week + '&year=' + year
+        url: 'get_schedule.php'
       }),
       columns = [{
         name: 'id',
@@ -290,7 +286,7 @@ function fetchSchedule(userId, week, year) {
         url: 'timeEdit/change_schedule.php',
         data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
         success: function() {
-          scheduleDays.fetch({reset: true});
+          scheduleDays.fetch({data: data, reset: true});
         }
       });
     } else {
@@ -299,13 +295,22 @@ function fetchSchedule(userId, week, year) {
         url: 'timeEdit/add_schedule.php',
         data: 'userId=' + userId + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
         success: function() {
-          scheduleDays.fetch({reset:true});
+          scheduleDays.fetch({data: data, reset:true});
         }
       });
     }
   });
   grid.render().sort('day','ascending');
   $schedule.html(grid.render().el);
-  scheduleDays.fetch({reset: true});
+  //$schedule.spin('large');
+  scheduleDays.fetch({data: data, reset: true});
+  $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"></i></a>');
+  /*$('#schedule-range-button').click(function() {
+    $schedule.before('<input type="date" class="datepicker" />');
+    $('.datepicker').pickadate({
+      selectMonths: true,
+      selectYears: true
+    });
+  });*/
   return true;
 }
