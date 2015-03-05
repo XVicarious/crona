@@ -1,0 +1,34 @@
+header, main, footer {
+    padding-left: 240px;
+}
+@media only screen and (max-width: 992px) {
+    header, main, footer {
+        padding-left: 0;
+    }
+}
+a.button-collapse.top-nav {
+    position: absolute;
+    top: 0;
+    float: none;
+    margin-left: 1.5rem;
+    color: #fff;
+    font-size: 32px;
+    z-index: 2;
+}
+a.button-collapse.top-nav.full {
+    line-height: 122px;
+}
+nav .nav-wrapper {
+    text-align: center;
+}
+header.login, main.login, footer.login {
+    padding: 0;
+}
+
+main {
+    padding-bottom: 20px !important;
+}
+
+footer {
+    margin-top: -20px !important;
+}
