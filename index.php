@@ -1,50 +1,79 @@
 <html>
 <head>
+    <meta name="theme-color" content="#dd2c00">
     <title>Crona Timestamp Login</title>
     <link rel="shortcut icon" href="favicon.ico"/>
-    <meta name=viewport content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/material-extra.css">
+    <script src="js/lib/jquery.js"></script>
+    <script src="js/lib/materialize.js"></script>
+    <script src="js/timeSubmit.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body>
-<div id="timeclock"></div>
-<div id="bestdiv">
-    <div id="ajaxDiv"></div>
-    <form id="formy" class="ui-widget">
-        <table id="loginForm">
-            <tr>
-                <td rowspan="2" style="width:64px">
-                    <image width="87px" height="64px" src="crona.png"></image>
-                </td>
-                <td><input style="width:100%" placeholder="Username" class="ui-corner-all" type="text" name="uname"
-                           id="uname"/></td>
-            </tr>
-            <tr>
-                <td><input style="width:100%" class="ui-corner-all" placeholder="Password" type="password" name="drowp"
-                           id="drowp"/></td>
-            </tr>
-            <tr>
-                <td colspan="2">
-                    <div id="typeRadio">
-                        <input type=radio name="loginType" value="timestamp" id="makeTimestamp" checked><label
-                            for="makeTimestamp">Timestamp</label>
-                        <input type=radio name="loginType" value="viewCards" id="viewTimestamp"><label
-                            for="viewTimestamp">View Card</label>
-                        <input type=radio name="loginType" value="cardAdmin" id="admnTimestamp"><label
-                            for="admnTimestamp">Administer</label>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <th colspan="2"><input id="submitButton" type="button" value="Submit"/></th>
-            </tr>
-        </table>
-        <p id="copy">written by: Brian Maurer and XVicarious Software Solutions</p>
-    </form>
+<header class="login">
+    <nav class="orange">
+        <div class="nav-wrapper">
+            <a class="page-title">Crona Timestamp</a>
+        </div>
+    </nav>
+</header>
+<main class="login orange lighten-5">
+    <div class="container">
+        <div class="row">
+            <div class="col s12">
+                <div id="ajaxDiv"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="mdi-action-account-circle prefix orange-text darken-1"></i>
+                <input id="uname" type="text" class="validate">
+                <label for="uname">Username</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <i class="mdi-communication-vpn-key prefix orange-text darken-1"></i>
+                <input id="drowp" type="password" class="validate">
+                <label for="drowp">Password</label>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <label for="loginType">Login Type</label>
+                <select class="browser-default" id="loginType">
+                    <option value="timestamp" selected>Timestamp</option>
+                    <option value="viewCards">View Card</option>
+                    <option value="cardAdmin">Administer</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="center">
+                    <a class="orange waves-effect waves-light btn" id="submit-button">Submit</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="login page-footer orange">
+    <div class="container"></div>
+    <div class="footer-copyright">
+        <div class="container">
+            2015 XVicarious Software Solutions
+        </div>
+    </div>
+</footer>
+<div id="bad-login" class="modal">
+    <div class="modal-content">
+        <h4>Bad Login!</h4>
+        <p class="modal-message"></p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="waves-effect waves-orange btn-flat modal-action modal-close">Okay</a>
+    </div>
 </div>
-<link rel="stylesheet" href="css/login.css"/>
-<link rel="stylesheet" href="css/jquery-ui.css"/>
-<link rel="stylesheet" href="css/jquery-ui.theme.css">
-<script defer src="js/lib/jquery.js"></script>
-<script defer src="js/lib/jquery-ui.js"></script>
-<script defer src="./js/timeSubmit.js"></script>
 </body>
 </html>
