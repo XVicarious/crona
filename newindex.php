@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="css/material-extra.css">
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/materialize.js"></script>
+    <script src="js/timeSubmit.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body>
@@ -42,7 +43,7 @@
             <div class="col s12">
                 <label for="loginType">Login Type</label>
                 <select class="browser-default" id="loginType">
-                    <option value="timecard" selected>Timestamp</option>
+                    <option value="timestamp" selected>Timestamp</option>
                     <option value="viewCards">View Card</option>
                     <option value="cardAdmin">Administer</option>
                 </select>
@@ -51,7 +52,7 @@
         <div class="row">
             <div class="col s12">
                 <div class="center">
-                    <a class="orange waves-effect waves-light btn">Submit</a>
+                    <a class="orange waves-effect waves-light btn" id="submit-button">Submit</a>
                 </div>
             </div>
         </div>
@@ -65,5 +66,14 @@
         </div>
     </div>
 </footer>
+<div id="bad-login" class="modal">
+    <div class="modal-content">
+        <h4>Bad Login!</h4>
+        <p class="modal-message"></p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="waves-effect waves-orange btn-flat modal-action modal-close">Okay</a>
+    </div>
+</div>
 </body>
 </html>
