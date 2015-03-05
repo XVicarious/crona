@@ -46,9 +46,9 @@ if ($_POST) {
                         $iquery = "INSERT INTO timestamp_list (user_id_stamp,timestamp_list.datetime)
                                    VALUES ($uid,'$now')";
                         mysqli_query($conn, $iquery);
-                        echo "Timestamp Accepted!";
+                        echo '<div id="accepted"></div>';
                     } else {
-                        echo "Timestamp <b>NOT</b> Accepted!";
+                        echo '<div id="not-accepted"></div>';
                     }
                 } elseif ($_POST["loginType"] === "cardAdmin") {
                     session_start();
@@ -60,11 +60,9 @@ if ($_POST) {
                     echo "<div id=\"b\"></div>";
                 }
             } else {
-                echo "Bad Username or Password!";
                 echo "<div id=\"badup\"></div>";
             }
         } else {
-            echo "Bad Username or Password!";
             echo "<div id=\"badup\"></div>";
         }
     } else {
