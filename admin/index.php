@@ -2,7 +2,7 @@
 session_start();
 if ($_SESSION["lastAction"] + 10 * 60 < time()) {
     session_destroy();
-    echo '<script>$(location).attr("href","http://xvss.net/time?timeout=1")</script>';
+    echo '<script>window.location.replace("http://xvss.net/devel/time?timeout=1");</script>';
 }
 $_SESSION["lastAction"] = time();
 ?>
