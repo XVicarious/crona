@@ -19,6 +19,7 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/materialize.css">
+    <link rel="stylesheet" href="../css/material-extra.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
     <script src="../js/lib/materialize.js"></script>
@@ -43,15 +44,14 @@ $_SESSION["lastAction"] = time();
     </script>
 </head>
 <body>
-<div>
-    <nav class="grey">
+<header>
+    <nav class="top-nav grey">
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo center">Crona Timestamp</a>
-            <ul id="slide-out" class="side-nav">
-                <li><a href="#!" id="timecardButton">Timecards</a></li>
-                <li><a href="#!" id="scheduleButton">Schedules</a></li>
-            </ul>
-            <a href="#" data-activates="slide-out" class="button-collapse"><i class="mdi-navigation-menu"></i></a>
+            <div class="container">
+                <div class="nav-wrapper">
+                    <a class="page-title">Crona Timestamp</a>
+                </div>
+            </div>
         </div>
         <!--<div class="col s12 m4 l3 grey lighten-2">
             <h3 class="row" >Options</h3>
@@ -68,25 +68,39 @@ $_SESSION["lastAction"] = time();
         </span>
         </div>-->
     </nav>
-    <div class="row">
-        <div class="col l2 hide-on-med-and-down grey lighten-2">
-            <!-- This all becomes a 'mode'.  No longer consider separate 'tabs' -->
-            <form>
-            <p>
-                <input name="editWhat" type="radio" id="timecardButton" checked/>
-                <label for="timecardButton">Timecards</label>
-            </p>
-            <p>
-                <input name="editWhat" type="radio" id="scheduleButton"/>
-                <label for="scheduleButton">Schedules</label>
-            </p>
-            </form>
-        </div>
-        <div class="col s12 m12 l10 grey lighten-3">
-            <div id="ajaxDiv"></div>
+    <div class="hide-on-large-only">
+        <a href="#" data-activates="nav-mobile" class="button-collapse top-nav">
+            <i class="mdi-navigation-menu"></i>
+        </a>
+    </div>
+    <ul id="nav-mobile" class="side-nav fixed">
+        <li class="logo">
+            <a id="logo-container" class="brand-logo">
+                CRONA
+            </a>
+        </li>
+        <li class="bold">
+            <a href="#" id="view-employees" class="waves-effect waves-light">Employees</a>
+        </li>
+        <li class="bold">
+            <a href="#" id="add-employees" class="waves-effect waves-light">Add Employees</a>
+        </li>
+        <li class="bold">
+            <a href="#" id="system-admin" class="waves-effect waves-light">System Administration</a>
+        </li>
+    </ul>
+</header>
+<main>
+    <div>
+        <div class="row">
+            <div class="col s12 m12 l12">
+                <div>
+                    <div id="ajaxDiv"></div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</main>
 <footer class="page-footer grey">
     <div class="footer-copyright">
         <div class="container">
