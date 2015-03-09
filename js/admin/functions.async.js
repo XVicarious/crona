@@ -5,7 +5,7 @@ function getPermissions() {
     url: 'export_permissions.php',
     success: function(data) {
       $('#exportC').html(data);
-      $('#exportcsv').click(function() {
+      $('#export-times .modal-export').click(function() {
         $.ajax({
           type: 'POST',
           url: 'export.php',
@@ -41,7 +41,11 @@ function getEmployee(id, range, extraString) {
     url: 'get_timecard.php',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
-      var $timecard = $('#timecardDiv');
+      var $timecard = $('#dialog .modal-text');
+      $('#dialog .modal-title').text("Edit Timecard");
+      $('#dialog .modal-footer').html(
+        '<a href="#" class="modal-okay waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Close</a>'
+      );
       $timecard.empty();
       $timecard.html(data);
       $('#range').val(range);
