@@ -57,6 +57,7 @@ $(function() {
     } else {
       getEmployee(model.id, 'this');
     }
+    /*
     var dialog = $('#dialog-timecard').dialog({
       modal: true,
       draggable: false,
@@ -72,6 +73,15 @@ $(function() {
     $(document).ajaxComplete(function() {
       var $dialogTC = $('#dialog-timecard');
       $dialogTC.dialog('option', 'position', $dialogTC.dialog('option', 'position'));
+    });
+    */
+    $('#dialog').openModal({
+      dismissible: false,
+      ready: function() {
+        $('#dialog .modal-cancel').click(function() {
+          $(this).closeModal();
+        });
+      }
     });
   });
   var pageableGrid = new Backgrid.Grid({
