@@ -32,3 +32,9 @@ main {
 footer {
     margin-top: -20px !important;
 }
+
+.giant-modal {
+    width: 95%;
+    max-height: 95%;
+    height: 95%;
+}
