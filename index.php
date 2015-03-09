@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/material-extra.css">
+    <link rel="stylesheet" href="css/sticky-footer.css">
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/materialize.js"></script>
     <script src="js/timeSubmit.js"></script>
@@ -26,21 +27,19 @@
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s12 l6 offset-l3">
                 <i class="mdi-action-account-circle prefix orange-text darken-1"></i>
-                <input id="uname" type="text" class="validate">
-                <label for="uname">Username</label>
+                <input id="uname" type="text" placeholder="Username" class="validate">
             </div>
         </div>
         <div class="row">
-            <div class="input-field col s12">
+            <div class="input-field col s12 l6 offset-l3">
                 <i class="mdi-communication-vpn-key prefix orange-text darken-1"></i>
-                <input id="drowp" type="password" class="validate">
-                <label for="drowp">Password</label>
+                <input id="drowp" type="password" placeholder="Password" class="validate">
             </div>
         </div>
         <div class="row">
-            <div class="col s12">
+            <div class="col s12 l6 offset-l3">
                 <label for="loginType">Login Type</label>
                 <select class="browser-default" id="loginType">
                     <option value="timestamp" selected>Timestamp</option>
@@ -50,9 +49,10 @@
             </div>
         </div>
         <div class="row">
-            <div class="col s12">
+            <div class="col s12 l6 offset-l3">
                 <div class="center">
-                    <a class="orange waves-effect waves-light btn" id="submit-button">Submit</a>
+                    <a class="cyan lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="mdi-action-lock-open right"></i></a>
+
                 </div>
             </div>
         </div>
