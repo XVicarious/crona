@@ -1,0 +1,86 @@
+.no-shadow {
+    box-shadow: none;
+}
+
+@font-face {
+    font-family: 'xvss-logo';
+    src:url('../font/xvss-logo/xvss-logo.eot?-ct7tcp');
+    src:url('../font/xvss-logo/xvss-logo.eot?#iefix-ct7tcp') format('embedded-opentype'),
+    url('../font/xvss-logo/xvss-logo.woff?-ct7tcp') format('woff'),
+    url('../font/xvss-logo/xvss-logo.ttf?-ct7tcp') format('truetype'),
+    url('../font/xvss-logo/xvss-logo.svg?-ct7tcp#xvss-logo') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.attention-image {
+    font-family: 'xvss-logo';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    /* Better Font Rendering =========== */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-logo:before {
+    content: "\e600";
+}
+
+.attention-caption {
+    font-size: 1.7rem;
+    font-weight: 500;
+    margin-top: 5px;
+    margin-bottom: 0px;
+}
+
+.attention {
+    width: 100%;
+    overflow: hidden;
+}
+
+@media only screen and (max-width: 992px) {
+    .attention {
+        width: 60%;
+        margin: 0 auto;
+        display: block;
+    }
+}
+
+.attention i {
+    font-size: 7rem;
+    display: block;
+}
+
+header {
+    height: 15%;
+}
+
+li.logo:hover {
+    background-color: transparent;
+}
+
+.bold > a {
+    font-weight: bold; }
+
+ul.side-nav.fixed {
+    overflow: hidden; }
+ul.side-nav.fixed li {
+    line-height: 44px; }
+ul.side-nav.fixed li:hover, ul.side-nav.fixed li.active {
+    background-color: rgba(0, 0, 0, 0.05); }
+ul.side-nav.fixed li a {
+    font-size: 13px; }
+ul.side-nav.fixed ul.collapsible-accordion {
+    background-color: #FFF; }
+ul.side-nav.fixed:hover {
+    overflow-y: auto; }
+
+#logo-container {
+    height: 64px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+}
+
