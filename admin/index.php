@@ -20,6 +20,8 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/materialize.css">
     <link rel="stylesheet" href="../css/material-extra.css">
+    <link rel="stylesheet" href="../css/xvss-logo.css">
+    <link rel="stylesheet" href="../css/sticky-footer.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
     <script src="../js/lib/materialize.js"></script>
@@ -74,10 +76,8 @@ $_SESSION["lastAction"] = time();
         </a>
     </div>
     <ul id="nav-mobile" class="side-nav fixed">
-        <li class="logo">
-            <a id="logo-container" class="brand-logo">
-                CRONA
-            </a>
+        <li class="logo attention">
+            <a id="logo-container"><i class="attention-image icon-logo center"></i></a>
         </li>
         <li class="bold">
             <a href="#" id="view-employees" class="waves-effect waves-light">Employees</a>
@@ -88,12 +88,15 @@ $_SESSION["lastAction"] = time();
         <li class="bold">
             <a href="#" id="system-admin" class="waves-effect waves-light">System Administration</a>
         </li>
+        <li class="bold">
+            <a href="#export-times" id="export-times-button" class="waves-effect waves-light modal-trigger">Export CSV</a>
+        </li>
     </ul>
 </header>
 <main>
     <div>
         <div class="row">
-            <div class="col s12 m12 l12">
+            <div class="col s12">
                 <div>
                     <div id="ajaxDiv"></div>
                 </div>
@@ -109,14 +112,24 @@ $_SESSION["lastAction"] = time();
     </div>
 </footer>
 <div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard">
-    <p><div id="timecardDiv"></div></p>
+    <div id="timecardDiv"></div>
 </div>
-<div id="dialog" class="modal">
+<div id="dialog" class="modal modal-fixed-footer">
     <div class="modal-content">
-        <h4 id="modal-title"></h4>
-        <p id="modal-text"></p>
+        <h4 class="modal-title"></h4>
+        <p class="modal-text"></p>
     </div>
-    <div id="modal-footer" class="modal-footer"></div>
+    <div class="modal-footer"></div>
+</div>
+<div id="export-times" class="modal">
+    <div class="modal-content">
+        <h4 class="modal-title">Export CSV For Payroll</h4>
+        <p id="exportC" class="modal-text"></p>
+    </div>
+    <div class="modal-footer">
+        <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-export">Export CSV</a>
+        <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>
+    </div>
 </div>
 </body>
 </html>
