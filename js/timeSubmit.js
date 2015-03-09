@@ -18,9 +18,10 @@ $(function() {
           $('#bad-login .modal-message').text("Bad username or password!");
           $('#bad-login').openModal();
         } else if ($('#a').length) {
-          // administrate
+          $(location).attr('href','admin');
         } else if ($('#b').length) {
-          // view card
+          //$(location).attr('href','view');
+          toast('Working on it!', 4000);
         } else if ($('#accepted').length) {
           toast('Timestamp Accepted!', 4000, 'toasty', function() {
             $('#uname').val('');
