@@ -43,10 +43,10 @@ if (isset($administrativeId)) {
             }
             $ak_companyCodes = array_keys($companyCodes);
         }
-        echo '<select id="companyCode">';
+        echo '<select id="companyCode" class="browser-default">';
         foreach ($ak_companyCodes as $c) {
             $t_name = $companyCodes[$c];
-            echo "<option value=\"$c\">[$c] " . substr($t_name, 0, 11) . "...</option>";
+            echo "<option value=\"$c\">[$c] " . $t_name . "</option>";
         }
         echo '</select>';
     }
