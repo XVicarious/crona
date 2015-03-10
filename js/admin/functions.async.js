@@ -1,4 +1,4 @@
-var SECOND = 1000, DAY_LENGTH = 86400000;
+var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400;
 function getPermissions() {
   $.ajax({
     type: 'POST',
@@ -132,6 +132,7 @@ function bindNewDate() {
       if (difference > DAY_LENGTH && difference <= DAY_LENGTH * 2) {
         thisDay = new Date(thisDay);
         thisDay.setDate(thisDay.getDate() - 1);
+        // todo: why am I adding 5 hours to this in seconds?
         thisDay = (thisDay.getTime() / SECOND) + 18000;
         createStamp(userId, thisDay);
         return false;
@@ -145,7 +146,7 @@ function bindNewDate() {
       if ($('#range').val() === 'specificDate') {
         date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
         var userId = $('#timecard').attr('user-id'),
-          date1 = date + 86399,
+          date1 = date + (DAY_LENGTH_SECONDS - 1),
           extraString = '&date0=' + date + '&date1=' + date1;
         getEmployee({id: userId, range: 'specificDate', extraString: extraString});
       }
@@ -162,7 +163,7 @@ function bindNewDate() {
     onSelect: function(date) {
       var userId = $('#timecard').attr('user-id'),
         date0 = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', $('#r').val())) / SECOND,
-        date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + 86400,
+        date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + DAY_LENGTH_SECONDS,
         extraString = '&date0=' + date0 + '&date1=' + date1;
       getEmployee({id: userId, range: 'specificDate', extraString: extraString});
     }
@@ -265,7 +266,7 @@ function fetchSchedule(parameters) {
         collection: scheduleDays
       }),
       $schedule = $('#timecardDiv');
-  grid.listenTo(scheduleDays, "backgrid:edited", function(model, column, command) {
+  grid.listenTo(scheduleDays, "backgrid:edited", function (model, column) {
     if (column.attributes.name !== 'department') {
       // we need in if out, and out if in
       var siblingName = column.attributes.name === 'in' ? 'out' : 'in';
