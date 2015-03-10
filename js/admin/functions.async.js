@@ -5,6 +5,7 @@ function getPermissions() {
     url: 'export_permissions.php',
     success: function(data) {
       $('#exportC').html(data);
+      // todo: doesn't successfully export the script, why?
       $('#export-times .modal-export').click(function() {
         $.ajax({
           type: 'POST',
@@ -24,7 +25,6 @@ function rowClear(rowClass) {
       return false;
     }
   });
-  //noinspection FunctionWithMultipleReturnPointsJS
   $('select.' + rowClass).each(function() {
     if ($(this).val() !== null) {
       isClear = false;
@@ -33,7 +33,10 @@ function rowClear(rowClass) {
   });
   return isClear;
 }
-function getEmployee(id, range, extraString) {
+function getEmployee(parameters) {
+  var id = parameters.id;
+  var range = parameters.range;
+  var extraString = parameters.extraString;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
   $.ajax({
@@ -41,13 +44,7 @@ function getEmployee(id, range, extraString) {
     url: 'get_timecard.php',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
-      var $timecard = $('#dialog .modal-text');
-      $('#dialog .modal-title').text("Edit Timecard");
-      $('#dialog .modal-footer').html(
-        '<a href="#" class="modal-okay waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Close</a>'
-      );
-      $timecard.empty();
-      $timecard.html(data);
+      $('#ajaxDiv').html(data);
       $('#range').val(range);
       bindNewDate();
     }
@@ -59,7 +56,7 @@ function createStamp(userId, stamp) {
     url: 'timeEdit/create_stamp.php',
     data: 'user=' + userId + '&date=' + stamp,
     success: function() {
-      getEmployee(userId);
+      getEmployee({id: userId});
     }
   });
 }
@@ -84,7 +81,7 @@ function bindNewDate() {
             type: 'POST',
             url: 'timeEdit/create_stamp.php',
             data: 'user=' + userId + '&date=' + date,
-            success: getEmployee(userId)
+            success: getEmployee({id: userId})
           });
         }
       });
@@ -150,7 +147,7 @@ function bindNewDate() {
         var userId = $('#timecard').attr('user-id'),
           date1 = date + 86399,
           extraString = '&date0=' + date + '&date1=' + date1;
-        getEmployee(userId, 'specificDate', extraString);
+        getEmployee({id: userId, range: 'specificDate', extraString: extraString});
       }
     },
     onClose: function() {
@@ -167,7 +164,7 @@ function bindNewDate() {
         date0 = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', $('#r').val())) / SECOND,
         date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + 86400,
         extraString = '&date0=' + date0 + '&date1=' + date1;
-      getEmployee(userId, 'specificDate', extraString);
+      getEmployee({id: userId, range: 'specificDate', extraString: extraString});
     }
   });
   $('#range').blur(function() {
@@ -186,8 +183,10 @@ function validMoment(timestamp) {
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
-
-function fetchSchedule(userId, week, year) {
+function fetchSchedule(parameters) {
+  var userId = parameters.userId;
+  var week = parameters.week;
+  var year = parameters.year;
   // It is useless if we weren't provided a userId
   if (userId === 'undefined') {
     return false;
@@ -309,12 +308,73 @@ function fetchSchedule(userId, week, year) {
   //$schedule.spin('large');
   scheduleDays.fetch({data: data, reset: true});
   $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"></i></a>');
-  /*$('#schedule-range-button').click(function() {
-    $schedule.before('<input type="date" class="datepicker" />');
-    $('.datepicker').pickadate({
-      selectMonths: true,
-      selectYears: true
-    });
-  });*/
   return true;
+}
+function getEmployees() {
+  var EmployeeList = Backbone.Model.extend({});
+  var EmployeeListPageable = Backbone.PageableCollection.extend({
+    model: EmployeeList,
+    url: 'get_employees.json.php',
+    state: {
+      pageSize: 10
+    },
+    mode: 'client'
+  });
+  var employeeListPageable = new EmployeeListPageable();
+  var columns = [{
+    name: 'id',
+    renderable: false,
+    cell: Backgrid.IntegerCell.extend({
+      orderSeparator: ''
+    }),
+    editable: false
+  }, {
+    name: 'adpid',
+    label: 'ADP ID',
+    cell: Backgrid.IntegerCell.extend({
+      orderSeparator: ''
+    }),
+    editable: false
+  }, {
+    name: 'name',
+    label: 'Employee Name (Last, First)',
+    cell: 'string',
+    editable: false
+  }, {
+    name: 'companycode',
+    label: 'Company Code',
+    cell: 'string',
+    editable: false
+  }, {
+    name: 'departmentcode',
+    label: 'Department Code',
+    cell: Backgrid.IntegerCell.extend({
+      orderSeparator: ''
+    }),
+    editable: false
+  }];
+  var ClickableRow = Backgrid.Row.extend({
+    events: {'click': 'onClick'},
+    onClick: function() {
+      Backbone.trigger('rowclicked', this.model);
+    }
+  });
+  Backbone.on('rowclicked', function(model) {
+    var $timeDiv = $('#timecardDiv');
+    $timeDiv.empty();
+    $timeDiv.spin('large', '#000');
+    $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
+    if (mode === 'schedule') {
+      fetchSchedule({userId: model.id});
+    } else {
+      getEmployee({id: model.id, range: 'this'});
+    }
+  });
+  var pageableGrid = new Backgrid.Grid({
+    row: ClickableRow,
+    columns: columns,
+    collection: employeeListPageable
+  }), $employeeList = $('#ajaxDiv');
+  $employeeList.html(pageableGrid.render().el);
+  employeeListPageable.getFirstPage({fetch: true});
 }
