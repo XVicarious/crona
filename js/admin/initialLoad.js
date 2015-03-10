@@ -1,9 +1,29 @@
-/* global getPermissions getEmployee rowClear */
 var eCounter = 0,
-  mode = '',
-  i = 0,
-  companyCodes = [["48N", "HNB Venture Ptrs LLC"], ["49C", "Hampton Inn Boston/Natick"], ["49D", "Crowne Plaza Boston"], ["49E", "Holiday Inn Somervil"], ["7IS", "Skybokx 109 Natick"], ["9NI", "Hart Hotels DLC, LLC"], ["ANY", "FLH Development, LLC"], ["FB1", "Madison Beach Hotel"], ["GE3", "Distinctive Hospitality Group"], ["GG8", "Seneca Market 1"], ["H4G", "DDH Hotel Mystic LLC"], ["HUG", "ATA Associates"], ["HXH", "Portland Harbor Hotel"], ["KZH", "Clayton Harbor Hotel"], ["L99", "Lenroc, L.P."], ["NPJ", "WPH Midtown Associates"], ["NPM", "WPH Airport Associates"], ["PPP", "Golden Triangle Associates"], ["Q56", "Hart Management Group"], ["RK3", "HBK Restaurant LLC"], ["ZVT", "Twenty Flint Rd LLC"]];
+    mode = '',
+    i = 0,
+    companyCodes = [["48N", "HNB Venture Ptrs LLC"],
+                    ["49C", "Hampton Inn Boston/Natick"],
+                    ["49D", "Crowne Plaza Boston"],
+                    ["49E", "Holiday Inn Somervil"],
+                    ["7IS", "Skybokx 109 Natick"],
+                    ["9NI", "Hart Hotels DLC, LLC"],
+                    ["ANY", "FLH Development, LLC"],
+                    ["FB1", "Madison Beach Hotel"],
+                    ["GE3", "Distinctive Hospitality Group"],
+                    ["GG8", "Seneca Market 1"],
+                    ["H4G", "DDH Hotel Mystic LLC"],
+                    ["HUG", "ATA Associates"],
+                    ["HXH", "Portland Harbor Hotel"],
+                    ["KZH", "Clayton Harbor Hotel"],
+                    ["L99", "Lenroc, L.P."],
+                    ["NPJ", "WPH Midtown Associates"],
+                    ["NPM", "WPH Airport Associates"],
+                    ["PPP", "Golden Triangle Associates"],
+                    ["Q56", "Hart Management Group"],
+                    ["RK3", "HBK Restaurant LLC"],
+                    ["ZVT", "Twenty Flint Rd LLC"]];
 $(function() {
+  getEmployees();
   getPermissions();
   $(".modal-trigger").leanModal();
   $('#addemployeeButton').click(function() {
@@ -126,9 +146,9 @@ $(function() {
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
       $('#r').datepicker('show');
     } else if ($(this).val() === 'w2d') {
-      getEmployee(userId, 'w2d');
+      getEmployee({id: userId, range: 'w2d'});
     } else {
-      getEmployee(userId);
+      getEmployee({id: userId});
     }
   });
   $(document).on('click', 'input.addButton', function() {
@@ -179,7 +199,7 @@ $(function() {
           url: 'timeEdit/change_stamp.php',
           data: 'sid=' + stampId + '&time=' + trueTime + '&dtime=' + defaultTime,
           success: function() {
-            getEmployee(userId);
+            getEmployee({id: userId});
           }
         });
       }
@@ -194,9 +214,8 @@ $(function() {
         dismissible: false,
         ready: function() {
           $('#dialog .modal-cancel').click(function() {
-            console.log("meeeeee");
             me.val(defaultTime);
-            getEmployee(userId);
+            getEmployee({id: userId});
           });
           $('#dialog .modal-okay').click(function() {
             $.ajax({
@@ -204,7 +223,7 @@ $(function() {
               url: 'timeEdit/delete_stamp.php',
               data: 'sid=' + stampId + '&dtime=' + defaultTime,
               success: function() {
-                getEmployee(userId);
+                getEmployee({id: userId});
               }
             });
           });
@@ -212,7 +231,6 @@ $(function() {
       });
     }
   });
-  //noinspection JSUnusedGlobalSymbols
   $.contextMenu({
     selector: '.context-menu',
     className: 'timeMenu',
@@ -235,7 +253,7 @@ $(function() {
                     url: 'timeEdit/change_department.php',
                     data: 'sid=' + stampId + '&modifier=' + $(this).val(),
                     success: function() {
-                      getEmployee(userId);
+                      getEmployee({id: userId});
                     }
                   });
                 }
@@ -300,18 +318,11 @@ $(function() {
       url: 'timeEdit/change_modifier.php',
       data: 'sids=' + stampString + '&modifier=' + modifier,
       success: function() {
-        getEmployee(userId);
+        getEmployee({id: userId});
       }
     });
   });
-  /*$('#timecardButton').click(function() {
-    mode = 'timecard';
-    $('#scheduleButton').css('background-color','#ddd');
-    $(this).css('background-color','#f00');
+  $('#view-employees').click(function() {
+    getEmployees();
   });
-  $('#scheduleButton').click(function() {
-    mode = 'schedule';
-    $('#timecardButton').css('background-color','#ddd');
-    $(this).css('background-color','#f00');
-  });*/
 });
