@@ -37,7 +37,6 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/spin.js"></script>
     <script src="../js/lib/jquery.spin.js"></script>
     <script src="../js/admin/functions.async.js"></script>
-    <script src="../js/admin/employee_list.js"></script>
     <script src="../js/admin/initialLoad.js"></script>
     <script>
         $(function() {
