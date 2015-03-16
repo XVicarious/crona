@@ -1,6 +1,8 @@
 var eCounter = 0,
     mode = '',
     i = 0,
+    offsetInSeconds = (new Date()).getTimezoneOffset() * 60,
+    offsetInHours = offsetInSeconds / 3600,
     companyCodes = [["48N", "HNB Venture Ptrs LLC"],
                     ["49C", "Hampton Inn Boston/Natick"],
                     ["49D", "Crowne Plaza Boston"],
@@ -171,7 +173,7 @@ $(function() {
     if (e.keyCode === 13) {
       $(this).blur();
     } else {
-      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -0500';
+      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -0' + offsetInHours + '00';
       $(this).css('color', moment(validTimestamp).isValid() ? 'inherit' : 'red');
     }
   });
@@ -189,7 +191,7 @@ $(function() {
       defaultTime = $(this).attr('default-time');
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
-        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -0500';
+        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -0' + offsetInHours + '00';
         if (!moment(validTimestamp).isValid()) {
           return;
         }
@@ -204,20 +206,20 @@ $(function() {
         });
       }
     } else {
-      // todo: modal fires TWICE, why is this?
-      $('#dialog .modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
-      $('#dialog .modal-footer').html(
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-okay">Okay</a>' +
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-cancel">Cancel</a>'
+      var confirmModal = $('#dialog');
+      confirmModal.find('.modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
+      confirmModal.find('.modal-footer').html(
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay</a>' +
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>'
       );
-      $('#dialog').openModal({
+      confirmModal.openModal({
         dismissible: false,
         ready: function() {
-          $('#dialog .modal-cancel').click(function() {
+          confirmModal.find('.modal-cancel').click(function() {
             me.val(defaultTime);
             getEmployee({id: userId});
           });
-          $('#dialog .modal-okay').click(function() {
+          confirmModal.find('.modal-okay').click(function() {
             $.ajax({
               type: 'POST',
               url: 'timeEdit/delete_stamp.php',
