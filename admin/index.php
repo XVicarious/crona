@@ -16,11 +16,11 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/jquery-ui.theme.css">
     <link rel="stylesheet" href="../css/jquery.contextMenu.css">
     <link rel="stylesheet" href="../css/backgrid.css">
-    <link rel="stylesheet" href="../css/timecard.css">
-    <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/materialize.css">
     <link rel="stylesheet" href="../css/material-extra.css">
     <link rel="stylesheet" href="../css/xvss-logo.css">
+    <link rel="stylesheet" href="../css/timecard.css">
+    <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/sticky-footer.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
