@@ -1,4 +1,5 @@
 <?php
+date_default_timezone_set('America/New_York'); //todo: make timezone configurable
 require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
@@ -32,8 +33,10 @@ if (sessionCheck()) {
     $timestamps = [];
     while (list($stampId, $timestamp, $modifier, $depart) = mysqli_fetch_row($queryResult)) {
         $lastTimestamp = end($timestamps);
-        $thisDay = date('Y-m-d', strtotime($timestamp) - 18000);
-        $thisTime = date('h:i:s a', strtotime($timestamp) - 18000);
+        $dateEDT = new DateTimeZone('America/New_York'); // todo: make timezone configurable
+        $offsetSeconds = $dateEDT->getOffset(new DateTime("now"));
+        $thisDay = date('Y-m-d', strtotime($timestamp) + $offsetSeconds);
+        $thisTime = date('h:i:s a', strtotime($timestamp) + $offsetSeconds);
         if ($lastTimestamp['date'] === $thisDay && count($lastTimestamp) - 1 < 6) {
             $timestamps[count($timestamps) - 1]['date'] = $thisDay;
             array_push($timestamps[count($timestamps) - 1], [$stampId, $thisTime, $modifier, $depart]);
