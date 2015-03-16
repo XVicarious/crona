@@ -1,4 +1,5 @@
 var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400;
+
 function getPermissions() {
   $.ajax({
     type: 'POST',
@@ -6,7 +7,7 @@ function getPermissions() {
     success: function(data) {
       $('#exportC').html(data);
       // todo: doesn't successfully export the script, why?
-      $('#export-times .modal-export').click(function() {
+      $('#export-times').find('.modal-export').click(function() {
         $.ajax({
           type: 'POST',
           url: 'export.php',
@@ -50,6 +51,7 @@ function getEmployee(parameters) {
     }
   });
 }
+
 function createStamp(userId, stamp) {
   $.ajax({
     type: 'POST',
@@ -132,8 +134,7 @@ function bindNewDate() {
       if (difference > DAY_LENGTH && difference <= DAY_LENGTH * 2) {
         thisDay = new Date(thisDay);
         thisDay.setDate(thisDay.getDate() - 1);
-        // todo: why am I adding 5 hours to this in seconds?
-        thisDay = (thisDay.getTime() / SECOND) + 18000;
+        thisDay = (thisDay.getTime() / SECOND) + offsetInSeconds;
         createStamp(userId, thisDay);
         return false;
       }

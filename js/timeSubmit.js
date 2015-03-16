@@ -14,9 +14,11 @@ $(function() {
       data: dataString,
       success: function(data) {
         $('#ajaxDiv').html(data);
+        var badLogin = $('#bad-login');
+        var badLoginMessage = badLogin.find('.modal-message');
         if ($('#badup').length) {
-          $('#bad-login .modal-message').text("Bad username or password!");
-          $('#bad-login').openModal();
+          badLoginMessage.text("Bad username or password!");
+          badLogin.openModal();
         } else if ($('#a').length) {
           $(location).attr('href','admin');
         } else if ($('#b').length) {
@@ -28,8 +30,8 @@ $(function() {
             $('#drowp').val('');
           });
         } else if ($('#not-accepted').length) {
-          $('#bad-login .modal-message').html('Your timestamp was <b>NOT</b> accepted.<br>This is usually because you\'re not on an approved IP address.');
-          $('#bad-login').openModal();
+          badLoginMessage.html('Your timestamp was <b>NOT</b> accepted.<br>This is usually because you\'re not on an approved IP address.');
+          badLogin.openModal();
         }
       }
     });
