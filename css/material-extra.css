@@ -33,8 +33,6 @@ footer {
     margin-top: -20px !important;
 }
 
-.giant-modal {
-    width: 95%;
-    max-height: 95%;
-    height: 95%;
+div.col.s12 {
+    padding-top: 0.75rem;
 }
