@@ -1,5 +1,4 @@
 $(function() {
-  //noinspection FunctionWithMultipleReturnPointsJS
   $('#submit-button').click(function() {
     var username = $('#uname'),
       password = $('input#drowp');
