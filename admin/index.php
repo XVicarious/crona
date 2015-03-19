@@ -88,7 +88,9 @@ $_SESSION["lastAction"] = time();
             <a href="#" id="system-admin" class="waves-effect waves-light">System Administration</a>
         </li>
         <li class="bold">
-            <a href="#export-times" id="export-times-button" class="waves-effect waves-light modal-trigger">Export CSV</a>
+            <a href="#export-times" id="export-times-button" class="waves-effect waves-light modal-trigger">
+                Export CSV
+            </a>
         </li>
     </ul>
 </header>
