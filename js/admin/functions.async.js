@@ -5,15 +5,11 @@ function getPermissions() {
     type: 'POST',
     url: 'export_permissions.php',
     success: function(data) {
+      console.log(data);
       $('#exportC').html(data);
       // todo: doesn't successfully export the script, why?
       $('#export-times').find('.modal-export').click(function() {
-        $.ajax({
-          type: 'POST',
-          url: 'export.php',
-          data: 'companyCode=' + $('#companyCode').val(),
-          success: $('#exportScript').html(data)
-        });
+        $.getScript('export.php?companyCode='+$('#companyCode').val());
       });
     }
   });

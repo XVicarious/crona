@@ -13,8 +13,7 @@ if (isset($administrativeId)) {
             $a_adminperms = unserialize($sa_adminperms);
             $a_codes = array_keys($a_adminperms);
         }
-        $exportCompany = $_POST['companyCode'];
-        echo $exportCompany;
+        $exportCompany = $_GET['companyCode'];
         // To prevent spoofing, make sure the person has permissions, if not end it
         if ($sa_adminperms !== "all" && !in_array($exportCompany, $a_codes)) {
             return;
@@ -114,7 +113,7 @@ if (isset($administrativeId)) {
                     fputcsv($csv, $fields);
                 }
                 fclose($csv);
-                echo "<script>window.open(\"http://xvss.net/time/admin/$fileName\")</script>";
+                echo "window.open(\"http://xvss.net/devel/time/admin/$fileName\")";
             }
         }
     }
