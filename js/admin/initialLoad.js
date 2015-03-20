@@ -146,7 +146,7 @@ $(function() {
   $(document).on('change', '#range', function() {
     var userId = $('#timecard').attr('user-id');
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
-      $('#r').datepicker('show');
+      picker.open(false);
     } else if ($(this).val() === 'w2d') {
       getEmployee({id: userId, range: 'w2d'});
     } else {

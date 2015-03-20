@@ -1,11 +1,10 @@
-var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400;
+var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400, $inputPicker = null, picker = null;
 
 function getPermissions() {
   $.ajax({
     type: 'POST',
     url: 'export_permissions.php',
     success: function(data) {
-      console.log(data);
       $('#exportC').html(data);
       // todo: doesn't successfully export the script, why?
       $('#export-times').find('.modal-export').click(function() {
@@ -13,6 +12,38 @@ function getPermissions() {
       });
     }
   });
+}
+function getOffsetString() {
+  var offsetMinutes = (new Date()).getTimezoneOffset();
+  var absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes);
+  var offsetString = '';
+  var offsetHourString = '';
+  var offsetMinuteString = '';
+  var extraOffset = 0;
+  if (absoluteOffsetMinutes) {
+    offsetString = '-';
+    absoluteOffsetMinutes = offsetMinutes;
+  } else {
+    offsetString = '+';
+    absoluteOffsetMinutes = Math.abs(offsetMinutes);
+  }
+  var offset = absoluteOffsetMinutes / 60;
+  var flooredOffset = Math.floor(offset);
+  if (flooredOffset < 10) {
+    offsetHourString = '0'+flooredOffset;
+  } else {
+    offsetHourString = ''+flooredOffset;
+  }
+  if (flooredOffset !== offset) {
+    extraOffset = absoluteOffsetMinutes - (flooredOffset * 60);
+  }
+  if (extraOffset < 10) {
+    offsetMinuteString = '00';
+  } else {
+    offsetMinuteString = ''+extraOffset;
+  }
+  offsetString += offsetHourString + offsetMinuteString;
+  return offsetString;
 }
 function rowClear(rowClass) {
   var isClear = true;
@@ -42,6 +73,20 @@ function getEmployee(parameters) {
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       $('#ajaxDiv').html(data);
+      $inputPicker = $('.datepicker').pickadate({
+        selectMonths: true,
+        selectYears: true,
+        onSet: function(thing, value) {
+          var fixedDate = this.get('value');
+          fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
+          var endOfDay = fixedDate + (DAY_LENGTH_SECONDS - 1);
+          var extraString = '&date0='+fixedDate+'&date1='+endOfDay;
+          getEmployee({id: id, range: 'specificDate', extraString: extraString})
+          this.close();
+        }
+      });
+      $inputPicker.css('display','none');
+      picker = $inputPicker.pickadate('picker');
       $('#range').val(range);
       bindNewDate();
     }
@@ -136,6 +181,7 @@ function bindNewDate() {
       }
     }
   });
+  /*
   var rDate = $('#r');
   rDate.datepicker({
     dateFormat: 'yy-mm-dd',
@@ -168,6 +214,7 @@ function bindNewDate() {
   $('#range').blur(function() {
     $(this).change();
   });
+  */
 }
 function validateEmail(email) {
   return email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)[1];
