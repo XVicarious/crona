@@ -9,7 +9,8 @@ table#timecard {
 table#timecard, table#timecard tr, table#timecard td, table#timecard th {
     border: thin solid #000
 }
-table#timecard select#range {
+select#range {
+    width: auto !important;
     float: right
 }
 table#timecard tr#topTR {
