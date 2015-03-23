@@ -1,4 +1,4 @@
-var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400, $inputPicker = null, picker = null;
+var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400, $inputPicker = [], picker = [], saveTheDate = 0;
 
 function getPermissions() {
   $.ajax({
@@ -6,7 +6,6 @@ function getPermissions() {
     url: 'export_permissions.php',
     success: function(data) {
       $('#exportC').html(data);
-      // todo: doesn't successfully export the script, why?
       $('#export-times').find('.modal-export').click(function() {
         $.getScript('export.php?companyCode='+$('#companyCode').val());
       });
@@ -17,8 +16,6 @@ function getOffsetString() {
   var offsetMinutes = (new Date()).getTimezoneOffset();
   var absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes);
   var offsetString = '';
-  var offsetHourString = '';
-  var offsetMinuteString = '';
   var extraOffset = 0;
   if (absoluteOffsetMinutes) {
     offsetString = '-';
@@ -30,19 +27,18 @@ function getOffsetString() {
   var offset = absoluteOffsetMinutes / 60;
   var flooredOffset = Math.floor(offset);
   if (flooredOffset < 10) {
-    offsetHourString = '0'+flooredOffset;
+    offsetString += '0'+flooredOffset;
   } else {
-    offsetHourString = ''+flooredOffset;
+    offsetString += ''+flooredOffset;
   }
   if (flooredOffset !== offset) {
     extraOffset = absoluteOffsetMinutes - (flooredOffset * 60);
   }
   if (extraOffset < 10) {
-    offsetMinuteString = '00';
+    offsetString += '00';
   } else {
-    offsetMinuteString = ''+extraOffset;
+    offsetString += ''+extraOffset;
   }
-  offsetString += offsetHourString + offsetMinuteString;
   return offsetString;
 }
 function rowClear(rowClass) {
@@ -73,20 +69,45 @@ function getEmployee(parameters) {
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       $('#ajaxDiv').html(data);
-      $inputPicker = $('.datepicker').pickadate({
+      var datepicker = $('#date0');
+      var secondDate = $('#date1');
+      $inputPicker[0] = datepicker.pickadate({
         selectMonths: true,
         selectYears: true,
-        onSet: function(thing, value) {
-          var fixedDate = this.get('value');
-          fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
-          var endOfDay = fixedDate + (DAY_LENGTH_SECONDS - 1);
-          var extraString = '&date0='+fixedDate+'&date1='+endOfDay;
-          getEmployee({id: id, range: 'specificDate', extraString: extraString})
-          this.close();
+        onSet: function(thing) {
+          if (thing.select) {
+            var fixedDate = this.get('value');
+            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
+            if ($('#range').children(':selected').val() === 'specificDate') {
+              var endOfDay = fixedDate + (DAY_LENGTH_SECONDS - 1);
+              var extraString = '&date0=' + fixedDate + '&date1=' + endOfDay;
+              getEmployee({id: id, range: 'specificDate', extraString: extraString});
+            } else if ($('#range').children(':selected').val() === 'special') {
+              saveTheDate = fixedDate;
+              picker[1].open(false);
+              this.close();
+            }
+          }
         }
       });
-      $inputPicker.css('display','none');
-      picker = $inputPicker.pickadate('picker');
+      $inputPicker[1] = secondDate.pickadate({
+        selectMonths: true,
+        selectYears: true,
+        onSet: function(thing) {
+          if (thing.select) {
+            var fixedDate = this.get('value');
+            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (DAY_LENGTH_SECONDS - 1);
+            var extraString = '&date0='+saveTheDate+'&date1='+fixedDate;
+            console.log(extraString);
+            getEmployee({id: id, range: 'specificDate', extraString: extraString});
+            this.close();
+          }
+        }
+      });
+      $inputPicker[1].css('display','none');
+      picker[1] = $inputPicker[1].pickadate('picker');
+      $inputPicker[0].css('display','none');
+      picker[0] = $inputPicker[0].pickadate('picker');
       $('#range').val(range);
       bindNewDate();
     }
