@@ -56,13 +56,14 @@ if (sessionCheck()) {
     }
 
     $addAfter = date($dateFormat, strtotime($timestamps[count($timestamps) - 1]['date'] . ' 00:00:00 +1 days'));
-    $echoMe = "<input type=\"date\" class=\"datepicker\"><table id=\"timecard\" user-start=\"$userstart\" user-id=\"$employeeId\"><tr id=\"topTR\">
-               <th id=\"topTH\" colspan=\"100%\">$userfirst $userlast's Timecard<select id=\"range\"
+    $echoMe = "<input type=\"date\" id=\"date0\" class=\"datepicker\"><input type=\"date\" id=\"date1\"
+                class=\"datepicker\"><table id=\"timecard\" user-start=\"$userstart\" user-id=\"$employeeId\">
+               <tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userfirst $userlast's Timecard<select id=\"range\"
                 class=\"browser-default\"><option value=\"last\">Previous Period</option><option value=\"this\"
                 selected>Current Period</option><option value=\"next\">Next Period</option><option class=\"sp\"
                 value=\"specificDate\">Specific Date</option><option value=\"w2d\">Week to Date</option><option
-                value=\"special\">Specific Period</option></select></th></tr><tr id=\"headings\"><th></th>
-                <th>Date</th><th colspan=\"100%\"></th></tr>";
+                value=\"special\">Specific Period</option></select></th></tr><tr id=\"headings\"><th></th><th>Date</th>
+               <th colspan=\"100%\"></th></tr>";
     $rowNumber = 0;
     $runningTotal = 0;
     foreach ($timestamps as $timestamp) {
@@ -158,8 +159,3 @@ if (sessionCheck()) {
     mysqli_close($sqlConnection);
     echo $echoMe;
 }
-
-/*
- * <input id=\"r\" class=\"datepicker\" size=\"0\" style=\"width:0;height:0\"/><input id=\"r2\"
-                size=\"0\" style=\"width:0;height:0\"/>
- */
