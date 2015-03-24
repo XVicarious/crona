@@ -1,11 +1,11 @@
-function gup(name) {
+function getByName(name) {
   name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
   var regexS = '[\\?&]' + name + '=([^&#]*)', regex = new RegExp(regexS), results = regex.exec(window.location.href);
   return (results === null ? '' : results[1]);
 }
 
 $(function() {
-  if (gup('c') === '' && gup('r') === 'go') {
+  if (getByName('c') === '' && getByName('r') === 'go') {
     $.ajax({
       type: 'POST',
       url: 'resetutil.php',
@@ -13,11 +13,11 @@ $(function() {
         $('#ajaxDiv').html(data).css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
       }
     });
-  } else if (gup('c')) {
+  } else if (getByName('c')) {
     $.ajax({
       type: 'GET',
       url: 'resetutil.php',
-      data: 'c=' + gup('c'),
+      data: 'c=' + getByName('c'),
       success: function(data) {
         var loginForm = $('#loginForm');
         $('#ajaxDiv').html(data).css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
