@@ -78,11 +78,12 @@ function getEmployee(parameters) {
           if (thing.select) {
             var fixedDate = this.get('value');
             fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
-            if ($('#range').children(':selected').val() === 'specificDate') {
+            var rangeChildren = $('#range').children(':selected');
+            if (rangeChildren.val() === 'specificDate') {
               var endOfDay = fixedDate + (DAY_LENGTH_SECONDS - 1);
               var extraString = '&date0=' + fixedDate + '&date1=' + endOfDay;
               getEmployee({id: id, range: 'specificDate', extraString: extraString});
-            } else if ($('#range').children(':selected').val() === 'special') {
+            } else if (rangeChildren.val() === 'special') {
               saveTheDate = fixedDate;
               picker[1].open(false);
               this.close();
@@ -98,7 +99,6 @@ function getEmployee(parameters) {
             var fixedDate = this.get('value');
             fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (DAY_LENGTH_SECONDS - 1);
             var extraString = '&date0='+saveTheDate+'&date1='+fixedDate;
-            console.log(extraString);
             getEmployee({id: id, range: 'specificDate', extraString: extraString});
             this.close();
           }
@@ -244,7 +244,9 @@ function validMoment(timestamp) {
   var validFormats = ['YYYY/MM/DD', 'YY/MM/DD', 'MM/DD/YYYY', 'MM/DD/YY', 'DD/MM/YYYY', 'DD/MM/YY'];
   var isValid = false; // we always assume they did it wrong
   for (var format in validFormats) {
-    isValid = isValid || moment(timestamp, format);
+    if (validFormats.hasOwnProperty(format)) {
+      isValid = isValid || moment(timestamp, format);
+    }
   }
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
