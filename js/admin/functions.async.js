@@ -12,6 +12,7 @@ function getPermissions() {
     }
   });
 }
+
 function getOffsetString() {
   var offsetMinutes = (new Date()).getTimezoneOffset();
   var absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes);
@@ -41,6 +42,7 @@ function getOffsetString() {
   }
   return offsetString;
 }
+
 function rowClear(rowClass) {
   var isClear = true;
   $('input.' + rowClass).each(function() {
@@ -57,6 +59,7 @@ function rowClear(rowClass) {
   });
   return isClear;
 }
+
 function getEmployee(parameters) {
   var id = parameters.id;
   var range = parameters.range;
@@ -65,7 +68,7 @@ function getEmployee(parameters) {
   extraString = extraString || '';
   $.ajax({
     type: 'POST',
-    url: 'get_timecard.php',
+    url: 'get_timecard_2.php',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       $('#ajaxDiv').html(data);
@@ -124,6 +127,7 @@ function createStamp(userId, stamp) {
     }
   });
 }
+
 function bindNewDate() {
   var newDateClass = $('.newDate');
   newDateClass.each(function() {
@@ -202,44 +206,12 @@ function bindNewDate() {
       }
     }
   });
-  /*
-  var rDate = $('#r');
-  rDate.datepicker({
-    dateFormat: 'yy-mm-dd',
-    onSelect: function(date) {
-      if ($('#range').val() === 'specificDate') {
-        date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
-        var userId = $('#timecard').attr('user-id'),
-          date1 = date + (DAY_LENGTH_SECONDS - 1),
-          extraString = '&date0=' + date + '&date1=' + date1;
-        getEmployee({id: userId, range: 'specificDate', extraString: extraString});
-      }
-    },
-    onClose: function() {
-      if ($('#range').val() !== 'specificDate') {
-        $('#r2').datepicker('show');
-      }
-    }
-  });
-  $('#r2').datepicker({
-    dateFormat: 'yy-mm-dd',
-    minDate: $.datepicker.parseDate('yy-mm-dd', rDate.val()),
-    onSelect: function(date) {
-      var userId = $('#timecard').attr('user-id'),
-        date0 = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', $('#r').val())) / SECOND,
-        date1 = ($.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND) + DAY_LENGTH_SECONDS,
-        extraString = '&date0=' + date0 + '&date1=' + date1;
-      getEmployee({id: userId, range: 'specificDate', extraString: extraString});
-    }
-  });
-  $('#range').blur(function() {
-    $(this).change();
-  });
-  */
 }
+
 function validateEmail(email) {
   return email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)[1];
 }
+
 function validMoment(timestamp) {
   var validFormats = ['YYYY/MM/DD', 'YY/MM/DD', 'MM/DD/YYYY', 'MM/DD/YY', 'DD/MM/YYYY', 'DD/MM/YY'];
   var isValid = false; // we always assume they did it wrong
@@ -251,6 +223,7 @@ function validMoment(timestamp) {
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
+
 function fetchSchedule(parameters) {
   var userId = parameters.userId;
   var week = parameters.week;
