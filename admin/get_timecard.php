@@ -7,6 +7,7 @@ if (sessionCheck()) {
     $employeeId = $_POST['employee'];
     $range = $_POST['range'];
     // Default range is 'this', therefore if something other than the following, it defaults to the current pay period
+    // fixme: on sunday, last sunday breaks everything :(
     $date0 = date($dateFormat, strtotime('last sunday'));
     $date1 = date($dateFormat, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
