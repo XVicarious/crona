@@ -58,3 +58,20 @@ table#timecard input[type=text].times, table#timecard input[type=button].addButt
 table#timecard input[type=text].times {
     text-align: center
 }
+
+.overnight {
+    position: relative;
+}
+
+.overnight:after {
+    content: "";
+    position: absolute;
+    top:0;
+    right:0;
+    width:0;
+    height:0
+    display:block;
+    border-left:20px solid transparent;
+    border-bottom:20px solid transparent;
+    border-top:20px solid #03F;
+}
