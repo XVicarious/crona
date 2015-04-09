@@ -327,4 +327,13 @@ $(function() {
   $('#view-employees').click(function() {
     getEmployees();
   });
+  $('#system-admin').click(function() {
+    $.ajax({
+      type: 'POST',
+      url: 'admin_console.php',
+      success: function(data) {
+        $('#ajaxDiv').html(data);
+      }
+    });
+  });
 });
