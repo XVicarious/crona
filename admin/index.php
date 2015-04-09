@@ -38,6 +38,7 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/jquery.spin.js"></script>
     <script src="../js/admin/functions.async.js"></script>
     <script src="../js/admin/initialLoad.js"></script>
+    <script src="../js/admin/adminConsole.js"></script>
     <script>
         $(function() {
             $('.button-collapse').sideNav();
