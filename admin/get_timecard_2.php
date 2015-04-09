@@ -127,7 +127,7 @@ if (sessionCheck()) {
                     $tri = "overnight";
                 }
                 $echoMe .= "<td class=\"times tstable $tri $miss\">
-                             <input class=\"times context-menu\" default-time=\"$stamp[1]\" type=\"text\" value=\"$realTime\">
+                             <input class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$realTime\">
                             </td>";
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
