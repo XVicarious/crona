@@ -1,8 +1,8 @@
 var eCounter = 0,
     mode = '',
     i = 0,
-    offsetInSeconds = (new Date()).getTimezoneOffset() * 60,
-    offsetInHours = offsetInSeconds / 3600,
+    offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
+    offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
     companyCodes = [["48N", "HNB Venture Ptrs LLC"],
                     ["49C", "Hampton Inn Boston/Natick"],
                     ["49D", "Crowne Plaza Boston"],
@@ -31,10 +31,10 @@ $(function() {
   $('#addemployeeButton').click(function() {
     var $dialog = $('#dialog-timecard');
     $dialog.attr('title', 'Add Employees');
-    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name</th><th>First Name</th><th>Company Code</th><th>Department Code</th><th>ADP ID</th><th>Email Address</th><th>Start Date</th></tr><tr class="e-0"><td><input class="userLast e-0"/></td><td><input class="userFirst e-0"/></td><td><select class="userCompany e-0"></select></td><td><select class="userDepartment e-0"><option value="100">Accounting (100)</option></select></td><td><input class="userADPID e-0" maxlength="6" size="6" /></td><td><input class="userEmail e-0" /></td><td><input maxlength="10" size="10" class="userStart e-0" /></td></tr></table></form>');
-    var optionString = '<option value="">(none)</option>';
+    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0"><\/select><\/td><td><select class="userDepartment e-0"><option value="100">Accounting (100)<\/option><\/select><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form>');
+    var optionString = '<option value="">(none)<\/option>';
     for (i = 0; i < companyCodes.length; i++) {
-      optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...</option>';
+      optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...<\/option>';
     }
     $('.userCompany.e-0').html(optionString);
     var dialog = $dialog.dialog({
@@ -132,10 +132,10 @@ $(function() {
     }
     if (myeclass === eCounter && eCounter < 10) {
       eCounter++;
-      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"/></td><td><input class="userFirst e-' + eCounter + '"/></td><td><select class="userCompany e-' + eCounter + '"></select></td><td><select class="userDepartment e-' + eCounter + '"></select></td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" /></td><td><input class="userEmail e-' + eCounter + '" /></td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" /></td></tr>');
-      var optionString = '<option value="">(none)</option>';
+      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + eCounter + '"\/><\/td><td><select class="userCompany e-' + eCounter + '"><\/select><\/td><td><select class="userDepartment e-' + eCounter + '"><\/select><\/td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" \/><\/td><td><input class="userEmail e-' + eCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" \/><\/td><\/tr>');
+      var optionString = '<option value="">(none)<\/option>';
       for (var j = 0; j < companyCodes.length; j++) {
-        optionString += '<option value="' + companyCodes[j][0] + '">[' + companyCodes[j][0] + '] ' + companyCodes[j][1].substring(0, 11) + '...</option>';
+        optionString += '<option value="' + companyCodes[j][0] + '">[' + companyCodes[j][0] + '] ' + companyCodes[j][1].substring(0, 11) + '...<\/option>';
       }
       $('.userCompany.e-' + i).html(optionString);
       // After adding a new row, we want to make sure we resize the dialog
@@ -170,7 +170,7 @@ $(function() {
   });
   $(document).on('keyup', 'input[type=text].times', function(e) {
     e.preventDefault();
-    if (e.keyCode === 13) {
+    if (e.keyCode === $.ui.keyCode.ENTER) {
       $(this).blur();
     } else {
       var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -0' + offsetInHours + '00';
@@ -195,7 +195,7 @@ $(function() {
         if (!moment(validTimestamp).isValid()) {
           return;
         }
-        var trueTime = (Date.parse(validTimestamp) / SECOND);
+        var trueTime = (Date.parse(validTimestamp) / TimeVar.MILLISECONDS_IN_SECOND);
         $.ajax({
           type: 'POST',
           url: 'timeEdit/change_stamp.php',
@@ -209,8 +209,8 @@ $(function() {
       var confirmModal = $('#dialog');
       confirmModal.find('.modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
       confirmModal.find('.modal-footer').html(
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay</a>' +
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>'
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay<\/a>' +
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel<\/a>'
       );
       confirmModal.openModal({
         dismissible: false,
@@ -247,7 +247,7 @@ $(function() {
             value: $trigger.parent().attr('department-special'),
             events: {
               keyup: function(e) {
-                if (e.keyCode === 13) {
+                if (e.keyCode === $.ui.keyCode.ENTER) {
                   var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
                   var userId = $('#timecard').attr('user-id');
                   $.ajax({

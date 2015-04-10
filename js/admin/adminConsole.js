@@ -3,8 +3,8 @@ $(function() {
     var modLogModal = $('#dialog');
     var modLogText = modLogModal.find('.modal-text');
     modLogModal.find('.modal-footer').html(
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close</a>' +
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh</a>'
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close<\/a>' +
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh<\/a>'
     );
     modLogModal.openModal({
       ready: function() {
@@ -54,8 +54,8 @@ $(function() {
     var modLogModal = $('#dialog');
     var modLogText = modLogModal.find('.modal-text');
     modLogModal.find('.modal-footer').html(
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close</a>' +
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh</a>'
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close<\/a>' +
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh<\/a>'
     );
     modLogModal.openModal({
       ready: function() {

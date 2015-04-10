@@ -1,4 +1,4 @@
-var SECOND = 1000, DAY_LENGTH = 86400000, DAY_LENGTH_SECONDS = 86400, $inputPicker = [], picker = [], saveTheDate = 0;
+var $inputPicker = [], picker = [], saveTheDate = 0;
 
 function getPermissions() {
   $.ajax({
@@ -25,7 +25,7 @@ function getOffsetString() {
     offsetString = '+';
     absoluteOffsetMinutes = Math.abs(offsetMinutes);
   }
-  var offset = absoluteOffsetMinutes / 60;
+  var offset = absoluteOffsetMinutes / TimeVar.MINUTES_IN_HOUR;
   var flooredOffset = Math.floor(offset);
   if (flooredOffset < 10) {
     offsetString += '0'+flooredOffset;
@@ -78,13 +78,15 @@ function getEmployee(parameters) {
         selectMonths: true,
         selectYears: true,
         onSet: function(thing) {
+          var fixedDate = this.get('value');
+          var rangeChildren = $('#range').children(':selected');
+          var endOfDay = 0;
+          var extraString = '';
           if (thing.select) {
-            var fixedDate = this.get('value');
             fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
-            var rangeChildren = $('#range').children(':selected');
             if (rangeChildren.val() === 'specificDate') {
-              var endOfDay = fixedDate + (DAY_LENGTH_SECONDS - 1);
-              var extraString = '&date0=' + fixedDate + '&date1=' + endOfDay;
+              endOfDay += fixedDate + (TimeVar.SECONDS_IN_DAY - 1);
+              extraString += '&date0=' + fixedDate + '&date1=' + endOfDay;
               getEmployee({id: id, range: 'specificDate', extraString: extraString});
             } else if (rangeChildren.val() === 'special') {
               saveTheDate = fixedDate;
@@ -98,10 +100,11 @@ function getEmployee(parameters) {
         selectMonths: true,
         selectYears: true,
         onSet: function(thing) {
+          var fixedDate = this.get('value');
+          var extraString = '';
           if (thing.select) {
-            var fixedDate = this.get('value');
-            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (DAY_LENGTH_SECONDS - 1);
-            var extraString = '&date0='+saveTheDate+'&date1='+fixedDate;
+            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (TimeVar.SECONDS_IN_DAY - 1);
+            extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
             getEmployee({id: id, range: 'specificDate', extraString: extraString});
             this.close();
           }
@@ -143,12 +146,12 @@ function bindNewDate() {
         selectOtherMonths: true,
         maxDate: thisThisDay,
         onSelect: function(date) {
-          date = $.datepicker.parseDate('yy-mm-dd', date);
-          date = $.datepicker.formatDate('@', date) / SECOND;
+          var chosenDate = $.datepicker.parseDate('yy-mm-dd', date);
+          chosenDate = $.datepicker.formatDate('@', chosenDate) / TimeVar.MILLISECONDS_IN_SECOND;
           $.ajax({
             type: 'POST',
             url: 'timeEdit/create_stamp.php',
-            data: 'user=' + userId + '&date=' + date,
+            data: 'user=' + userId + '&date=' + chosenDate,
             success: getEmployee({id: userId})
           });
         }
@@ -162,9 +165,9 @@ function bindNewDate() {
         selectOtherMonths: true,
         minDate: earlierDay2,
         onSelect: function(date) {
-          date = $.datepicker.parseDate('yy-mm-dd', date);
-          date = $.datepicker.formatDate('@', date) / SECOND;
-          createStamp(userId, date);
+          var selectedDate = $.datepicker.parseDate('yy-mm-dd', date);
+          selectedDate = $.datepicker.formatDate('@', selectedDate) / TimeVar.MILLISECONDS_IN_SECOND;
+          createStamp(userId, selectedDate);
         }
       });
     } else {
@@ -172,7 +175,7 @@ function bindNewDate() {
       thisDay = new Date(thisDay);
       var difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
-      if (difference > DAY_LENGTH * 2) {
+      if (difference > TimeVar.MILLISECONDS_IN_DAY * 2) {
         $(this).datepicker({
           dateFormat: 'yy-mm-dd',
           showOtherMonths: true,
@@ -180,8 +183,8 @@ function bindNewDate() {
           minDate: earlierDay,
           maxDate: thisDay,
           onSelect: function(date) {
-            date = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / SECOND;
-            createStamp(userId, date);
+            var selectedDate = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / TimeVar.MILLISECONDS_IN_SECOND;
+            createStamp(userId, selectedDate);
           }
         });
       }
@@ -197,10 +200,10 @@ function bindNewDate() {
       thisDay = new Date(thisDay);
       var difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
-      if (difference > DAY_LENGTH && difference <= DAY_LENGTH * 2) {
+      if (difference > TimeVar.MILLISECONDS_IN_DAY && difference <= TimeVar.MILLISECONDS_IN_DAY * 2) {
         thisDay = new Date(thisDay);
         thisDay.setDate(thisDay.getDate() - 1);
-        thisDay = (thisDay.getTime() / SECOND) + offsetInSeconds;
+        thisDay = (thisDay.getTime() / TimeVar.MILLISECONDS_IN_SECOND) + offsetInSeconds;
         createStamp(userId, thisDay);
         return false;
       }
@@ -253,11 +256,12 @@ function fetchSchedule(parameters) {
         cell: 'string',
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
           fromRaw: function(rawValue) {
+            var rawDay = rawValue;
             //Parse the values from this fetch to display a proper date
             moment.locale('en-US');
             // Have to subtract one from rawValue for a hotfix.  Unknown as to why it thinks Monday is the start of the
             // week in the en-US locale.
-            var myMoment = moment(year + ' ' + week + ' ' + --rawValue, 'YYYY WW E');
+            var myMoment = moment(year + ' ' + week + ' ' + --rawDay, 'YYYY WW E');
             return myMoment.format('ddd MM/DD');
           }
         })
@@ -348,7 +352,7 @@ function fetchSchedule(parameters) {
   $schedule.html(grid.render().el);
   //$schedule.spin('large');
   scheduleDays.fetch({data: data, reset: true});
-  $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"></i></a>');
+  $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"><\/i><\/a>');
   return true;
 }
 function getEmployees() {

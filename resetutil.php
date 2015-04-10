@@ -60,7 +60,7 @@ if (isset($function)) {
                         :bmaurer@harthotels.com\nReturn-Path:bmaurer@harthotels.com\nContent-Type:text/html;
                         charset=iso-8859-1";
             $subject = 'Password Recovery for Hart Hotels Timestamp';
-            @mail($email, $subject, $message, $headers);
+            mail($email, $subject, $message, $headers);
         }
         echo "If a user with the email <b>$email</b> exists, an email has been dispatched with a link to
               reset your password.";

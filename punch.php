@@ -14,7 +14,7 @@ if ($_POST) {
                 $passwordSetLapse = time() - strtotime($udate);
                 if ($passwordSetLapse >= 15742080) {
                     $data = http_build_query(['function' => 'sendEmail', 'email' => $uemail]);
-                    $opts = array('http' => array('method' => 'POST', 'content' => $data));
+                    $opts = ['http' => ['method' => 'POST', 'content' => $data]];
                     $st = stream_context_create($opts);
                     $fp = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $st);
                     echo 'Password Expired!  Reset link set to your email.';

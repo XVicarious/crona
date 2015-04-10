@@ -1,3 +1,4 @@
+var TOAST_LENGTH = 4000;
 $(function() {
   $('#submit-button').click(function() {
     var username = $('#uname'),
@@ -22,14 +23,14 @@ $(function() {
           $(location).attr('href','admin');
         } else if ($('#b').length) {
           //$(location).attr('href','view');
-          toast('Working on it!', 4000);
+          toast('Working on it!', TOAST_LENGTH);
         } else if ($('#accepted').length) {
-          toast('Timestamp Accepted!', 4000, 'toasty', function() {
+          toast('Timestamp Accepted!', TOAST_LENGTH, 'toasty', function() {
             $('#uname').val('');
             $('#drowp').val('');
           });
         } else if ($('#not-accepted').length) {
-          badLoginMessage.html('Your timestamp was <b>NOT</b> accepted.<br>This is usually because you\'re not on an approved IP address.');
+          badLoginMessage.html('Your timestamp was <b>NOT<\/b> accepted.<br>This is usually because you\'re not on an approved IP address.');
           badLogin.openModal();
         }
       }
