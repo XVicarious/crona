@@ -5,13 +5,27 @@ $sqlConnection = createSql();
 $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
+$dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $employeeId = $_POST['employee'];
+    $range = $_POST['range'];
     // todo: for the dates, find a better way for reference.  'last sunday' won't work correctly if today is sunday
     // todo: previous todo also applies to saturday, though this issue isn't as severe
-    $date0 = date($dateFormat.' '.$timeFormat24, strtotime('last sunday'));
-    $date1 = date($dateFormat.' '.$timeFormat24, strtotime('next saturday 23:59:59'));
-    // todo: allow other range functions (last, next, specificDate, etc)
+    $date0 = date($dateTimeFormat24, strtotime('last sunday'));
+    $date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
+    if ($range === 'last') {
+        $date0 = date($dateTimeFormat24, strtotime('last sunday -1 weeks'));
+        $date1 = date($dateTimeFormat24, strtotime('last sunday -1 days 23:59:59'));
+    } elseif ($range === 'next') {
+        $date0 = date($dateTimeFormat24, strtotime('next sunday'));
+        $date1 = date($dateTimeFormat24, strtotime("next saturday 23:59:59 +1 weeks"));
+    } elseif ($range === 'specificDate') {
+        $date0 = date($dateTimeFormat24, $_POST['date0']);
+        $date1 = date($dateTimeFormat24, $_POST['date1']);
+    } elseif ($range === 'w2d') {
+        $date0 = date($dateTimeFormat24, strtotime('monday 00:00:00'));
+        $date1 = date($dateTimeFormat24, strtotime('today 23:59:59'));
+    }
     $query = "SELECT stamp_id,timestamp_list.datetime,stamp_special,stamp_department,stamp_partner
               FROM timestamp_list
               WHERE user_id_stamp = $employeeId
@@ -118,6 +132,7 @@ if (sessionCheck()) {
             if (($timestampCount % 2 === 0 && $key === $timestampCount - 2)) {
                 $miss = 'missingTime';
             }
+            $modifier = $stamp[2];
             // ['date'] will count as a $stamp, so make sure we are dealing with an array
             if (is_array($stamp)) {
                 $echoMe .= '<td class="tstable addButton"><input class="addButton" type="button" value="+"></td>';
@@ -126,8 +141,20 @@ if (sessionCheck()) {
                 if (date($dateFormat, $stamp[1]) !== $day) {
                     $tri = "overnight";
                 }
+                $val = $realTime;
+                $disabled = '';
+                if (isset($modifier)) {
+                    $disabled = 'readonly disabled';
+                    if ($modifier === 'S') {
+                        $val = 'SICK';
+                    } elseif ($modifier === 'F') {
+                        $val = 'BEREAVEMENT';
+                    } elseif ($modifier === 'V') {
+                        $val = 'VACATION';
+                    }
+                }
                 $echoMe .= "<td class=\"times tstable $tri $miss\">
-                             <input class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$realTime\">
+                             <input $disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$val\">
                             </td>";
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
