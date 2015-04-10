@@ -11,8 +11,8 @@ $(function() {
       aOptions.push($(this).val());
     });
     mySelect.each(function() {
-      $(this).find('option').prop('hidden', false);
       var selected = $(this);
+      $(this).find('option').prop('hidden', false);
       $.each(aOptions, function(key, value) {
         if ((value.length) && (value !== selected.val())) {
           selected.find('option').filter('[value="' + value + '"]').prop('hidden', true);

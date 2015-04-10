@@ -48,7 +48,7 @@
     <option passfail="false" />
     <option phantom="false" />
     <option plusplus="false" />
-    <option predef="$:false,_:false,Backbone:false,Backgrid:false,getPermissions:true,SECOND:true,getEmployee:true,bindNewDate:true,validMoment:true,moment:false,validateEmail:true,rowClear:true,createStamp:true,offsetInSeconds:true,mode:true,getEmployees:true,toast:false" />
+    <option predef="$:false,_:false,Backbone:false,Backgrid:false,getPermissions:true,SECOND:true,getEmployee:true,bindNewDate:true,validMoment:true,moment:false,validateEmail:true,rowClear:true,createStamp:true,offsetInSeconds:true,mode:true,getEmployees:true,toast:false,picker:true,TimeVar:false" />
     <option proto="false" />
     <option prototypejs="false" />
     <option quotmark="false" />

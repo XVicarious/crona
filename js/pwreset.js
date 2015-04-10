@@ -1,6 +1,6 @@
 function getByName(name) {
-  name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-  var regexS = '[\\?&]' + name + '=([^&#]*)', regex = new RegExp(regexS), results = regex.exec(window.location.href);
+  var getName = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+  var regexS = '[\\?&]' + getName + '=([^&#]*)', regex = new RegExp(regexS), results = regex.exec(window.location.href);
   return (results === null ? '' : results[1]);
 }
 
@@ -25,9 +25,9 @@ $(function() {
     });
   }
   $(document).on('click', '#subby', function() {
-    var $pwc = $('#pwc');
+    var passwordConfirmationInput = $('#pwc');
+    var email = $('#email').val();
     if ($('div#semail').length) {
-      var email = $('#email').val();
       $.ajax({
         type: 'POST',
         url: 'resetutil.php',
@@ -36,14 +36,14 @@ $(function() {
           $('#ajaxDiv').html(data);
         }
       });
-    } else if ($('div#rpassword').length && ($('#pw').val() === $pwc.val())) {
-      if ($pwc.val().length >= 6) {
+    } else if ($('div#rpassword').length && ($('#pw').val() === passwordConfirmationInput.val())) {
+      if (passwordConfirmationInput.val().length >= 6) {
         /* todo: make this configurable */
-        if ($pwc.val().match(/(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)/)) {
+        if (passwordConfirmationInput.val().match(/(?=.*[a-z].*)(?=.*[A-Z].*)(?=.*[0-9].*)/)) {
           $.ajax({
             type: 'POST',
             url: 'resetutil.php',
-            data: 'function=checkReset&resetId=' + $('#resetId').val() + '&pword=' + $pwc.val() + '&answer=' +
+            data: 'function=checkReset&resetId=' + $('#resetId').val() + '&pword=' + passwordConfirmationInput.val() + '&answer=' +
             $('#answer').val() + '&qid=' + $('#qid').val() + '&user=' + $('#uid').val(),
             success: function(data) {
               $('#ajaxDiv').html(data);
