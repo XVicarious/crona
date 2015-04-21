@@ -16,10 +16,10 @@ if (sessionCheck()) {
     //$date0 = date($dateTimeFormat24, strtotime('last sunday'));
     //$date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
-        $date0 = date($dateTimeFormat24, strtotime('-$day days -1 weeks')); //'last sunday -1 weeks'));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks")); //'last sunday -1 weeks'));
         $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59')); //'last sunday -1 days 23:59:59'));
     } elseif ($range === 'next') {
-        $date0 = date($dateTimeFormat24, strtotime('-$day days +1 weeks')); //'next sunday'));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks")); //'next sunday'));
         $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59')); //"next saturday 23:59:59 +1 weeks"));
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
@@ -139,9 +139,9 @@ if (sessionCheck()) {
             if (is_array($stamp)) {
                 $echoMe .= '<td class="tstable addButton"><input class="addButton" type="button" value="+"></td>';
                 $realTime = date($timeFormat12, $stamp[1]);
-                $tri = "";
+                $tri = '';
                 if (date($dateFormat, $stamp[1]) !== $day) {
-                    $tri = "overnight";
+                    $tri = 'overnight';
                 }
                 $val = $realTime;
                 $disabled = '';
