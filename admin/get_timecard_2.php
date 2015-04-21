@@ -11,8 +11,11 @@ if (sessionCheck()) {
     $range = $_POST['range'];
     // todo: for the dates, find a better way for reference.  'last sunday' won't work correctly if today is sunday
     // todo: previous todo also applies to saturday, though this issue isn't as severe
-    $date0 = date($dateTimeFormat24, strtotime('last sunday'));
-    $date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
+    $day = date('w');
+    $date0 = date($dateTimeFormat24, strtotime("-$day days"));
+    $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days'));
+    //$date0 = date($dateTimeFormat24, strtotime('last sunday'));
+    //$date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
         $date0 = date($dateTimeFormat24, strtotime('last sunday -1 weeks'));
         $date1 = date($dateTimeFormat24, strtotime('last sunday -1 days 23:59:59'));
@@ -49,7 +52,6 @@ if (sessionCheck()) {
         if ($lastTimestamp['date'] === $thisDay || in_array($partnerId, $stamps)) {
             // push things in for this day.  They can be for this day, or reference it
             $timestampsCount = count($timestamps) - 1;
-            //$timestamps[$timestampsCount]['date'] = $thisDay;
             array_push($timestamps[$timestampsCount], [$stampId, $thisUnix, $modifier, $department, $partnerId]);
         } else {
             // if this is a new day (or it doesn't reference the previous day) then start a new day
