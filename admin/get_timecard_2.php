@@ -9,23 +9,23 @@ $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $employeeId = $_POST['employee'];
     $range = $_POST['range'];
-    // todo: for the dates, find a better way for reference.  'last sunday' won't work correctly if today is sunday
-    // todo: previous todo also applies to saturday, though this issue isn't as severe
+    // todo: this might be a tad screwy because of timezones
     $day = date('w');
     $date0 = date($dateTimeFormat24, strtotime("-$day days"));
     $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days'));
     //$date0 = date($dateTimeFormat24, strtotime('last sunday'));
     //$date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
-        $date0 = date($dateTimeFormat24, strtotime('last sunday -1 weeks'));
-        $date1 = date($dateTimeFormat24, strtotime('last sunday -1 days 23:59:59'));
+        $date0 = date($dateTimeFormat24, strtotime('-$day days -1 weeks')); //'last sunday -1 weeks'));
+        $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59')); //'last sunday -1 days 23:59:59'));
     } elseif ($range === 'next') {
-        $date0 = date($dateTimeFormat24, strtotime('next sunday'));
-        $date1 = date($dateTimeFormat24, strtotime("next saturday 23:59:59 +1 weeks"));
+        $date0 = date($dateTimeFormat24, strtotime('-$day days +1 weeks')); //'next sunday'));
+        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59')); //"next saturday 23:59:59 +1 weeks"));
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
         $date1 = date($dateTimeFormat24, $_POST['date1']);
     } elseif ($range === 'w2d') {
+        // todo: is this REALLY needed?
         $date0 = date($dateTimeFormat24, strtotime('monday 00:00:00'));
         $date1 = date($dateTimeFormat24, strtotime('today 23:59:59'));
     }
