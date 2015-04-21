@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('America/New_York'); //todo: make timezone configurable
+date_default_timezone_set('America/New_York');
 require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
@@ -7,7 +7,6 @@ if (sessionCheck()) {
     $employeeId = $_POST['employee'];
     $range = $_POST['range'];
     // Default range is 'this', therefore if something other than the following, it defaults to the current pay period
-    // fixme: on sunday, last sunday breaks everything :(
     $date0 = date($dateFormat, strtotime('last sunday'));
     $date1 = date($dateFormat, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
@@ -34,7 +33,7 @@ if (sessionCheck()) {
     $timestamps = [];
     while (list($stampId, $timestamp, $modifier, $depart) = mysqli_fetch_row($queryResult)) {
         $lastTimestamp = end($timestamps);
-        $dateEDT = new DateTimeZone('America/New_York'); // todo: make timezone configurable
+        $dateEDT = new DateTimeZone('America/New_York');
         $offsetSeconds = $dateEDT->getOffset(new DateTime("now"));
         $thisDay = date('Y-m-d', strtotime($timestamp) + $offsetSeconds);
         $thisTime = date('h:i:s a', strtotime($timestamp) + $offsetSeconds);
