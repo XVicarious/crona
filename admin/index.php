@@ -34,9 +34,8 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/jquery.contextMenu.js"></script>
     <script src="../js/lib/moment.js"></script>
     <script src="../js/lib/backgrid-moment-cell.js"></script>
-    <script src="../js/lib/spin.js"></script>
-    <script src="../js/lib/jquery.spin.js"></script>
     <script src="../js/timeConstants.js"></script>
+    <script src="../js/lib/jquery.pjax.js"></script>
     <script src="../js/admin/functions.async.js"></script>
     <script src="../js/admin/initialLoad.js"></script>
     <script src="../js/admin/adminConsole.js"></script>
@@ -56,20 +55,6 @@ $_SESSION["lastAction"] = time();
                 </div>
             </div>
         </div>
-        <!--<div class="col s12 m4 l3 grey lighten-2">
-            <h3 class="row" >Options</h3>
-            <a class="row" id="timecardButton">Timecards</a>
-            <a class="row" id="scheduleButton">Schedules</a>
-            <a class="row" id="addemployeeButton" href="#addEmployee">Add Employees</a>
-            <a class="row" >System Management</a>
-        <span class="row" >
-            Export
-            <form>
-                <div id="exportC"></div><br><input id="exportcsv" type=button value="Export CSV">
-            </form>
-            <div id="exportScript"></div>
-        </span>
-        </div>-->
     </nav>
     <div class="hide-on-large-only">
         <a href="#" data-activates="nav-mobile" class="button-collapse top-nav">
@@ -84,10 +69,10 @@ $_SESSION["lastAction"] = time();
             <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards</a>
         </li>
         <li class="bold">
-            <a href="#" id="manage-schedules" class="waves-effect waves-light">Manage Schedules</a>
+            <a id="manage-schedules" class="grey-text lighten-4 waves-effect waves-light">Manage Schedules</a>
         </li>
         <li class="bold">
-            <a href="#" id="add-employees" class="waves-effect waves-light">Add Employees</a>
+            <a id="add-employees" class="grey-text lighten-4 waves-effect waves-light">Add Employees</a>
         </li>
         <li class="bold">
             <a href="#" id="system-admin" class="waves-effect waves-light">System Administration</a>
