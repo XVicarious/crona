@@ -24,8 +24,6 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/backbone.paginator.js"></script>
     <script src="../js/lib/moment.js"></script>
     <script src="../js/lib/backgrid-moment-cell.js"></script>
-    <script src="../js/lib/spin.js"></script>
-    <script src="../js/lib/jquery.spin.js"></script>
     <script src="../js/timeConstants.js"></script>
     <script src="../js/view/viewTimecard.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>

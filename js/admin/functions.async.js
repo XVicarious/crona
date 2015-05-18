@@ -66,9 +66,11 @@ function getEmployee(parameters) {
   var extraString = parameters.extraString;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
+  var url = 'get_timecard_2.php?employee='+id+'&range='+range+extraString;
   $.ajax({
     type: 'POST',
     url: 'get_timecard_2.php',
+    //container: '#ajaxDiv',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       $('#ajaxDiv').html(data);
@@ -380,7 +382,6 @@ function fetchSchedule(parameters) {
   });
   grid.render().sort('day','ascending');
   $schedule.html(grid.render().el);
-  //$schedule.spin('large');
   scheduleDays.fetch({data: data, reset: true});
   $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"><\/i><\/a>');
   return true;
