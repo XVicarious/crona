@@ -22,8 +22,8 @@ $(function() {
         } else if ($('#a').length) {
           $(location).attr('href','admin');
         } else if ($('#b').length) {
-          //$(location).attr('href','view');
-          toast('Working on it!', TOAST_LENGTH);
+          $(location).attr('href','view');
+          //toast('Working on it!', TOAST_LENGTH);
         } else if ($('#accepted').length) {
           toast('Timestamp Accepted!', TOAST_LENGTH, 'toasty', function() {
             $('#uname').val('');
