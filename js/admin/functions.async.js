@@ -436,9 +436,6 @@ function getEmployees() {
     }
   });
   Backbone.on('rowclicked', function(model) {
-    var $timeDiv = $('#timecardDiv');
-    $timeDiv.empty();
-    $timeDiv.spin('large', '#000');
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
     if (mode === 'schedule') {
       fetchSchedule({userId: model.id});
