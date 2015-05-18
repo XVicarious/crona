@@ -101,7 +101,8 @@ if (sessionCheck()) {
                  <option value="w2d">Week to Date</option>
                  <option value="specificDate">Specific Date</option>
                  <option value="special">Specific Period</option>
-                </select><i class="mdi-action-delete medium right trashBin"></i></th></tr>';
+                </select></th></tr>';
+    // <i class="mdi-action-delete medium right trashBin"></i>
     // Finally for the head, the (shitty) header for date and junk
     $echoMe .= '<tr><th>Date</th><th colspan="100%"></th></tr>';
     /*
@@ -156,7 +157,7 @@ if (sessionCheck()) {
                     }
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                             <div class=\"draggableTimes\">*<input $disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$val\"></div>
+                             <div class=\"draggableTimes\"><input $disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$val\"></div>
                             </td>";
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
