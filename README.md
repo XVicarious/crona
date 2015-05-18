@@ -12,7 +12,7 @@ Backbone Paginator (https://github.com/backbone-paginator/backbone.paginator)
 Backgrid (http://backgridjs.com/)  
 Backgrid MomentCell  
 Moment  
-Spin, jQuery Spin  
 jQuery contextMenu
+MaterializeCSS
 
 etc
