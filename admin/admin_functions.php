@@ -6,7 +6,7 @@ function sessionCheck()
     $lastAction = $_SESSION['lastAction'];
     if ($lastAction + 10 * 60 < time()) {
         session_destroy();
-        echo '<script>$(location).attr("href","http://xvss.net/time?timeout=1")</script>';
+        echo '<script src="../js/lib/jquery.js"></script><script>$(location).attr("href","http://xvss.net/time?timeout=1")</script>';
         return false;
     }
     $_SESSION['lastAction'] = time();
