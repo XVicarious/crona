@@ -10,7 +10,7 @@ $(function() {
       type: 'POST',
       url: 'resetutil.php',
       success: function(data) {
-        $('#ajaxDiv').html(data).css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
+        $('#ajaxDiv').html(data);//.css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
       }
     });
   } else if (getByName('c')) {
@@ -20,7 +20,7 @@ $(function() {
       data: 'c=' + getByName('c'),
       success: function(data) {
         var loginForm = $('#loginForm');
-        $('#ajaxDiv').html(data).css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
+        $('#ajaxDiv');//.html(data).css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
       }
     });
   }
@@ -33,7 +33,8 @@ $(function() {
         url: 'resetutil.php',
         data: 'email=' + email + '&function=sendEmail',
         success: function(data) {
-          $('#ajaxDiv').html(data);
+          toast("If a user with that email exists, an email has been dispatched with a link to reset your password.",5000);
+          //$('#ajaxDiv').html(data);
         }
       });
     } else if ($('div#rpassword').length && ($('#pw').val() === passwordConfirmationInput.val())) {
