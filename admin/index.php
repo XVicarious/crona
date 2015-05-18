@@ -82,6 +82,11 @@ $_SESSION["lastAction"] = time();
                 Export CSV
             </a>
         </li>
+        <li class="bold">
+            <a href="#about-log" id="about-log-button" class="waves-effect waves-light modal-trigger">
+                About Crona
+            </a>
+        </li>
     </ul>
 </header>
 <main>
@@ -105,7 +110,7 @@ $_SESSION["lastAction"] = time();
 <div id="dialog-timecard" class="ui-helper-hidden" title="Edit Timecard">
     <div id="timecardDiv"></div>
 </div>
-<div id="dialog" class="modal modal-fixed-footer">
+<div id="dialog" class="modal">
     <div class="modal-content">
         <h4 class="modal-title"></h4>
         <p class="modal-text"></p>
@@ -120,6 +125,27 @@ $_SESSION["lastAction"] = time();
     <div class="modal-footer">
         <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-export">Export CSV</a>
         <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>
+    </div>
+</div>
+<div id="about-log" class="modal">
+    <div class="modal-content">
+        <h4 class="modal-title">About Crona</h4>
+        <p class="modal-text">
+            Crona was written by Brian Maurer.  It uses technologies such as Javascript and PHP to create a quick and flexible timecard management system.
+            Crona uses libraries such as <a href="https://jquery.com/">jQuery</a>, <a href="https://github.com/jashkenas/underscore">Underscore</a>, <a href="https://github.com/jashkenas/backbone/">Backbone</a>, and <a href="https://github.com/wyuenho/backgrid">Backgrid</a> to acomplish this.
+            <a href="https://github.com/Dogfalo/materialize">Materialize</a> was used for the UI of Crona, and to make it mobile responsive.
+            <br /><br />
+            If you have any questions, concerns, complaints, or bug reports please email Brian Maurer at bmaurer@harthotels.com
+            <hr />
+            <ul class="collection with-header">
+                <li class="collection-header"><h6>Known Bugs</h6></li>
+                <li class="yellow lighten-4 collection-item">If the menu is opened while Crona's window is small, when the window is made bigger the menu disappears until you resize it again.</li>
+                <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will not close when you choose an option.</li>
+                <li class="yellow lighten-4 collection-item">When adding days after Monday in a timecard, you can add past the selected period. For example, after adding Tuesday, you will be able to add NEXT Sunday.</li>
+                <li class="yellow lighten-4 collection-item">Times are not perfectly centered in their boxes.</li>
+                <li class="yellow lighten-4 collection-item">You are not able to designate overnight shifts.</li>
+            </ul>
+        </p>
     </div>
 </div>
 </body>
