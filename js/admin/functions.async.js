@@ -138,39 +138,40 @@ function bindNewDate() {
       earlierDay = $myGrandparent.prev().attr('stamp-day'),
       thisDay = $myGrandparent.attr('stamp-day'),
       userId = $('#timecard').attr('user-id');
-    if (!earlierDay) {
+    if (!earlierDay) { // before first stamp
       var thisThisDay = new Date(thisDay);
+      var weekstart = new Date(new Date().getDate() - thisThisDay.getDay());
       $(this).datepicker({
         dateFormat: 'yy-mm-dd',
         showOtherMonths: true,
         selectOtherMonths: true,
+        minDate: weekstart,
         maxDate: thisThisDay,
         onSelect: function(date) {
           var chosenDate = $.datepicker.parseDate('yy-mm-dd', date);
-          chosenDate = $.datepicker.formatDate('@', chosenDate) / TimeVar.MILLISECONDS_IN_SECOND;
-          $.ajax({
-            type: 'POST',
-            url: 'timeEdit/create_stamp.php',
-            data: 'user=' + userId + '&date=' + chosenDate,
-            success: getEmployee({id: userId})
-          });
+          chosenDate = $.datepicker.formatDate('@', chosenDate);
+          createStamp(userId, chosenDate / TimeVar.MILLISECONDS_IN_SECOND);
         }
       });
-    } else if (!thisDay) {
+    } else if (!thisDay) { // after last stamp
+      // fixme: if the timecard is empty for the specified period, the whole calendar is selectable
       var earlierDay2 = new Date(earlierDay);
+      var weekend = new Date(earlierDay);
+      weekend.setDate(weekend.getDate() + 6);
       earlierDay2.setDate(earlierDay2.getDate() + 2);
       $(this).datepicker({
         dateFormat: 'yy-mm-dd',
         showOtherMonths: true,
         selectOtherMonths: true,
         minDate: earlierDay2,
+        maxDate: weekend,
         onSelect: function(date) {
           var selectedDate = $.datepicker.parseDate('yy-mm-dd', date);
           selectedDate = $.datepicker.formatDate('@', selectedDate) / TimeVar.MILLISECONDS_IN_SECOND;
           createStamp(userId, selectedDate);
         }
       });
-    } else {
+    } else { // between stamps
       earlierDay = new Date(earlierDay);
       thisDay = new Date(thisDay);
       var difference = thisDay.getTime() - earlierDay.getTime();
@@ -213,6 +214,35 @@ function bindNewDate() {
 
 function validateEmail(email) {
   return email.match(/[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/)[1];
+}
+
+function makeDraggable() {
+  $('.draggableTimes').each(function() {
+    $(this).find('.times').attr('disabled','true');
+    $(this).draggable({stack:'.droppableTimes',containment: '#timecard',cursor: 'move',revert: true});
+  });
+  $('.droppabledTimes').droppable({accept:'.draggableTimes',hoverClass:'draggableHover',drop: handleDrop});
+  $('i.trashBin').droppable({accept:'.draggableTimes',hoverClass:'draggableHover',drop:handleDelete});
+}
+
+function handleDrop(event, ui) {
+  ui.draggable.position({of:$(this),my:'left top',at:'left top'});
+}
+
+function handleDelete(event, ui) {
+  ui.draggable.draggable('disable');
+  ui.draggable.draggable('option','revert',false);
+  var userId = $('#timecard').attr('user-id');
+  var stampId = $(ui.draggable).find('.times').attr('stamp-id');
+  var defaultTime = $(ui.draggable).find('.times').attr('default-time');
+  $.ajax({
+    type: 'POST',
+    url: 'timeEdit/delete_stamp.php',
+    data: 'sid=' + stampId + '&dtime=' + defaultTime,
+    success: function() {
+      getEmployee({id: userId});
+    }
+  });
 }
 
 function validMoment(timestamp) {
