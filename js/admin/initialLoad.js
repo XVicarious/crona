@@ -157,7 +157,7 @@ $(function() {
     var timestamp, $thisParent = $(this).parent();
     if ($thisParent.prev().children(':first-child').is('input')) {
       timestamp = $thisParent.prev().children(':first-child').val();
-    } else if ($thisParent.next().children(':first-child").is("input')) {
+    } else if ($thisParent.next().children(':first-child').is('input')) {
       timestamp = $thisParent.next().children(':first-child').val();
     }
     var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp,
