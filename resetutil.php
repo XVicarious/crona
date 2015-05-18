@@ -62,8 +62,8 @@ if (isset($function)) {
             $subject = 'Password Recovery for Hart Hotels Timestamp';
             mail($email, $subject, $message, $headers);
         }
-        echo "If a user with the email <b>$email</b> exists, an email has been dispatched with a link to
-              reset your password.";
+        //echo "If a user with the email <b>$email</b> exists, an email has been dispatched with a link to
+        //      reset your password.";
     }
 } elseif (isset($_GET['c'])) {
     $resetId = $_GET['c'];
@@ -99,10 +99,20 @@ if (isset($function)) {
         echo 'Invalid reset link.';
     }
 } elseif (!isset($_GET['c'])) {
-    echo '<div id="semail" style="position:absolute;display:block"><form style="background-color:white">
-          <input type=hidden name="function" value="sendEmail"><table id="emailtable" style="border:solid thin black;
-          table-layout:fixed;font-family:monospace"><tr><td>Email Address:</td><td><input id="email" type=text
-          name="email"/></td></tr><tr><th colspan="2"><input id="subby" style="width:100%" type="submit" value="submit">
-          </th></tr></table></form></div>';
+    echo '<div id="semail" class="container">
+           <div class="row">
+            <div class="input-field col s12 l6 offset-l3">
+             <i class="mdi-communication-email prefix orange-text darken-1"></i>
+             <input placeholder="email@email.com" id="email" type="text" name="email"/>
+            </div>
+           </div>
+           <div class="row">
+            <div class="col s12 l6 offset-l3">
+             <div class="center">
+              <a href="#" id="subby" class="cyan lighten-1 waves-effect waves-light btn">Send Email<i class="mdi-content-send right"></i></a>
+             </div>
+            </div>
+           </div>
+          </div>';
 }
 mysqli_close($sqlConnection);
