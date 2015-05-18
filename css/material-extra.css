@@ -36,3 +36,7 @@ footer {
 div.col.s12 {
     padding-top: 0.75rem;
 }
+
+.draggableHover {
+    background-color: #00ff00;
+}
