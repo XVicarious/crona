@@ -94,18 +94,20 @@ if (isset($administrativeId)) {
                         $overtimeHours = $totalHours - 40;
                         $totalHours = 40;
                     }
-                    array_push($a_userHours, [$exportCompany,
-                                              50,
-                                              $user[1],
-                                              $totalHours,
-                                              $overtimeHours,
-                                              'S', round($totalSickHours, 2),
-                                              'V', round($totalVacationHours, 2),
-                                              'P', round($totalPersonalHours, 2),
-                                              'H', round($totalHolidayHours / 3600, 2),
-                                              'F', round($totalSadHours, 2),
-                                              'B', 0,
-                                              'T', 0]);
+                    if ($totalHours != 0) {
+                        array_push($a_userHours, [$exportCompany,
+                            50,
+                            $user[1],
+                            $totalHours,
+                            $overtimeHours,
+                            'S', round($totalSickHours, 2),
+                            'V', round($totalVacationHours, 2),
+                            'P', round($totalPersonalHours, 2),
+                            'H', round($totalHolidayHours / 3600, 2),
+                            'F', round($totalSadHours, 2),
+                            'B', 0,
+                            'T', 0]);
+                    }
                 }
                 $fileName = "tmp/$exportCompany-" . time() . '.csv';
                 $csv = fopen($fileName, 'w');
