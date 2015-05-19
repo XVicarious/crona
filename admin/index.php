@@ -143,7 +143,16 @@ $_SESSION["lastAction"] = time();
                 <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will not close when you choose an option.</li>
                 <li class="yellow lighten-4 collection-item">When adding days after Monday in a timecard, you can add past the selected period. For example, after adding Tuesday, you will be able to add NEXT Sunday.</li>
                 <li class="yellow lighten-4 collection-item">Times are not perfectly centered in their boxes.</li>
-                <li class="yellow lighten-4 collection-item">You are not able to designate overnight shifts.</li>
+            </ul>
+            <ul class="collection with-header">
+                <li class="collection-header"><h6>Features In Development</h6></li>
+                <li class="green lighten-4 collection-item">Designate overnight shifts.</li>
+                <li class="green lighten-4 collection-item">Create schedules for employees.</li>
+                <li class="green lighten-4 collection-item">Add Employees</li>
+                <li class="green lighten-4 collection-item">Configurable timezones</li>
+                <li class="green lighten-4 collection-item">Configurable password requirements.</li>
+                <li class="green lighten-4 collection-item">AUTOMAGIC payable benefits!</li>
+                <li class="green lighten-4 collection-item">Drag and drop timestamps!</li>
             </ul>
         </p>
     </div>
