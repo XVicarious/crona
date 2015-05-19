@@ -255,6 +255,7 @@ function validMoment(timestamp) {
       isValid = isValid || moment(timestamp, format);
     }
   }
+  console.log(timestamp + " " + isValid);
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
