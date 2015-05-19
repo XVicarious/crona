@@ -173,8 +173,10 @@ $(function() {
     if (e.keyCode === $.ui.keyCode.ENTER) {
       $(this).blur();
     } else {
-      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -0' + offsetInHours + '00';
-      $(this).css('color', moment(validTimestamp).isValid() ? 'inherit' : 'red');
+      // todo: this works, however am/pm does not work with this format
+      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -' + offsetInHours + '00';
+      console.log(validTimestamp, moment(validTimestamp,['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']).isValid());
+      $(this).css('color', moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']).isValid() ? 'inherit' : 'red');
     }
   });
   $(document).on('keydown', '.times', function(e) {
@@ -191,11 +193,15 @@ $(function() {
       defaultTime = $(this).attr('default-time');
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
-        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -0' + offsetInHours + '00';
-        if (!moment(validTimestamp).isValid()) {
+        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
+        var myMoment = moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']);
+        if (!myMoment.isValid()) {
           return;
         }
-        var trueTime = (Date.parse(validTimestamp) / TimeVar.MILLISECONDS_IN_SECOND);
+        //myMoment.utc();
+        console.log(myMoment);
+        var trueTime = myMoment.format('X');
+        console.log(trueTime);
         $.ajax({
           type: 'POST',
           url: 'timeEdit/change_stamp.php',
