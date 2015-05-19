@@ -28,7 +28,7 @@ if ($_POST) {
                         session_start();
                         $_SESSION["lastAction"] = time();
                         $_SESSION["userId"] = $uid;
-                        echo '<script>$(location).attr("href","http://xvss.net/devel/time/set_security_questions.php?" +
+                        echo '<script>$(location).attr("href","http://xvss.net/time/set_security_questions.php?" +
                               "s=partial")</script>';
                         return;
                     }
@@ -36,7 +36,7 @@ if ($_POST) {
                     session_start();
                     $_SESSION["lastAction"] = time();
                     $_SESSION["userId"] = $uid;
-                    echo '<script>$(location).attr("href","http://xvss.net/devel/time/set_security_questions.php")</script>';
+                    echo '<script>$(location).attr("href","http://xvss.net/time/set_security_questions.php")</script>';
                     return;
                 }
                 if ($_POST["loginType"] === "timestamp") {

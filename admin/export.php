@@ -115,7 +115,7 @@ if (isset($administrativeId)) {
                     fputcsv($csv, $fields);
                 }
                 fclose($csv);
-                echo "window.open(\"http://xvss.net/devel/time/admin/$fileName\")";
+                echo "window.open(\"http://xvss.net/time/admin/$fileName\")";
             }
         }
     }
