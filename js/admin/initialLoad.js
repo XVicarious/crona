@@ -315,7 +315,7 @@ $(function() {
       userId = $('#timecard').attr('user-id');
     // We need to traverse the row to find more stamps
     var stampString = '' + stampId;
-    $('#' + stampId).parent().parent().children().each(function() {
+    $('#' + stampId).parent().parent().parent().children().children().each(function() {
       var hopefulInput = $(this).children(':first-child');
       if (hopefulInput.is('input') && hopefulInput.attr('stamp-id') && hopefulInput.attr('stamp-id') !== stampId) {
         stampString += ',' + hopefulInput.attr('stamp-id');
