@@ -147,7 +147,7 @@ if (sessionCheck()) {
                 $val = $realTime;
                 $disabled = '';
                 if ($modifier !== '') {
-                    $disabled = 'readonly disabled';
+                    $disabled = 'readonly';
                     if ($modifier === 'S') {
                         $val = 'SICK';
                     } elseif ($modifier === 'F') {
