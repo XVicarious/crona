@@ -25,19 +25,20 @@ var eCounter = 0,
                     ["RK3", "HBK Restaurant LLC"],
                     ["ZVT", "Twenty Flint Rd LLC"]];
 $(function() {
+  var employeeDialog;
   getEmployees();
   getPermissions();
   $(".modal-trigger").leanModal();
   $('#addemployeeButton').click(function() {
-    var $dialog = $('#dialog-timecard');
-    $dialog.attr('title', 'Add Employees');
+    var dialog = $('#dialog-timecard');
+    dialog.attr('title', 'Add Employees');
     $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0"><\/select><\/td><td><select class="userDepartment e-0"><option value="100">Accounting (100)<\/option><\/select><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form>');
     var optionString = '<option value="">(none)<\/option>';
     for (i = 0; i < companyCodes.length; i++) {
       optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...<\/option>';
     }
     $('.userCompany.e-0').html(optionString);
-    var dialog = $dialog.dialog({
+    employeeDialog = dialog.dialog({
       modal: true,
       draggable: false,
       width: $(window).width() * 0.9,
@@ -56,18 +57,16 @@ $(function() {
               if ($(this).val() === null || !$(this).val().length) {
                 // we allow userEmail and userStart to be empty because they have default values
                 // userStart will be today, and userEmail will be their immediate superior's email
-                if ($(this).hasClass('userEmail') || $(this).hasClass('userStart')) {
-                  if ($(this).val().length) {
-                    if ($(this).hasClass('userEmail')) {
-                      if (!validateEmail($(this).val())) {
-                        isEverythingGood = false;
-                        return false;
-                      }
-                    } else {
-                      if (!validMoment($(this).val())) {
-                        isEverythingGood = false;
-                        return false;
-                      }
+                if (($(this).hasClass('userEmail') || $(this).hasClass('userStart')) && $(this).val().length) {
+                  if ($(this).hasClass('userEmail')) {
+                    if (!validateEmail($(this).val())) {
+                      isEverythingGood = false;
+                      return false;
+                    }
+                  } else {
+                    if (!validMoment($(this).val())) {
+                      isEverythingGood = false;
+                      return false;
                     }
                   }
                 } else {
@@ -154,15 +153,15 @@ $(function() {
     }
   });
   $(document).on('click', 'input.addButton', function() {
-    var timestamp, $thisParent = $(this).parent();
-    if ($thisParent.prev().children(':first-child').is('input')) {
-      timestamp = $thisParent.prev().children(':first-child').val();
-    } else if ($thisParent.next().children(':first-child').is('input')) {
-      timestamp = $thisParent.next().children(':first-child').val();
+    var timestamp, validTimestamp, userId, trueTime, thisParent = $(this).parent();
+    if (thisParent.prev().children(':first-child').is('input')) {
+      timestamp = thisParent.prev().children(':first-child').val();
+    } else if (thisParent.next().children(':first-child').is('input')) {
+      timestamp = thisParent.next().children(':first-child').val();
     }
-    var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp,
-      userId = $('#timecard').attr('user-id'),
-      trueTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a').format('X'));
+    validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp;
+    userId = $('#timecard').attr('user-id');
+    trueTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a').format('X'));
     createStamp(userId, trueTime);
   });
   $(document).on('focus', 'input.times', function() {
@@ -190,18 +189,18 @@ $(function() {
       me = $(this),
       stampId = $(this).attr('stamp-id'),
       userId = $('#timecard').attr('user-id'),
-      defaultTime = $(this).attr('default-time');
+      defaultTime = $(this).attr('default-time'),
+      validTimestamp,
+      myMoment,
+      trueTime;
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
-        var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
-        var myMoment = moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']);
+        validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
+        myMoment = moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']);
         if (!myMoment.isValid()) {
           return;
         }
-        //myMoment.utc();
-        console.log(myMoment);
-        var trueTime = myMoment.format('X');
-        console.log(trueTime);
+        trueTime = myMoment.format('X');
         $.ajax({
           type: 'POST',
           url: 'timeEdit/change_stamp.php',
