@@ -61,17 +61,14 @@ $(function() {
                   if ($(this).hasClass('userEmail')) {
                     if (!validateEmail($(this).val())) {
                       isEverythingGood = false;
-                      return false;
                     }
                   } else {
                     if (!validMoment($(this).val())) {
                       isEverythingGood = false;
-                      return false;
                     }
                   }
                 } else {
                   isEverythingGood = false;
-                  return false;
                 }
               } else {
                 aTempEmployee.push($(this).val());
