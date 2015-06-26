@@ -14,10 +14,12 @@ function getPermissions() {
 }
 
 function getOffsetString() {
-  var offsetMinutes = (new Date()).getTimezoneOffset();
-  var absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes);
-  var offsetString = '';
-  var extraOffset = 0;
+  var offsetMinutes = (new Date()).getTimezoneOffset(),
+      absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes),
+      offsetString = '',
+      extraOffset = 0;
+  var offset,
+      flooredOffset;
   if (absoluteOffsetMinutes) {
     offsetString = '-';
     absoluteOffsetMinutes = offsetMinutes;
@@ -25,15 +27,15 @@ function getOffsetString() {
     offsetString = '+';
     absoluteOffsetMinutes = Math.abs(offsetMinutes);
   }
-  var offset = absoluteOffsetMinutes / TimeVar.MINUTES_IN_HOUR;
-  var flooredOffset = Math.floor(offset);
+  offset = absoluteOffsetMinutes / TimeVar.MINUTES_IN_HOUR;
+  flooredOffset = Math.floor(offset);
   if (flooredOffset < 10) {
     offsetString += '0'+flooredOffset;
   } else {
     offsetString += ''+flooredOffset;
   }
   if (flooredOffset !== offset) {
-    extraOffset = absoluteOffsetMinutes - (flooredOffset * 60);
+    extraOffset = absoluteOffsetMinutes - (flooredOffset * TimeVar().MINUTES_IN_HOUR);
   }
   if (extraOffset < 10) {
     offsetString += '00';
@@ -48,14 +50,14 @@ function rowClear(rowClass) {
   $('input.' + rowClass).each(function() {
     if ($(this).val().length) {
       isClear = false;
-      return false;
     }
+    return true;
   });
   $('select.' + rowClass).each(function() {
     if ($(this).val() !== null) {
       isClear = false;
-      return false;
     }
+    return false;
   });
   return isClear;
 }
@@ -64,18 +66,20 @@ function getEmployee(parameters) {
   var id = parameters.id;
   var range = parameters.range;
   var extraString = parameters.extraString;
+  //var url;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
-  var url = 'get_timecard_2.php?employee='+id+'&range='+range+extraString;
+  //url = 'get_timecard_2.php?employee='+id+'&range='+range+extraString;
   $.ajax({
     type: 'POST',
     url: 'get_timecard_2.php',
     //container: '#ajaxDiv',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
+      var datepicker, secondDate;
       $('#ajaxDiv').html(data);
-      var datepicker = $('#date0');
-      var secondDate = $('#date1');
+      datepicker = $('#date0');
+      secondDate = $('#date1');
       $inputPicker[0] = datepicker.pickadate({
         selectMonths: true,
         selectYears: true,
@@ -136,13 +140,18 @@ function createStamp(userId, stamp) {
 function bindNewDate() {
   var newDateClass = $('.newDate');
   newDateClass.each(function() {
-    var $myGrandparent = $(this).parent().parent(),
-      earlierDay = $myGrandparent.prev().attr('stamp-day'),
-      thisDay = $myGrandparent.attr('stamp-day'),
+    var myGrandparent = $(this).parent().parent(),
+      earlierDay = myGrandparent.prev().attr('stamp-day'),
+      thisDay = myGrandparent.attr('stamp-day'),
       userId = $('#timecard').attr('user-id');
+    var thisThisDay,
+      weekstart,
+      earlierDay2,
+      weekend,
+      difference;
     if (!earlierDay) { // before first stamp
-      var thisThisDay = new Date(thisDay);
-      var weekstart = new Date(new Date().getDate() - thisThisDay.getDay());
+      thisThisDay = new Date(thisDay);
+      weekstart = new Date(new Date().getDate() - thisThisDay.getDay());
       $(this).datepicker({
         dateFormat: 'yy-mm-dd',
         showOtherMonths: true,
@@ -157,8 +166,8 @@ function bindNewDate() {
       });
     } else if (!thisDay) { // after last stamp
       // fixme: if the timecard is empty for the specified period, the whole calendar is selectable
-      var earlierDay2 = new Date(earlierDay);
-      var weekend = new Date(earlierDay);
+      earlierDay2 = new Date(earlierDay);
+      weekend = new Date(earlierDay);
       weekend.setDate(weekend.getDate() + 6);
       earlierDay2.setDate(earlierDay2.getDate() + 2);
       $(this).datepicker({
@@ -176,7 +185,7 @@ function bindNewDate() {
     } else { // between stamps
       earlierDay = new Date(earlierDay);
       thisDay = new Date(thisDay);
-      var difference = thisDay.getTime() - earlierDay.getTime();
+      difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
       if (difference > TimeVar.MILLISECONDS_IN_DAY * 2) {
         $(this).datepicker({
@@ -197,18 +206,18 @@ function bindNewDate() {
     var twoParent = $(this).parent().parent(),
       earlierDay = twoParent.prev().attr('stamp-day'),
       thisDay = twoParent.attr('stamp-day'),
-      userId = $('#timecard').attr('user-id');
+      userId = $('#timecard').attr('user-id'),
+      difference;
     if (earlierDay && thisDay) {
       earlierDay = new Date(earlierDay);
       thisDay = new Date(thisDay);
-      var difference = thisDay.getTime() - earlierDay.getTime();
+      difference = thisDay.getTime() - earlierDay.getTime();
       earlierDay.setDate(earlierDay.getDate() + 2);
       if (difference > TimeVar.MILLISECONDS_IN_DAY && difference <= TimeVar.MILLISECONDS_IN_DAY * 2) {
         thisDay = new Date(thisDay);
         thisDay.setDate(thisDay.getDate() - 1);
         thisDay = (thisDay.getTime() / TimeVar.MILLISECONDS_IN_SECOND) + offsetInSeconds;
         createStamp(userId, thisDay);
-        return false;
       }
     }
   });
@@ -232,11 +241,12 @@ function handleDrop(event, ui) {
 }
 
 function handleDelete(event, ui) {
+  var userId, stampId, defaultTime;
   ui.draggable.draggable('disable');
   ui.draggable.draggable('option','revert',false);
-  var userId = $('#timecard').attr('user-id');
-  var stampId = $(ui.draggable).find('.times').attr('stamp-id');
-  var defaultTime = $(ui.draggable).find('.times').attr('default-time');
+  userId = $('#timecard').attr('user-id');
+  stampId = $(ui.draggable).find('.times').attr('stamp-id');
+  defaultTime = $(ui.draggable).find('.times').attr('default-time');
   $.ajax({
     type: 'POST',
     url: 'timeEdit/delete_stamp.php',
@@ -248,14 +258,14 @@ function handleDelete(event, ui) {
 }
 
 function validMoment(timestamp) {
-  var validFormats = ['YYYY/MM/DD', 'YY/MM/DD', 'MM/DD/YYYY', 'MM/DD/YY', 'DD/MM/YYYY', 'DD/MM/YY'];
-  var isValid = false; // we always assume they did it wrong
-  for (var format in validFormats) {
+  var validFormats = ['YYYY/MM/DD', 'YY/MM/DD', 'MM/DD/YYYY', 'MM/DD/YY', 'DD/MM/YYYY', 'DD/MM/YY'],
+      isValid = false; // we always assume they did it wrong
+  var format;
+  for (format in validFormats) {
     if (validFormats.hasOwnProperty(format)) {
       isValid = isValid || moment(timestamp, format);
     }
   }
-  console.log(timestamp + " " + isValid);
   return isValid;
   //var valid = moment(timestamp,"YYYY/MM/DD").isValid() || moment(timestamp, )
 }
@@ -264,6 +274,7 @@ function fetchSchedule(parameters) {
   var userId = parameters.userId;
   var week = parameters.week;
   var year = parameters.year;
+  var data, Schedule, ScheduleList, scheduleDays, grid, columns, $schedule;
   // It is useless if we weren't provided a userId
   if (userId === 'undefined') {
     return false;
@@ -271,13 +282,13 @@ function fetchSchedule(parameters) {
   // If the week or year isn't defined, get the current one
   week = week || moment().week();
   year = year || moment().year();
-  var data = {userId: userId, week: week, year: year};
-  var Schedule = Backbone.Model.extend({});
-  var ScheduleList = Backbone.Collection.extend({
+  data = {userId: userId, week: week, year: year};
+  Schedule = Backbone.Model.extend({});
+  ScheduleList = Backbone.Collection.extend({
         model: Schedule,
         url: 'get_schedule.php'
-      }),
-      columns = [{
+      });
+  columns = [{
         name: 'id',
         renderable: false,
         cell: 'integer'
@@ -290,11 +301,12 @@ function fetchSchedule(parameters) {
         formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
           fromRaw: function(rawValue) {
             var rawDay = rawValue;
+            var myMoment;
             //Parse the values from this fetch to display a proper date
             moment.locale('en-US');
             // Have to subtract one from rawValue for a hotfix.  Unknown as to why it thinks Monday is the start of the
             // week in the en-US locale.
-            var myMoment = moment(year + ' ' + week + ' ' + --rawDay, 'YYYY WW E');
+            myMoment = moment(year + ' ' + week + ' ' + --rawDay, 'YYYY WW E');
             return myMoment.format('ddd MM/DD');
           }
         })
@@ -337,28 +349,24 @@ function fetchSchedule(parameters) {
         label: 'Department',
         cell: 'integer'
       }];
-  var scheduleDays = new ScheduleList();
-  var grid = new Backgrid.Grid({
-        columns: columns,
-        collection: scheduleDays
-      }),
-      $schedule = $('#timecardDiv');
-  grid.listenTo(scheduleDays, "backgrid:edited", function (model, column) {
+  scheduleDays = new ScheduleList();
+  grid = new Backgrid.Grid({columns: columns, collection: scheduleDays});
+  $schedule = $('#timecardDiv');
+  grid.listenTo(scheduleDays, "backgrid:edited", function(model, column) {
+    var siblingName, sibling, newValue;
     if (column.attributes.name !== 'department') {
       // we need in if out, and out if in
-      var siblingName = column.attributes.name === 'in' ? 'out' : 'in';
-      // the cells like to change the values to strings, make sure they're ints because we're about to work with them
-      var newValue = parseInt(model.attributes[column.attributes.name]);
-      var sibling = parseInt(model.attributes[siblingName]);
+      siblingName = column.attributes.name === 'in' ? 'out' : 'in';
+      // the cells like to change the values to strings, make sure they're ints, because we're about to work with them
+      newValue = parseInt(model.attributes[column.attributes.name]);
+      sibling = parseInt(model.attributes[siblingName]);
       // todo: make sure to tell the user they're wrong
       if (siblingName === 'in' && newValue < sibling) {
         // throw an error, you can't leave before you get there
         model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
-        return false;
       } else if (siblingName === 'out' && sibling < newValue) {
         // same thing, different sibling
         model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
-        return false;
       }
     }
     if (model.attributes.id) {
@@ -388,6 +396,7 @@ function fetchSchedule(parameters) {
   return true;
 }
 function getEmployees() {
+  var pageableGrid, $employeeList;
   var EmployeeList = Backbone.Model.extend({});
   var EmployeeListPageable = Backbone.PageableCollection.extend({
     model: EmployeeList,
@@ -444,11 +453,12 @@ function getEmployees() {
       getEmployee({id: model.id, range: 'this'});
     }
   });
-  var pageableGrid = new Backgrid.Grid({
+  pageableGrid = new Backgrid.Grid({
     row: ClickableRow,
     columns: columns,
     collection: employeeListPageable
-  }), $employeeList = $('#ajaxDiv');
+  });
+  $employeeList = $('#ajaxDiv');
   $employeeList.html(pageableGrid.render().el);
   employeeListPageable.getFirstPage({fetch: true});
 }
