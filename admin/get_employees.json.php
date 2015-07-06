@@ -12,10 +12,6 @@ if (sessionCheck()) {
         }
         array_push($permissionsArray[$companyCode], $departmentId);
     }
-    /*
-     * We want to make a query that looks like this:
-     * SELECT STUFF FROM THIS WHERE ($cc = this AND ($dc = this,orthis,orthis)) OR ($cc = this AND ($dc = this,orthis))
-     */
     $adminPermissionPart = 'WHERE ';
     $indexNumber = 0;
     $permissionsArrayCount = count($permissionsArray);
