@@ -3,40 +3,41 @@ require "admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
     $administrativeId = $_SESSION['userId'];
-    $permissionsQuery = "SELECT user_admin_perms FROM employee_list WHERE user_id = $administrativeId";
-    $permissionQueryPart = '';
-    $permissionResult = mysqli_query($sqlConnection, $permissionsQuery);
-    //echo findExceptions($sqlConnection);
-    list($permissionResult) = mysqli_fetch_row($permissionResult);
-    if (!isset($permissionResult)) {
-        return false;
-    }
-    if ($permissionResult !== 'all') {
-        $a_permission = unserialize($permissionResult);
-        $a_companyCode = array_keys($a_permission);
-        $permissionQueryPart = 'WHERE ';
-        foreach ($a_companyCode as $companyCode) {
-            $permissionQueryPart .= "(user_companyCode = '$companyCode'";
-            if (count($a_permission[$companyCode]) > 0) {
-                $permissionQueryPart .= ' AND (';
-            }
-            foreach ($a_permission[$companyCode] as $departmentCode) {
-                $permissionQueryPart .= "user_department = $departmentCode OR ";
-            }
-            if (substr($permissionQueryPart, strlen($permissionQueryPart) - 4) === ' OR ') {
-                $permissionQueryPart = substr($permissionQueryPart, 0, strlen($permissionQueryPart) - 4);
-            }
-            if (count($a_permission[$companyCode]) > 0) {
-                $permissionQueryPart .= ')';
-            }
-            $permissionQueryPart .= ') OR ';
+    $permissionQuery = "SELECT company_code, department_id FROM employee_supervisors WHERE user_id = $administrativeId";
+    $result = mysqli_query($sqlConnection, $permissionQuery);
+    $permissionsArray = [];
+    while (list($companyCode, $departmentId) = mysqli_fetch_row($result)) {
+        if (!isset($permissionsArray[$companyCode])) {
+            $permissionsArray[$companyCode] = [];
         }
-        $permissionQueryPart = substr($permissionQueryPart, 0, strlen($permissionQueryPart) - 4);
+        array_push($permissionsArray[$companyCode], $departmentId);
     }
-    $employeeQuery = "SELECT user_id,user_adpid,user_last,user_first,user_companycode,user_department
-                      FROM employee_list $permissionQueryPart ORDER BY user_last";
-    $employeeResult = mysqli_query($sqlConnection, $employeeQuery);
-    $resultNumber = mysqli_num_rows($employeeResult);
+    /*
+     * We want to make a query that looks like this:
+     * SELECT STUFF FROM THIS WHERE ($cc = this AND ($dc = this,orthis,orthis)) OR ($cc = this AND ($dc = this,orthis))
+     */
+    $adminPermissionPart = 'WHERE ';
+    $indexNumber = 0;
+    $permissionsArrayCount = count($permissionsArray);
+    foreach ($permissionsArray as $key => $permission) {
+        $permissionSize = count($permission);
+        $adminPermissionPart .= "(user_companycode = \"$key\" AND (";
+        for ($i = 0; $i < $permissionSize; $i++) {
+            $adminPermissionPart .= 'user_department = ' . $permission[$i];
+            if ($i < $permissionSize - 1) {
+                $adminPermissionPart .= ' OR ';
+            }
+        }
+        $adminPermissionPart .= '))';
+        if ($indexNumber < $permissionsArrayCount - 1) {
+            $adminPermissionPart .= ' OR ';
+        }
+        $indexNumber++;
+    }
+    $employeeQuery = "SELECT user_id, user_adpid, user_last, user_first, user_companycode, user_department
+                      FROM employee_list $adminPermissionPart ORDER BY user_last";
+    $result = mysqli_query($sqlConnection, $employeeQuery);
+    $resultNumber = mysqli_num_rows($result);
     $a_employeeList = [];
     if ($resultNumber !== 0) {
         // Start generating that table monkey!
@@ -46,7 +47,7 @@ if (sessionCheck()) {
                                      "total_pages" => $totalPages,
                                      "page" => 1]);
         array_push($a_employeeList, []);
-        while (list($user_id,$user_adpid,$user_last,$user_first,$user_companycode,$user_department) = mysqli_fetch_row($employeeResult)) {
+        while (list($user_id,$user_adpid,$user_last,$user_first,$user_companycode,$user_department) = mysqli_fetch_row($result)) {
             array_push($a_employeeList[1], ['id' => $user_id,
                                             'adpid' => $user_adpid,
                                             'name' => "$user_last, $user_first",
