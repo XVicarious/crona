@@ -60,14 +60,15 @@ $(function() {
     var s1 = $('#s1'),
       s2 = $('#s2'),
       s3 = $('#s3');
-    //if (!(s1.val() === s2.val() || s1.val() === s3.val() || s2.val() === s3.val() || $s1ic.val() === '' ||
-      //$s2ic.val() === '' || $s3ic.val() === '')) {
-    if (!(''.match(new RegExp($s1ic+'|'+$s2ic+'|'+$s3ic)) || s1.val() === s2.val() || s1.val() === s3.val() || s2.val() === s3.val()) && $s1i.val() === $s1ic.val() && $s2i.val() === $s2ic.val() && $s3i.val() === $s3ic.val()) {
+    if (!(''.match(new RegExp($s1ic+'|'+$s2ic+'|'+$s3ic)) || s1.val() === s2.val() || s1.val() === s3.val() ||
+          s2.val() === s3.val()) && $s1i.val() === $s1ic.val() && $s2i.val() === $s2ic.val() &&
+          $s3i.val() === $s3ic.val()) {
+        console.log("it is good...");
         $.ajax({
           type: 'POST',
           url: 'insert_security.php',
           data: 's1=' + s1.val() + '&s2=' + s2.val() + '&s3=' + s3.val() + '&s1i=' + $s1ic.val() + '&s2i=' +
-          $s2ic.val() + '&s3i=' + $s3ic.val(),
+                $s2ic.val() + '&s3i=' + $s3ic.val(),
           success: function() {
             $(location).attr('href', 'http://xvss.net/time/');
           }

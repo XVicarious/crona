@@ -30,7 +30,7 @@ $_SESSION["lastAction"] = time();
     $userId = $_SESSION['userId'];
     if (isset($userId)) {
         // Please add to the END of this list to not screw everyone up
-        $a_securityQuestions = ["What city was your mother born in?",
+        /*$a_securityQuestions = ["What city was your mother born in?",
                                 "What is the name of the street you grew up on?",
                                 "What is then name of your first grade teacher?",
                                 "What is your father's middle name?",
@@ -41,9 +41,17 @@ $_SESSION["lastAction"] = time();
                                 "What was the name of your first pet?",
                                 "What was your first phone number?",
                                 "Where did you go to primary school?",
-                                "Where did you grow up?", "Who was your first boss?"];
+                                "Where did you grow up?",
+                                "Who was your first boss?"];
+        */
+        $a_securityQuestions = [];
         require 'admin/admin_functions.php';
         $sqlConnection = createSql();
+        $query = 'SELECT sque_question FROM security_questions';
+        $result = mysqli_query($sqlConnection, $query);
+        while (list($question) = mysqli_fetch_row($result)) {
+            array_push($a_securityQuestions, $question);
+        }
         /*if ($_GET['s'] === 'partial') {
             $query = "SELECT sec_1,sec_2,sec_3 FROM employee_security WHERE sec_user_id = $userId";
             $result = mysqli_query($sqlConnection, $query);
