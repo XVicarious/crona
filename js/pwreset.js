@@ -20,7 +20,7 @@ $(function() {
       data: 'c=' + getByName('c'),
       success: function(data) {
         var loginForm = $('#loginForm');
-        $('#ajaxDiv');//.html(data).css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
+        $('#ajaxDiv').html(data);//.css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
       }
     });
   }

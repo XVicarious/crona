@@ -12,6 +12,7 @@ if ($_POST) {
             $salt = substr($upas, 0, 8);
             if (validateLogin($_POST['drowp'], substr($upas, 8), $salt)) {
                 $passwordSetLapse = time() - strtotime($udate);
+                //todo: make password expiration configurable
                 if ($passwordSetLapse >= 15742080) {
                     $data = http_build_query(['function' => 'sendEmail', 'email' => $uemail]);
                     $opts = ['http' => ['method' => 'POST', 'content' => $data]];
@@ -20,19 +21,9 @@ if ($_POST) {
                     echo 'Password Expired!  Reset link set to your email.';
                     return;
                 }
-                $query = 'SELECT sec_1,sec_2,sec_3 FROM employee_security WHERE sec_user_id = ' . $uid;
+                $query = 'SELECT eque_number FROM employee_questions WHERE eque_user = ' . $uid;
                 $result = mysqli_query($conn, $query);
-                if (mysqli_num_rows($result) !== 0) {
-                    list($s1, $s2, $s3) = mysqli_fetch_row($result);
-                    if ($s1 === "" || $s2 === "" || $s3 === "") {
-                        session_start();
-                        $_SESSION["lastAction"] = time();
-                        $_SESSION["userId"] = $uid;
-                        echo '<script>$(location).attr("href","http://xvss.net/devel/time/set_security_questions.php?" +
-                              "s=partial")</script>';
-                        return;
-                    }
-                } else {
+                if (mysqli_num_rows($result) < 3) {
                     session_start();
                     $_SESSION["lastAction"] = time();
                     $_SESSION["userId"] = $uid;

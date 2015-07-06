@@ -20,15 +20,14 @@ if (isset($function)) {
     if ($function === 'checkReset') {
         $resetId = $_POST['resetId'];
         $password = $_POST['pword'];
-        $qanswer = $_POST['answer'];
+        $qanswer = strtolower($_POST['answer']);
         $qid = $_POST['qid'];
         $userId = $_POST['user'];
-        $securityId = "sec_$qid";
-        $query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $userId";
+        //$query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $userId";
+        $query = "SELECT eque_answer FROM employee_questions WHERE eque_number = $qid AND eque_user = $userId";
         $result = mysqli_query($sqlConnection, $query);
-        list($sa_qa) = mysqli_fetch_row($result);
-        $a_qa = unserialize($sa_qa);
-        if (sha1($qanswer) === $a_qa[1]) {
+        list($lowerAnswer) = mysqli_fetch_row($result);
+        if (sha1($qanswer) === $lowerAnswer) {
             $salt = randomSalt();
             $password = $salt . $password;
             $password = sha1($password);
@@ -80,19 +79,22 @@ if (isset($function)) {
                   ?r=go</a> to get a new link.';
             return;
         }
-        $random = rand(1, 3);
+        $random = rand(0, 2);
         $securityId = "sec_$random";
-        $query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $uid";
+        //$query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $uid";
+        //$query = "SELECT eque_number FROM employee_questions WHERE eque_user = $uid LIMIT 1 OFFSET $random";
+        $query = "SELECT sque_id, sque_question FROM security_questions WHERE sque_id IN
+                  (SELECT eque_number FROM employee_questions WHERE eque_user = $uid) LIMIT 1 OFFSET $random";
         $result = mysqli_query($sqlConnection, $query);
-        list($sa_qa) = mysqli_fetch_row($result);
-        $a_qa = unserialize($sa_qa);
+        echo $query;
+        list($securityId, $securityQuestion) = mysqli_fetch_row($result);
         echo '<div id="rpassword" style="position:absolute;display:block"><form style="background-color:white">
               <input id="uid" type=hidden name="user" value="' . $uid . '"><input type=hidden name="function"
               value="checkReset"><table id="loginForm" style="border:solid thin black;table-layout:fixed;
-              font-family:monospace"><tr></tr><tr><td>' . $a_securityQuestions[$a_qa[0]] . "</td><td>
+              font-family:monospace"><tr></tr><tr><td>' . $securityQuestion . "</td><td>
               <input id=\"answer\" name=\"answer\" type=password></td></tr><tr><td>New Password:<input type=hidden
               id=\"resetId\" name=\"resetId\" value=\"$resetId\"><input id=\"qid\" type=hidden name=\"qid\"
-              value=\"$random\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td><td>
+              value=\"$securityId\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td><td>
               <input id=\"pwc\" type=password name=\"pword\"></td></tr><tr><th colspan=\"3\"><input id=\"subby\"
               style=\"width:100%\" type=submit value=\"Submit\"></th></tr></table></form></div>";
     } else {
