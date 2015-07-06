@@ -1,18 +1,5 @@
 <?php
 require 'function.php';
-$a_securityQuestions = ["What city was your mother born in?",
-                        "What is the name of the street you grew up on?",
-                        "What is then name of your first grade teacher?",
-                        "What is your father's middle name?",
-                        "What is your favorite color?",
-                        "What is your favorite food?",
-                        "What was the make and model of your first car?",
-                        "What was the name of your childhood best friend?",
-                        "What was the name of your first pet?",
-                        "What was your first phone number?",
-                        "Where did you go to primary school?",
-                        "Where did you grow up?",
-                        "Who was your first boss?"];
 require 'admin/admin_functions.php';
 $sqlConnection = createSql();
 $function = $_POST['function'];
@@ -23,7 +10,6 @@ if (isset($function)) {
         $qanswer = strtolower($_POST['answer']);
         $qid = $_POST['qid'];
         $userId = $_POST['user'];
-        //$query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $userId";
         $query = "SELECT eque_answer FROM employee_questions WHERE eque_number = $qid AND eque_user = $userId";
         $result = mysqli_query($sqlConnection, $query);
         list($lowerAnswer) = mysqli_fetch_row($result);
@@ -81,8 +67,6 @@ if (isset($function)) {
         }
         $random = rand(0, 2);
         $securityId = "sec_$random";
-        //$query = "SELECT $securityId FROM employee_security WHERE sec_user_id = $uid";
-        //$query = "SELECT eque_number FROM employee_questions WHERE eque_user = $uid LIMIT 1 OFFSET $random";
         $query = "SELECT sque_id, sque_question FROM security_questions WHERE sque_id IN
                   (SELECT eque_number FROM employee_questions WHERE eque_user = $uid) LIMIT 1 OFFSET $random";
         $result = mysqli_query($sqlConnection, $query);
