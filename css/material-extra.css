@@ -40,3 +40,11 @@ div.col.s12 {
 .draggableHover {
     background-color: #00ff00;
 }
+
+.profile-button {
+    margin: 0;
+    text-transform: capitalize;
+    padding: 0;
+    font-size: 15px;
+    text-shadow: 1px 1px 1px #444444;
+}
