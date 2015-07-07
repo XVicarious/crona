@@ -66,10 +66,8 @@ function getEmployee(parameters) {
   var id = parameters.id;
   var range = parameters.range;
   var extraString = parameters.extraString;
-  //var url;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
-  //url = 'get_timecard_2.php?employee='+id+'&range='+range+extraString;
   $.ajax({
     type: 'POST',
     url: 'get_timecard_2.php',
@@ -109,7 +107,8 @@ function getEmployee(parameters) {
           var fixedDate = this.get('value');
           var extraString = '';
           if (thing.select) {
-            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (TimeVar.SECONDS_IN_DAY - 1);
+            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() +
+                               (TimeVar.SECONDS_IN_DAY - 1);
             extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
             getEmployee({id: id, range: 'specificDate', extraString: extraString});
             this.close();
