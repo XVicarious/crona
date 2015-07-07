@@ -1,6 +1,6 @@
 <html>
 <head>
-    <meta name="theme-color" content="#dd2c00">
+    <meta name="theme-color" content="#ff9800">
     <title>Crona Timestamp Login</title>
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="css/materialize.css">
@@ -13,13 +13,13 @@
 </head>
 <body>
 <header class="login">
-    <nav class="orange">
+    <nav class="green darken-3">
         <div class="nav-wrapper">
             <a class="page-title">Crona Timestamp</a>
         </div>
     </nav>
 </header>
-<main class="login orange lighten-5">
+<main class="login green lighten-5">
     <div class="container">
         <div class="row">
             <div class="col s12">
@@ -28,13 +28,13 @@
         </div>
         <div class="row">
             <div class="input-field col s12 l6 offset-l3">
-                <i class="mdi-action-account-circle prefix orange-text darken-1"></i>
+                <i class="mdi-action-account-circle prefix blue-text lighten-1"></i>
                 <input id="uname" type="text" placeholder="Username" class="validate">
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12 l6 offset-l3">
-                <i class="mdi-communication-vpn-key prefix orange-text darken-1"></i>
+                <i class="mdi-communication-vpn-key prefix blue-text lighten-1"></i>
                 <input id="drowp" type="password" placeholder="Password" class="validate">
             </div>
         </div>
@@ -51,14 +51,14 @@
         <div class="row">
             <div class="col s12 l6 offset-l3">
                 <div class="center">
-                    <a class="cyan lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="mdi-action-lock-open right"></i></a>
+                    <a class="blue lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="mdi-action-lock-open right"></i></a>
 
                 </div>
             </div>
         </div>
     </div>
 </main>
-<footer class="login page-footer orange">
+<footer class="login page-footer green darken-3">
     <div class="container"></div>
     <div class="footer-copyright">
         <div class="container">
