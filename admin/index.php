@@ -16,7 +16,7 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/jquery-ui.theme.css">
     <link rel="stylesheet" href="../css/jquery.contextMenu.css">
     <link rel="stylesheet" href="../css/backgrid.css">
-    <link rel="stylesheet" href="../css/materialize.css">
+    <link rel="stylesheet" href="../css/materialize.css?v=0.97">
     <link rel="stylesheet" href="../css/material-extra.css">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
@@ -24,7 +24,7 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/sticky-footer.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
-    <script src="../js/lib/materialize.js"></script>
+    <script src="../js/lib/materialize.js?v=0.97"></script>
     <script src="../js/lib/underscore.js"></script>
     <script src="../js/lib/backbone.js"></script>
     <script src="../js/lib/backgrid.js"></script>
@@ -62,8 +62,30 @@ $_SESSION["lastAction"] = time();
         </a>
     </div>
     <ul id="nav-mobile" class="side-nav fixed">
-        <li class="logo attention">
+        <!--<li class="logo attention">
             <a id="logo-container"><i class="attention-image icon-logo center"></i></a>
+        </li>-->
+        <li class="user-details orange">
+            <div class="row">
+                <div class="col s4 m4 l4">
+                    <img alt class="circle responsive-img valign profile-image">
+                </div>
+                <div class="col s8 m8 l8">
+                    <a class="btn-flat dropdown-button white-text profile-button" href="#" data-activates="profile-dropdown">
+                        Username
+                        <i class="mdi-navigation-arrow-drop-down right"></i>
+                    </a>
+                    <ul id="profile-dropdown" class="dropdown-content active">
+                        <li>
+                            <a href="#">
+                                <i class="mdi-hardware-keyboard-tab"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="user-role">Administrator</p>
+                </div>
+            </div>
         </li>
         <li class="bold">
             <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards</a>
