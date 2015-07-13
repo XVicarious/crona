@@ -1,20 +1,31 @@
 <?php
 require 'function.php';
 if ($_POST) {
+    //todo: convert to new sql system
     $conn = mysqli_connect("localhost", "bmaurer_pciven", "3al12of4ut25", "bmaurer_hhemployee");
     $myu = $_POST['uname'];
-    $query = "SELECT user_id, user_name, user_password, user_password_set, user_emails FROM employee_list WHERE
-              employee_list.user_name = \"$myu\"";
+    //$query = "SELECT user_id, user_name, user_password, user_password_set, user_emails FROM employee_list WHERE
+              //employee_list.user_name = \"$myu\"";
+    $query = "SELECT employee_list.user_id,
+                     user_hashes.uhsh_hash AS user_hash,
+                     user_hashes.uhsh_created AS user_created,
+                     user_salts.uslt_salt AS user_salt,
+                     user_emails.ueml_email AS user_email
+              FROM employee_list
+                  LEFT JOIN user_hashes ON employee_list.user_id = user_hashes.uhsh_user
+                  LEFT JOIN user_salts ON employee_list.user_id = user_salts.uslt_user
+                  LEFT JOIN user_emails ON employee_list.user_email_primary = user_emails.ueml_id
+              WHERE employee_list.user_name = \"$myu\"";
     $result = mysqli_query($conn, $query);
     if ($result !== false) {
         if (mysqli_num_rows($result) !== 0) {
-            list($uid, $uname, $upas, $udate, $uemail) = mysqli_fetch_row($result);
-            $salt = substr($upas, 0, 8);
-            if (validateLogin($_POST['drowp'], substr($upas, 8), $salt)) {
-                $passwordSetLapse = time() - strtotime($udate);
+            //list($uid, $uname, $upas, $udate, $uemail) = mysqli_fetch_row($result);
+            list($uid, $userHash, $userCreated, $userSalt, $userEmail) = mysqli_fetch_row($result);
+            if (validateLogin($_POST['drowp'], $userHash, $userSalt)) {
+                $passwordSetLapse = time() - $userCreated;
                 //todo: make password expiration configurable
                 if ($passwordSetLapse >= 15742080) {
-                    $data = http_build_query(['function' => 'sendEmail', 'email' => $uemail]);
+                    $data = http_build_query(['function' => 'sendEmail', 'email' => $userEmail]);
                     $opts = ['http' => ['method' => 'POST', 'content' => $data]];
                     $st = stream_context_create($opts);
                     $fp = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $st);
