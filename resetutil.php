@@ -17,9 +17,10 @@ if (isset($function)) {
             $salt = randomSalt();
             $password = $salt . $password;
             $password = sha1($password);
-            $password = $salt . $password;
-            $query = "UPDATE employee_list SET user_password = '$password', user_password_set = DEFAULT
-                      WHERE user_id = $userId";
+            $time = time();
+            $query = "INSERT INTO user_hashes (uhsh_user, uhsh_hash, uhsh_created) VALUES ($userId, $password, $time)";
+            mysqli_query($sqlConnection, $query);
+            $query = "INSERT INTO user_salts (uslt_user, uslt_salt) VALUES ($userId, '$salt')";
             mysqli_query($sqlConnection, $query);
             $query = "DELETE FROM reset_list WHERE reset_string = '$resetId'";
             mysqli_query($sqlConnection, $query);
