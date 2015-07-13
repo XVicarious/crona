@@ -85,6 +85,11 @@ function randomSalt($useSpecial = true, $len = 8)
     return $str;
 }
 
+function randomSalt16()
+{
+    return randomSalt(true, 16);
+}
+
 function generateUsername($sqlConnection, $baseUsername, $number = 0)
 {
     $username = $number ? $baseUsername . $number : $baseUsername;

@@ -6,7 +6,7 @@ function validateLogin($pass, $hashedPass, $salt, $hashMethod = 'sha1')
     }
     return ($hashedPass === sha1($salt . $pass));
 }
-function createHash($string, $hashMethod = 'sha1', $saltLength = 8)
+function createHash($string, $hashMethod = 'sha1', $saltLength = 16)
 {
     $salt = randomSalt($saltLength);
     if (function_exists('hash') && in_array($hashMethod, hash_algos())) {
