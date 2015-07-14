@@ -31,7 +31,7 @@ $(function() {
           //toast('Working on it!', TOAST_LENGTH);
         }
         if ($('#accepted').length) {
-          toast('Timestamp Accepted!', TOAST_LENGTH, 'toasty', function() {
+          Materialize.toast('Timestamp Accepted!', TOAST_LENGTH, 'toasty', function() {
             $('#uname').val('');
             $('#drowp').val('');
           });
