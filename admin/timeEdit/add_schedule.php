@@ -18,12 +18,9 @@ if (sessionCheck()) {
         // Answer: I don't
         return false;
     }
-    echo $data;
-    echo '<br/>'.$place;
     $year = date('Y', $data);
     $week = date('W', $data);
     $day = date('N', $data);
-    echo "<br/>$day";
     // This is AMERICA DAMMIT, Sunday begins the week here.
     if (++$day === 8) {
         $day = 1;
