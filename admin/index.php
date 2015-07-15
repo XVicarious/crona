@@ -91,7 +91,7 @@ $_SESSION["lastAction"] = time();
             <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards</a>
         </li>
         <li class="bold">
-            <a id="manage-schedules" class="grey-text lighten-4 waves-effect waves-light">Manage Schedules</a>
+            <a href="#" id="manage-schedules" class="waves-effect waves-light">Manage Schedules</a>
         </li>
         <li class="bold">
             <a id="add-employees" class="grey-text lighten-4 waves-effect waves-light">Add Employees</a>
