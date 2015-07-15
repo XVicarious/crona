@@ -350,7 +350,7 @@ function fetchSchedule(parameters) {
       }];
   scheduleDays = new ScheduleList();
   grid = new Backgrid.Grid({columns: columns, collection: scheduleDays});
-  $schedule = $('#timecardDiv');
+  $schedule = $('#ajaxDiv');
   grid.listenTo(scheduleDays, "backgrid:edited", function(model, column) {
     var siblingName, sibling, newValue;
     if (column.attributes.name !== 'department') {
@@ -372,9 +372,10 @@ function fetchSchedule(parameters) {
       $.ajax({
         type: 'POST',
         url: 'timeEdit/change_schedule.php',
-        data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
-        success: function() {
+        data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + newValue,
+        success: function(stuffing) {
           scheduleDays.fetch({data: data, reset: true});
+          $('#ajaxDiv').after(stuffing);
         }
       });
     } else {
@@ -382,8 +383,9 @@ function fetchSchedule(parameters) {
         type: 'POST',
         url: 'timeEdit/add_schedule.php',
         data: 'userId=' + userId + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
-        success: function() {
+        success: function(stuffing) {
           scheduleDays.fetch({data: data, reset:true});
+          $('#ajaxDiv').after(stuffing);
         }
       });
     }

@@ -329,6 +329,10 @@ $(function() {
   $('#view-employees').click(function() {
     getEmployees();
   });
+  $('#manage-schedules').click(function() {
+    mode = 'schedule';
+    getEmployees();
+  });
   $('#system-admin').click(function() {
     $.ajax({
       type: 'POST',
