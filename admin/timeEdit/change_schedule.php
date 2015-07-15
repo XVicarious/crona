@@ -6,7 +6,6 @@ if (sessionCheck()) {
     $in = $_POST['in'];
     $out = $_POST['out'];
     $department = $_POST['department'];
-    echo $in.'<br>'.$out.'<br>';
     $query = 'UPDATE employee_schedule SET ';
     if (isset($in)) {
         $in = intval($in);
@@ -28,6 +27,5 @@ if (sessionCheck()) {
     }
     $id = intval($id);
     $query .= " WHERE schedule_id = $id";
-    echo $query;
     mysqli_query($sqlConnection, $query);
 }

@@ -373,9 +373,8 @@ function fetchSchedule(parameters) {
         type: 'POST',
         url: 'timeEdit/change_schedule.php',
         data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + newValue,
-        success: function(stuffing) {
+        success: function() {
           scheduleDays.fetch({data: data, reset: true});
-          $('#ajaxDiv').after(stuffing);
         }
       });
     } else {
@@ -383,9 +382,8 @@ function fetchSchedule(parameters) {
         type: 'POST',
         url: 'timeEdit/add_schedule.php',
         data: 'userId=' + userId + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
-        success: function(stuffing) {
+        success: function() {
           scheduleDays.fetch({data: data, reset:true});
-          $('#ajaxDiv').after(stuffing);
         }
       });
     }
