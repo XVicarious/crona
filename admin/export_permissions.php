@@ -4,10 +4,13 @@ require 'admin_functions.php';
 $sqlConnection = createSql();
 $administrativeId = $_SESSION['userId'];
 if (isset($administrativeId)) {
-    $adminResults = mysqli_query($sqlConnection, "SELECT user_admin_perms FROM employee_list
+    $adminResults = mysqli_query($sqlConnection, "SELECT company_code FROM employee_supervisors
                                                   WHERE user_id = $administrativeId");
     if (mysqli_num_rows($adminResults) !== 0) {
-        list($sa_adminperms) = mysqli_fetch_row($adminResults);
+        $adminPermissions = [];
+        while (list($compCode) = mysqli_fetch_row($adminResults)) {
+            array_push($adminPermissions, "$compCode");
+        }
         $companyCodes = ["48N" => "HNB Venture Ptrs LLC",
                          "49C" => "Hampton Inn Boston/Natick",
                          "49D" => "Crowne Plaza Boston",
@@ -30,23 +33,16 @@ if (isset($administrativeId)) {
                          "RK3" => "HBK Restaurant LLC",
                          "ZVT" => "Twenty Flint Rd LLC"];
         $ak_companyCodes = array_keys($companyCodes);
-        if ($sa_adminperms === '') {
-            return false;
-        }
-        if ($sa_adminperms !== 'all') {
-            $a_permissions = unserialize($sa_adminperms);
-            $a_permissionCodes = array_keys($a_permissions);
-            foreach ($ak_companyCodes as $code) {
-                if (!array_key_exists($code, $a_permissions)) {
-                    unset($companyCodes[$code]);
-                }
+        foreach ($ak_companyCodes as $code) {
+            if (!in_array($code, $adminPermissions)) {
+                unset($companyCodes[$code]);
             }
-            $ak_companyCodes = array_keys($companyCodes);
         }
+        $ak_companyCodes = array_keys($companyCodes);
         echo '<select id="companyCode" class="browser-default">';
-        foreach ($ak_companyCodes as $c) {
-            $t_name = $companyCodes[$c];
-            echo "<option value=\"$c\">[$c] " . $t_name . "</option>";
+        foreach ($ak_companyCodes as $code) {
+            $t_name = $companyCodes[$code];
+            echo "<option value=\"$code\">[$code] $t_name</option>";
         }
         echo '</select>';
     }

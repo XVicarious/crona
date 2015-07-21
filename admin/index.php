@@ -148,6 +148,7 @@ $_SESSION["lastAction"] = time();
         <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-export">Export CSV</a>
         <a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>
     </div>
+    <div class="modal-export"></div>
 </div>
 <div id="about-log" class="modal">
     <div class="modal-content">
