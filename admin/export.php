@@ -3,21 +3,17 @@ session_start();
 require 'admin_functions.php';
 $sqlConnection = createSql();
 $administrativeId = $_SESSION['userId'];
+$exportCompany = $_GET['companyCode'];
 if (isset($administrativeId)) {
-    $adminResults = mysqli_query($sqlConnection, "SELECT user_admin_perms FROM employee_list
-                                                  WHERE user_id = $administrativeId");
-    if (mysqli_num_rows($adminResults) !== 0) {
-        $a_codes = [];
-        list($sa_adminperms) = mysqli_fetch_row($adminResults);
-        if ($sa_adminperms !== "all") {
-            $a_adminperms = unserialize($sa_adminperms);
-            $a_codes = array_keys($a_adminperms);
-        }
-        $exportCompany = $_GET['companyCode'];
-        // To prevent spoofing, make sure the person has permissions, if not end it
-        if ($sa_adminperms !== "all" && !in_array($exportCompany, $a_codes)) {
-            return;
-        }
+    $query = "SELECT CASE WHEN EXISTS (
+                  SELECT user_id FROM employee_supervisors
+                  WHERE user_id = $administrativeId AND company_code = \"$exportCompany\"
+              )
+              THEN 1 ELSE 0 END AS rowExists";
+    $adminResults = mysqli_query($sqlConnection, $query);
+    list($isTrue) = mysqli_fetch_row($adminResults);
+    //fixme: should I convert this ($isTrue) to an integer before I do this? Currently it is a string.
+    if ($isTrue == 1) {
         $peopleResults = mysqli_query($sqlConnection, "SELECT user_id,user_adpid FROM employee_list
                                                        WHERE user_companycode = '$exportCompany'");
         $dateFormat = 'Y-m-d H:i:s';
