@@ -9,7 +9,10 @@ if (sessionCheck()) {
     $qarray = [];
     while (list($changeTime,$changeId,$changeArray,$username) = mysqli_fetch_row($queryResult)) {
         $unserialzed = unserialize($changeArray);
-        array_push($qarray, ['modtime'=>$changeTime, 'userchanged'=>$username, 'from'=>$unserialzed[2], 'to'=>$unserialzed[3]]);
+        array_push($qarray, ['modtime'=>$changeTime,
+                             'userchanged'=>$username,
+                             'from'=>$unserialzed[2],
+                             'to'=>$unserialzed[3]]);
     }
     echo json_encode($qarray);
 }
