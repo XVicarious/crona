@@ -66,13 +66,15 @@ function getEmployee(parameters) {
   var id = parameters.id;
   var range = parameters.range;
   var extraString = parameters.extraString;
+  //todo: when all is set with the new system, fix this
+  var mode = 2; //parameters.mode;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
   $.ajax({
     type: 'POST',
     url: 'get_timecard_2.php',
     //container: '#ajaxDiv',
-    data: 'employee=' + id + '&range=' + range + extraString,
+    data: 'mode=' + mode + '&employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       var datepicker, secondDate;
       $('#ajaxDiv').html(data);
