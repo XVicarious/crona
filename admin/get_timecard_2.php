@@ -9,18 +9,21 @@ $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $employeeId = $_POST['employee'];
     $range = $_POST['range'];
+    // mode describes who is viewing the timecard
+    // 0 = an employee with no modification rights
+    // 1 = a printable, non-editable version of the card
+    // 2 = an administrator with editing rights
+    $mode = intval($_POST['mode']);
     // todo: this might be a tad screwy because of timezones
     $day = date('w');
     $date0 = date($dateTimeFormat24, strtotime("-$day days"));
     $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days'));
-    //$date0 = date($dateTimeFormat24, strtotime('last sunday'));
-    //$date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
     if ($range === 'last') {
-        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks")); //'last sunday -1 weeks'));
-        $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59')); //'last sunday -1 days 23:59:59'));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks"));
+        $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59'));
     } elseif ($range === 'next') {
-        $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks")); //'next sunday'));
-        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59')); //"next saturday 23:59:59 +1 weeks"));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
+        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59'));
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
         $date1 = date($dateTimeFormat24, $_POST['date1']);
@@ -61,7 +64,7 @@ if (sessionCheck()) {
         array_push($stamps, $stampId);
     }
     // todo: breaks could be an issue here!
-    // fixme: If there are no stamps, array_splice errors our!
+    // fixme: If there are no stamps, array_splice errors out!
     /*
     if (!in_array($timestamps[0][0][4], $stamps)) {
         // Remove the first entry of the array if it isn't right!
@@ -93,7 +96,7 @@ if (sessionCheck()) {
     $echoMe .= "<table id=\"timecard\" user-id=\"$employeeId\">"; // todo: is there a better way to store the id?
     // Add the header, sans range selector
     $echoMe .= "<tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userFirst $userLast's Timecard";
-    // Add the select, close the header
+    // Add the select
     $echoMe .= '<select id="range" class="browser-default">
                  <option value="last">Previous Period</option>
                  <option value="this">Current Period</option>
@@ -101,7 +104,13 @@ if (sessionCheck()) {
                  <option value="w2d">Week to Date</option>
                  <option value="specificDate">Specific Date</option>
                  <option value="special">Specific Period</option>
-                </select></th></tr>';
+                </select>';
+    // close the header
+    $echoMe .= '</th></tr>';
+    // Add a print button! Only if we aren't printing it.
+    if ($mode !== 1) {
+        $echoMe .= '<a class="btn-flat wave-effect wave-orange" href="utility/export_timecard.html?userid='. $employeeId. '" target="_blank"><i class="mdi-action-print"></i></a>';
+    }
     // <i class="mdi-action-delete medium right trashBin"></i>
     // Finally for the head, the (shitty) header for date and junk
     $echoMe .= '<tr><th>Date</th><th colspan="100%"></th></tr>';
@@ -124,7 +133,9 @@ if (sessionCheck()) {
         // Add the date column to $echoMe
         // todo: redo parts of code to use the day cell's id to remove 'stamp-day'
         $echoMe .= "<tr stamp-day=\"$day\" class=\"dataRow\">";
-        $echoMe .= '<td class="newDate"><input class="newDate" type="button" value="<+"</td>';
+        if ($mode === 2) {
+            $echoMe .= '<td class="newDate"><input class="newDate" type="button" value="<+"</td>';
+        }
         $echoMe .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";
         $timestampCount = count($timestamp);
         $timeIn = [];
@@ -138,7 +149,9 @@ if (sessionCheck()) {
             $modifier = $stamp[2];
             // ['date'] will count as a $stamp, so make sure we are dealing with an array
             if (is_array($stamp)) {
-                $echoMe .= '<td class="tstable addButton"><input class="addButton" type="button" value="+"></td>';
+                if ($mode === 2) {
+                    $echoMe .= '<td class="tstable addButton"><input class="addButton" type="button" value="+"></td>';
+                }
                 $realTime = date($timeFormat12, $stamp[1]);
                 $tri = '';
                 if (date($dateFormat, $stamp[1]) !== $day) {
@@ -155,6 +168,8 @@ if (sessionCheck()) {
                     } elseif ($modifier === 'V') {
                         $val = 'VACATION';
                     }
+                } else if ($mode === 0 || $mode === 1) {
+                    $disabled = 'disabled readonly';
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
                              <div class=\"draggableTimes\"><input $disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$val\"></div>
@@ -166,14 +181,20 @@ if (sessionCheck()) {
                 }
             }
         }
-        $echoMe .= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
+        if ($mode === 2) {
+            $echoMe .= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
+        }
         $timeTotal = 0;
         for ($i = 0; $i < count($timeOut); ++$i) {
             $timeTotal += ($timeOut[$i] - $timeIn[$i]);
         }
         for ($i = 0; $i < $maxStamps - $timestampCount; ++$i) {
             // Fill in rows that don't have the maximum number of stamps.
-            $echoMe .= '<td colspan=2 class="overflow"></td>';
+            $colspan = 1;
+            if ($mode === 2) {
+                $colspan = 2;
+            }
+            $echoMe .= '<td colspan='.$colspan.' class="overflow"></td>';
         }
         $timeTotal = round($timeTotal / 3600, 2);
         $echoMe .= '<td class="dailyHours">';
@@ -182,8 +203,13 @@ if (sessionCheck()) {
         $echoMe .= '</tr>';
         $runningTotal += $timeTotal;
     }
-    $echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"</td></tr>';
-    $push = $maxStamps * 2 + 1;
+    if ($mode === 2) {
+        $echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"</td></tr>';
+    }
+    $push = $maxStamps;
+    if ($mode === 2) {
+        $push = $maxStamps * 2 + 1;
+    }
     $echoMe .= "<tr class=\"dataRow\"><td colspan=\"$push\"></td><td class=\"dailyHours\">";
     $echoMe .= number_format($runningTotal, 2);
     $echoMe .= '</td></tr><tr><th colspan="100%">Timecard</th></tr>';
