@@ -1,0 +1,16 @@
+<html>
+<link rel="stylesheet" href="../../css/timecard.css">
+<script src="../../js/lib/jquery.js"></script>
+<script src="../../js/lib/materialize.js"></script>
+<script src="../../js/view/viewTimecard.js"></script>
+<script src="../../js/pwreset.js"></script>
+<script>
+    $(function() {
+        getEmployee({
+            id: getByName('userid'),
+            range: 'last'
+        });
+    });
+</script>
+<div id="ajaxDiv"></div>
+</html>
