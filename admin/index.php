@@ -11,17 +11,15 @@ $_SESSION["lastAction"] = time();
 <head>
     <title></title>
     <link rel="shortcut icon" href="../favicon.ico"/>
-    <!--<link rel="stylesheet" href="../css/style.css" type="text/css">-->
-    <link rel="stylesheet" href="../css/jquery-ui.css">
-    <link rel="stylesheet" href="../css/jquery-ui.theme.css">
     <link rel="stylesheet" href="../css/jquery.contextMenu.css">
+    <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/backgrid.css">
-    <link rel="stylesheet" href="../css/materialize.css?v=0.97">
     <link rel="stylesheet" href="../css/material-extra.css">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/sticky-footer.css">
+    <link rel="stylesheet" href="../css/materialize.css?v=0.97">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
     <script src="../js/lib/materialize.js?v=0.97"></script>
@@ -29,7 +27,6 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/backbone.js"></script>
     <script src="../js/lib/backgrid.js"></script>
     <script src="../js/lib/backbone.paginator.js"></script>
-    <!--<script src="../js/lib/backgrid-filter.js"></script>-->
     <script src="../js/lib/jquery-ui.js"></script>
     <script src="../js/lib/jquery.contextMenu.js"></script>
     <script src="../js/lib/moment.min.js"></script>
@@ -71,7 +68,8 @@ $_SESSION["lastAction"] = time();
                     <img alt class="circle responsive-img valign profile-image">
                 </div>
                 <div class="col s8 m8 l8">
-                    <a class="btn-flat dropdown-button white-text profile-button" href="#" data-activates="profile-dropdown">
+                    <a class="btn-flat dropdown-button white-text profile-button" href="#"
+                       data-activates="profile-dropdown">
                         Username
                         <i class="mdi-navigation-arrow-drop-down right"></i>
                     </a>
@@ -154,17 +152,27 @@ $_SESSION["lastAction"] = time();
     <div class="modal-content">
         <h4 class="modal-title">About Crona</h4>
         <p class="modal-text">
-            Crona was written by Brian Maurer.  It uses technologies such as Javascript and PHP to create a quick and flexible timecard management system.
-            Crona uses libraries such as <a href="https://jquery.com/">jQuery</a>, <a href="https://github.com/jashkenas/underscore">Underscore</a>, <a href="https://github.com/jashkenas/backbone/">Backbone</a>, and <a href="https://github.com/wyuenho/backgrid">Backgrid</a> to acomplish this.
-            <a href="https://github.com/Dogfalo/materialize">Materialize</a> was used for the UI of Crona, and to make it mobile responsive.
+            Crona was written by Brian Maurer.  It uses technologies such as Javascript and PHP to create a quick and
+            flexible timecard management system.
+            Crona uses libraries such as <a href="https://jquery.com/">jQuery</a>,
+            <a href="https://github.com/jashkenas/underscore">Underscore</a>,
+            <a href="https://github.com/jashkenas/backbone/">Backbone</a>, and
+            <a href="https://github.com/wyuenho/backgrid">Backgrid</a> to acomplish this.
+            <a href="https://github.com/Dogfalo/materialize">Materialize</a> was used for the UI of Crona, and to make
+            it mobile responsive.
             <br /><br />
-            If you have any questions, concerns, complaints, or bug reports please email Brian Maurer at bmaurer@harthotels.com
+            If you have any questions, concerns, complaints, or bug reports please email Brian Maurer at
+            bmaurer@harthotels.com
             <hr />
             <ul class="collection with-header">
                 <li class="collection-header"><h6>Known Bugs</h6></li>
-                <li class="yellow lighten-4 collection-item">If the menu is opened while Crona's window is small, when the window is made bigger the menu disappears until you resize it again.</li>
-                <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will not close when you choose an option.</li>
-                <li class="yellow lighten-4 collection-item">When adding days after Monday in a timecard, you can add past the selected period. For example, after adding Tuesday, you will be able to add NEXT Sunday.</li>
+                <li class="yellow lighten-4 collection-item">If the menu is opened while Crona's window is small, when
+                    the window is made bigger the menu disappears until you resize it again.</li>
+                <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will
+                    not close when you choose an option.</li>
+                <li class="yellow lighten-4 collection-item">When adding days after Monday in a timecard, you can add
+                    past the selected period. For example, after adding Tuesday, you will be able to add NEXT Sunday.
+                </li>
                 <li class="yellow lighten-4 collection-item">Times are not perfectly centered in their boxes.</li>
             </ul>
             <ul class="collection with-header">
