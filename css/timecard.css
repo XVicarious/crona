@@ -1,77 +1,92 @@
-table#timecard * {
-    font-family: monospace;
-}
 table#timecard {
     border-collapse: collapse;
     text-align: left;
     width: 100%
 }
-table#timecard, table#timecard tr, table#timecard td, table#timecard th {
-    border: thin solid #000
+
+table#timecard * {
+    font-family: monospace
 }
-select#range {
-    width: auto !important;
-    float: right
-}
+
 table#timecard tr#topTR {
     background: #CCC
 }
+
 table#timecard tr.dataRow {
     background: #DDD
 }
+
 table#timecard tr.odd {
     background: #EEE
 }
+
 table#timecard td {
     background: inherit
 }
+
 table#timecard td.overflow {
     border: none
 }
-table#timecard td.times, table#timecard td.addButton {
-    padding: 0
-}
-table#timecard td.newDate, table#timecard input[type=button].newDate {
-    height: 100%;
-    padding: 0;
-    width: 27px
-}
+
 table#timecard input[type=button].newDate {
     padding-left: 2px;
     padding-right: 2px
 }
+
 table#timecard .newDate.after {
     height: 20px;
     width: 100%
 }
-table#timecard td.addButton, table#timecard input[type=button].addButton {
-    height: 100%;
-    padding: 0;
-    width: 23px
-}
-table#timecard input[type=text].times, table#timecard input[type=button].addButton, table#timecard input[type=button].newDate {
-    background: none;
-    border: none;
-    height: 100%;
-    width: 100%
-}
+
 table#timecard input[type=text].times {
     text-align: center
 }
 
+table#timecard,table#timecard tr,table#timecard td,table#timecard th {
+    border: thin solid #000
+}
+
+select#range {
+    width: auto!important;
+    float: right
+}
+
+table#timecard td.times,table#timecard td.addButton {
+    padding: 0
+}
+
+table#timecard td.newDate,table#timecard input[type=button].newDate {
+    height: 100%;
+    padding: 0;
+    width: 27px
+}
+
+table#timecard td.addButton,table#timecard input[type=button].addButton {
+    height: 100%;
+    padding: 0;
+    width: 23px
+}
+
+table#timecard input[type=text].times,table#timecard input[type=button].addButton,table#timecard input[type=button].newDate {
+    background: none;
+    border: none !important;
+    height: 100%;
+    width: 100%
+}
+
 .overnight {
-    position: relative;
+    position: relative
 }
 
 .overnight:after {
     content: "";
     position: absolute;
-    top:0;
-    right:0;
-    width:0;
-    height:0
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
     display:block;
-    border-left:20px solid transparent;
-    border-bottom:20px solid transparent;
-    border-top:20px solid #03F;
+    border-left: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-top: 20px solid #03F
 }
