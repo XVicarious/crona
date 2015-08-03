@@ -140,64 +140,58 @@ function createStamp(userId, stamp) {
 
 function bindNewDate() {
   var newDateClass = $('.newDate');
-  newDateClass.each(function() {
+  var newDateInputClass = $('input.newDate');
+  newDateInputClass.each(function() {
     var myGrandparent = $(this).parent().parent(),
       earlierDay = myGrandparent.prev().attr('stamp-day'),
-      thisDay = myGrandparent.attr('stamp-day'),
-      userId = $('#timecard').attr('user-id');
-    var thisThisDay,
-      weekstart,
-      earlierDay2,
-      weekend,
-      difference;
-    if (!earlierDay) { // before first stamp
-      thisThisDay = new Date(thisDay);
-      weekstart = new Date(new Date().getDate() - thisThisDay.getDay());
-      $(this).datepicker({
-        dateFormat: 'yy-mm-dd',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        minDate: weekstart,
-        maxDate: thisThisDay,
-        onSelect: function(date) {
-          var chosenDate = $.datepicker.parseDate('yy-mm-dd', date);
-          chosenDate = $.datepicker.formatDate('@', chosenDate);
-          createStamp(userId, chosenDate / TimeVar.MILLISECONDS_IN_SECOND);
+      thisDay = myGrandparent.attr('stamp-day');
+    var difference,
+        daysBetweenTodayStamp;
+    // Lets try to clean up these variables...
+    var earlierDate = $(this).parent().parent().prev().attr('stamp-day'),
+        todaysDate = $(this).parent().parent().attr('stamp-day'),
+        userId = $('#timecard').attr('user-id');
+    var rangeEndDate = moment(earlierDate || todaysDate, 'YYYY-MM-DD').endOf('week');
+    var rangeStartDate = moment(earlierDate || todaysDate, 'YYYY-MM-DD').startOf('week');
+    if (earlierDay === undefined) { // before first stamp
+      daysBetweenTodayStamp = moment().diff(rangeStartDate, 'days');
+      $(this).pickadate({
+        selectMonths: true,
+        selectYears: true,
+        min: rangeStartDate.toArray(),
+        max: -daysBetweenTodayStamp,
+        onSet: function(thingSet) {
+          if (thingSet.select) {
+            createStamp(userId, thingSet.select / TimeVar.MILLISECONDS_IN_SECOND);
+            this.close();
+          }
         }
       });
     } else if (!thisDay) { // after last stamp
+      // todo: test the fixme
       // fixme: if the timecard is empty for the specified period, the whole calendar is selectable
-      earlierDay2 = new Date(earlierDay);
-      weekend = new Date(earlierDay);
-      weekend.setDate(weekend.getDate() + 6);
-      earlierDay2.setDate(earlierDay2.getDate() + 2);
-      $(this).datepicker({
-        dateFormat: 'yy-mm-dd',
-        showOtherMonths: true,
-        selectOtherMonths: true,
-        minDate: earlierDay2,
-        maxDate: weekend,
-        onSelect: function(date) {
-          var selectedDate = $.datepicker.parseDate('yy-mm-dd', date);
-          selectedDate = $.datepicker.formatDate('@', selectedDate) / TimeVar.MILLISECONDS_IN_SECOND;
-          createStamp(userId, selectedDate);
+      $(this).pickadate({
+        selectMonths: true,
+        min: moment(todaysDate, 'YYYY-MM-DD').add(1, 'days').toArray(),
+        max: rangeEndDate.toArray(),
+        onSet: function(thingSet) {
+          if (thingSet.select) {
+            createStamp(userId, thingSet.select / TimeVar.MILLISECONDS_IN_SECOND);
+          }
         }
       });
     } else { // between stamps
-      earlierDay = new Date(earlierDay);
-      thisDay = new Date(thisDay);
-      difference = thisDay.getTime() - earlierDay.getTime();
-      earlierDay.setDate(earlierDay.getDate() + 2);
-      if (difference > TimeVar.MILLISECONDS_IN_DAY * 2) {
-        $(this).datepicker({
-          dateFormat: 'yy-mm-dd',
-          showOtherMonths: true,
-          selectOtherMonths: true,
-          minDate: earlierDay,
-          maxDate: thisDay,
-          onSelect: function(date) {
-            var selectedDate = $.datepicker.formatDate('@', $.datepicker.parseDate('yy-mm-dd', date)) / TimeVar.MILLISECONDS_IN_SECOND;
-            createStamp(userId, selectedDate);
+      difference = moment(earlierDate, 'YYYY-MM-DD').diff(moment(todaysDate, 'YYYY-MM-DD'), 'days');
+      if (Math.abs(difference) > 2) {
+        $(this).pickadate({
+          selectMonths: true,
+          selectYears: true,
+          min: moment(earlierDate, 'YYYY-MM-DD').add(1, 'days').toArray(),
+          max: moment(todaysDate, 'YYYY-MM-DD').subtract(1, 'days').toArray(),
+          onSet: function(thingSet) {
+            if (thingSet.select) {
+              createStamp(userId, thingSet.select / TimeVar.MILLISECONDS_IN_SECOND);
+            }
           }
         });
       }
