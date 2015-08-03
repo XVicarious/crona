@@ -15,12 +15,12 @@ if (sessionCheck()) {
     // 2 = an administrator with editing rights
     $mode = intval($_POST['mode']);
     // todo: this might be a tad screwy because of timezones
-    $day = date('w');
+    $day = date('w') + 1;
     $date0 = date($dateTimeFormat24, strtotime("-$day days"));
-    $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days'));
+    $date1 = date($dateTimeFormat24, strtotime('+'.(7-$day).' days'));
     if ($range === 'last') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks"));
-        $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59'));
+        $date1 = date($dateTimeFormat24, strtotime('-'.($day).' days 23:59:59'));
     } elseif ($range === 'next') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
         $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59'));
@@ -168,7 +168,7 @@ if (sessionCheck()) {
                     } elseif ($modifier === 'V') {
                         $val = 'VACATION';
                     }
-                } else if ($mode === 0 || $mode === 1) {
+                } elseif ($mode === 0 || $mode === 1) {
                     $disabled = 'disabled readonly';
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
