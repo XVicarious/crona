@@ -63,7 +63,6 @@ $(function() {
     if (!(''.match(new RegExp($s1ic+'|'+$s2ic+'|'+$s3ic)) || s1.val() === s2.val() || s1.val() === s3.val() ||
           s2.val() === s3.val()) && $s1i.val() === $s1ic.val() && $s2i.val() === $s2ic.val() &&
           $s3i.val() === $s3ic.val()) {
-        console.log("it is good...");
         $.ajax({
           type: 'POST',
           url: 'insert_security.php',
