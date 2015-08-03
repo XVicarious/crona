@@ -32,8 +32,9 @@ $(function() {
         type: 'POST',
         url: 'resetutil.php',
         data: 'email=' + email + '&function=sendEmail',
-        success: function(data) {
-          toast("If a user with that email exists, an email has been dispatched with a link to reset your password.",5000);
+        success: function() {
+          Materialize.toast("If a user with that email exists, an email has been dispatched with a link to reset your" +
+                            " password.",5000);
           //$('#ajaxDiv').html(data);
         }
       });
