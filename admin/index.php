@@ -34,7 +34,7 @@ $_SESSION["lastAction"] = time();
     <script src="../js/timeConstants.js"></script>
     <script src="../js/lib/jquery.pjax.js"></script>
     <script src="../js/admin/functions.async.js"></script>
-    <script src="../js/admin/initialLoad.js"></script>
+    <script src="../js/testing/combinedSource.js"></script>
     <script src="../js/admin/adminConsole.js"></script>
     <script>
         $(function() {
@@ -58,7 +58,7 @@ $_SESSION["lastAction"] = time();
             <i class="mdi-navigation-menu"></i>
         </a>
     </div>
-    <ul id="nav-mobile" class="side-nav fixed">
+    <ul id="nav-mobile" class="side-nav fixed" style="overflow: hidden">
         <!--<li class="logo attention">
             <a id="logo-container"><i class="attention-image icon-logo center"></i></a>
         </li>-->
@@ -75,7 +75,7 @@ $_SESSION["lastAction"] = time();
                     </a>
                     <ul id="profile-dropdown" class="dropdown-content active">
                         <li>
-                            <a href="#">
+                            <a id="logout-button" href="logout.php">
                                 <i class="mdi-hardware-keyboard-tab"></i>
                                 Logout
                             </a>
@@ -114,7 +114,21 @@ $_SESSION["lastAction"] = time();
         <div class="row">
             <div class="col s12">
                 <div>
-                    <div id="ajaxDiv"></div>
+                    <div id="ajaxDiv">
+                        <div class="preloader-wrapper big active center-align">
+                            <div class="spinner-layer spinner-blue-only">
+                                <div class="circle-clipper left">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="gap-patch">
+                                    <div class="circle"></div>
+                                </div>
+                                <div class="circle-clipper right">
+                                    <div class="circle"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
