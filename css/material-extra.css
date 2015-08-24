@@ -44,7 +44,7 @@ div.col.s12 {
 .profile-button {
     margin: 0;
     text-transform: capitalize;
-    padding: 0;
+    padding: 0 !important;
     font-size: 15px;
     text-shadow: 1px 1px 1px #444444;
 }
