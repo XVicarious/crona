@@ -18,7 +18,21 @@
     </nav>
 </header>
 <main class="login orange lighten-5">
-    <div id="ajaxDiv"></div>
+    <div id="ajaxDiv">
+        <div class="preloader-wrapper big active center">
+            <div class="spinner-layer spinner-blue-only">
+                <div class="circle-clipper left">
+                    <div class="circle"></div>
+                </div>
+                <div class="gap-patch">
+                    <div class="circle"></div>
+                </div>
+                <div class="circle-clipper right">
+                    <div class="circle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 <footer class="login page-footer orange">
     <div class="container"></div>
