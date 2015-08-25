@@ -115,7 +115,7 @@ $_SESSION["lastAction"] = time();
             <div class="col s12">
                 <div>
                     <div id="ajaxDiv">
-                        <div class="preloader-wrapper big active center-align">
+                        <div class="preloader-wrapper big active center">
                             <div class="spinner-layer spinner-blue-only">
                                 <div class="circle-clipper left">
                                     <div class="circle"></div>
