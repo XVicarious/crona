@@ -52,7 +52,13 @@
             <div class="col s12 l6 offset-l3">
                 <div class="center">
                     <a class="blue lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="mdi-action-lock-open right"></i></a>
-
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12 l6 offset-l3">
+                <div class="center">
+                    Forgot your password? Click <a href="forgot">here</a>.
                 </div>
             </div>
         </div>
