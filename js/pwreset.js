@@ -5,15 +5,7 @@ function getByName(name) {
 }
 
 $(function() {
-  if (getByName('c') === '' && getByName('r') === 'go') {
-    $.ajax({
-      type: 'POST',
-      url: 'resetutil.php',
-      success: function(data) {
-        $('#ajaxDiv').html(data);//.css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
-      }
-    });
-  } else if (getByName('c')) {
+  if (getByName('c') !== '') {
     $.ajax({
       type: 'GET',
       url: 'resetutil.php',
@@ -21,6 +13,14 @@ $(function() {
       success: function(data) {
         var loginForm = $('#loginForm');
         $('#ajaxDiv').html(data);//.css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
+      }
+    });
+  } else {
+    $.ajax({
+      type: 'POST',
+      url: 'resetutil.php',
+      success: function(data) {
+        $('#ajaxDiv').html(data);//.css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
       }
     });
   }

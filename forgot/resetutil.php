@@ -1,6 +1,6 @@
 <?php
-require 'function.php';
-require 'admin/admin_functions.php';
+require '../function.php';
+require '../admin/admin_functions.php';
 $sqlConnection = createSql();
 $function = $_POST['function'];
 if (isset($function)) {
@@ -31,7 +31,7 @@ if (isset($function)) {
     } elseif ($function === 'sendEmail') {
         $email = $_POST['email'];
         $resetString = randomString();
-        $resetLink = "http://xvss.net/time/reset_password.php?c=$resetString";
+        $resetLink = "http://xvss.net/time/forgot/?c=$resetString";
         $query = "SELECT user_id FROM employee_list WHERE user_emails = '$email'";
         $result = mysqli_query($sqlConnection, $query);
         if (mysqli_num_rows($result) !== 0) {
@@ -62,7 +62,7 @@ if (isset($function)) {
             $query = "DELETE FROM reset_list WHERE reset_string = '$resetId'";
             mysqli_query($sqlConnection, $query);
             echo 'The password reset link you gave has expired.  Please to go
-                  <a href="http://xvicario.us/time/reset_password.php?r=go">http://xvicario.us/time/reset_password.php
+                  <a href="http://xvicario.us/time/forgot/?r=go">http://xvicario.us/time/forgot/
                   ?r=go</a> to get a new link.';
             return;
         }
