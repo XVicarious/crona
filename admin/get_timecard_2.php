@@ -107,10 +107,6 @@ if (sessionCheck()) {
                 </select>';
     // close the header
     $echoMe .= '</th></tr>';
-    // Add a print button! Only if we aren't printing it.
-    if ($mode !== 1) {
-        $echoMe .= '<a class="btn-flat wave-effect wave-orange" href="utility/export_timecard.html?userid='. $employeeId. '" target="_blank"><i class="mdi-action-print"></i></a>';
-    }
     // <i class="mdi-action-delete medium right trashBin"></i>
     // Finally for the head, the (shitty) header for date and junk
     $echoMe .= '<tr><th>Date</th><th colspan="100%"></th></tr>';
@@ -212,8 +208,18 @@ if (sessionCheck()) {
     }
     $echoMe .= "<tr class=\"dataRow\"><td colspan=\"$push\"></td><td class=\"dailyHours\">";
     $echoMe .= number_format($runningTotal, 2);
-    $echoMe .= '</td></tr><tr><th colspan="100%">Timecard</th></tr>';
+    $echoMe .= '</td></tr><tr><th colspan="100%">Timecard';
+    // Add a print button! Only if we aren't printing it.
+    if ($mode !== 1) {
+        $echoMe .= '<a class="btn-flat wave-effect wave-orange right" href="utility/export_timecard.html?userid=' .
+                    $employeeId . '" target="_blank"><i class="material-icons">print</i></a>';
+    }
+    if ($mode === 2) {
+        $echoMe .= '<a href="#" class="btn-flat right" title="Prevent further editing of the timecard"><i class="material-icons">lock</i></a>';
+    }
+    $echoMe .= '</th></tr>';
     $echoMe .= '</table>';
+    $echoMe .= '<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">';
     mysqli_close($sqlConnection);
     echo $echoMe;
 }
