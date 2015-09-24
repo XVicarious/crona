@@ -174,7 +174,12 @@ if (sessionCheck()) {
         }
         for ($i = 0; $i < $maxStamps - $timestampCount; ++$i) {
             // Fill in rows that don't have the maximum number of stamps.
-            $echoMe .= '<td colspan=2 class="overflow"></td>';
+            $colspan = 1;
+            if ($mode === 2) {
+                $colspan = 2;
+            }
+            echo $mode.'<br/>'.$colspan;
+            $echoMe .= '<td colspan='.$colspan.' class="overflow"></td>';
         }
         $timeTotal = round($timeTotal / 3600, 2);
         $echoMe .= '<td class="dailyHours">';
@@ -191,4 +196,5 @@ if (sessionCheck()) {
     $echoMe .= '</table>';
     mysqli_close($sqlConnection);
     echo $echoMe;
+    echo "ssssssssssssssss";
 }

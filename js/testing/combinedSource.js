@@ -34,6 +34,7 @@ $(function() {
   if (operationMode) {
     getEmployees();
     getPermissions();
+    getExportPermissions();
   } else {
     getEmployee();
   }
@@ -42,83 +43,15 @@ $(function() {
 
   });
   $(document).tooltip();
-  $('#addemployeeButton').click(function() {
-    var dialog = $('#dialog-timecard');
-    dialog.attr('title', 'Add Employees');
-    $('#timecardDiv').html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0"><\/select><\/td><td><select class="userDepartment e-0"><option value="100">Accounting (100)<\/option><\/select><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form>');
-    var optionString = '<option value="">(none)<\/option>';
-    for (i = 0; i < companyCodes.length; i++) {
-      optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...<\/option>';
-    }
-    $('.userCompany.e-0').html(optionString);
-    employeeDialog = dialog.dialog({
-      modal: true,
-      draggable: false,
-      width: $(window).width() * 0.9,
-      height: 'auto',
-      resizable: false,
-      buttons: {
-        'Add Employees': function() {
-          var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter,
-            isEverythingGood = true,
-            aToAdd = [],
-            dataString = '',
-            aTempEmployee = [];
-          // is everything set?
-          for (i = 0; i < toThis; i++) {
-            $('input.e-' + i + ',select.e-' + i).each(function() {
-              if ($(this).val() === null || !$(this).val().length) {
-                // we allow userEmail and userStart to be empty because they have default values
-                // userStart will be today, and userEmail will be their immediate superior's email
-                if (($(this).hasClass('userEmail') || $(this).hasClass('userStart')) && $(this).val().length) {
-                  if ($(this).hasClass('userEmail')) {
-                    if (!validateEmail($(this).val())) {
-                      isEverythingGood = false;
-                    }
-                  } else {
-                    if (!validMoment($(this).val())) {
-                      isEverythingGood = false;
-                    }
-                  }
-                } else {
-                  isEverythingGood = false;
-                }
-              } else {
-                aTempEmployee.push($(this).val());
-              }
-              return true;
-            });
-            aToAdd.push(aTempEmployee);
-          }
-          if (!isEverythingGood) {
-            return false;
-          }
-          // First we need to gather up all of that information!  If we hit the max number of rows, we want to test if
-          // the last row is empty.  If so, we only want the first 9, otherwise we will take the 10th.  If eCounter is
-          // NOT full, we will just use eCounter because the first eCounter - 1 rows will not be clear, but the last
-          // one will always be.
-          // We can't do anything if it is empty
-          if (!aToAdd.length) {
-            return false;
-          }
-          // Now we have to form the string:
-          for (i = 0; i < aToAdd.length; i++) {
-            dataString += (i + '=' + JSON.stringify(aToAdd[i]));
-            if (i < aToAdd.length - 1) {
-              dataString += '&';
-            }
-          }
-          $.ajax({
-            type: 'POST',
-            url: 'insert_user.php',
-            data: dataString
-          });
-          $(this).dialog('close');
-        },
-        'Cancel': function() {
-          $(this).dialog('close');
-        }
-      }
+  $(document).on('click', '#lock-card', function() {
+    var timecard = $('#timecard');
+    var userId = timecard.attr('user-id');
+    var week = timecard.attr('week');
+    var year = timecard.attr('year');
+    $.ajax({
+      type: "POST",
+      url: "lock_timecard.php",
+      data: "user=" + userId + "&week=" + week + "&year=" + year
     });
   });
   $(document).on('change', '[class|="e"]', function() {
@@ -126,10 +59,11 @@ $(function() {
     myeclass = parseInt(myeclass[0].substr(2), 10);
     for (i = 0; i < eCounter + 1; i++) {
       if (!rowClear('e-' + i)) {
-        $('.e-' + i).each(function() {
+        $('.e-' + i + ":not(tr)").each(function() {
           // This on 'if' took me like 5 minutes to figure out.  I AM EXHAUSTED.  Like I could fall asleep right here...
           // 5:43pm on February 11th 2015
-          if (!($(this).hasClass('userEmail') || $(this).hasClass('userStart'))) {
+          if ((!($(this).hasClass('userEmail') || $(this).hasClass('userStart')))) {
+            console.log($(this));
             if ($(this).val() !== null && $(this).val().length) {
               $(this).removeClass('ui-state-error');
             } else {
@@ -141,16 +75,67 @@ $(function() {
     }
     if (myeclass === eCounter && eCounter < 10) {
       eCounter++;
-      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + eCounter + '"\/><\/td><td><select class="userCompany e-' + eCounter + '"><\/select><\/td><td><select class="userDepartment e-' + eCounter + '"><\/select><\/td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" \/><\/td><td><input class="userEmail e-' + eCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" \/><\/td><\/tr>');
+      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + eCounter + '"\/><\/td><td><select class="userCompany browser-default e-' + eCounter + '"><\/select><\/td><td><input class="userDepartment e-' + eCounter + '"><\/input><\/td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" \/><\/td><td><input class="userEmail e-' + eCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" \/><\/td><\/tr>');
       var optionString = '<option value="">(none)<\/option>';
       for (var j = 0; j < companyCodes.length; j++) {
         optionString += '<option value="' + companyCodes[j][0] + '">[' + companyCodes[j][0] + '] ' + companyCodes[j][1].substring(0, 11) + '...<\/option>';
       }
       $('.userCompany.e-' + i).html(optionString);
-      // After adding a new row, we want to make sure we resize the dialog
-      var $dialog = $('#dialog-timecard');
-      $dialog.dialog('option', 'position', $dialog.dialog('option', 'position'));
     }
+  });
+  $(document).on('click', '#initial-confirm-add', function() {
+    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter; // Complicated!  Does this even work properly?
+    var isGood = true,
+        toAdd = [],
+        dataString = '',
+        aTempEmployee = [];
+    for (i = 0; i < toThis; i++) {
+      $('input.e-'+i+',select.e-'+i).each(function() {
+        if ($(this).val() === null || !$(this).val().length) {
+          // we allow userEmail and userStart to be empty, because they have default values
+          // userStart will be today, and userEmail will be derived from the immediate superior's email
+          if (($(this).hasClass('userEmail') || $(this).hasClass('userStart')) && $(this).val().length) {
+            if ($(this).hasClass('userEmail')) {
+              if (!validateEmail($(this).val())) {
+                isGood = false;
+              }
+            } else {
+              if (!validMoment($(this).val())) {
+                isGood = false;
+              }
+            }
+          } else {
+            isGood = false;
+          }
+        } else {
+          aTempEmployee.push($(this).val());
+        }
+        return true;
+      });
+      toAdd.push(aTempEmployee);
+    }
+    if (!isGood) {
+      return isGood;
+    }
+    // first we need to gather all our information.  if we hit the max number of rows, we want to test if the last row
+    // is empty.  if so, we only want the first 9, otherwise we will take the 10th.  if eCounter is NOT full, we will
+    // just use eCounter, because the first eCounter - 1 rows will NOT be clear, but the last one will always be
+    // we can't do anything if it is empty
+    if (!toAdd.length) {
+      return false;
+    }
+    // now we have to form the string of data
+    for (i = 0; i < toAdd.length; i++) {
+      dataString += (i + '=' + JSON.stringify(toAdd[i]));
+      if (i < toAdd.length - 1) {
+        dataString += '&';
+      }
+    }
+    $.ajax({
+      type: "POST",
+      url: "insert_user.php",
+      data: dataString
+    });
   });
   $(document).on('change', '#range', function() {
     var userId = $('#timecard').attr('user-id');
@@ -339,11 +324,15 @@ $(function() {
     });
   });
   $('#view-employees').click(function() {
+    mode = undefined;
     getEmployees();
   });
   $('#manage-schedules').click(function() {
     mode = 'schedule';
     getEmployees();
+  });
+  $('#add-employees').click(function() {
+    addEmployeesAction();
   });
   $('#system-admin').click(function() {
     $.ajax({
@@ -366,6 +355,19 @@ function getPermissions() {
     }
   });
   return permissions;
+}
+
+function getExportPermissions() {
+  $.ajax({
+    type: 'POST',
+    url: 'export_permissions.php',
+    success: function(data) {
+      $('#exportC').html(data);
+      $('#export-times').find('.modal-export').click(function() {
+        $.getScript('export.php?companyCode='+$('#companyCode').val());
+      });
+    }
+  });
 }
 
 function getEmployee(parameters) {
@@ -623,7 +625,7 @@ function fetchSchedule(parameters) {
   grid.render().sort('day','ascending');
   $schedule.html(grid.render().el);
   scheduleDays.fetch({data: data, reset: true});
-  $schedule.before('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"><\/i><\/a>');
+  $schedule.prepend('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"><\/i><\/a>');
   return true;
 }
 
@@ -657,4 +659,16 @@ function getOffsetString() {
     offsetString += ''+extraOffset;
   }
   return offsetString;
+}
+
+function addEmployeesAction() {
+  var optionString = '<option value="">(none)<\/option>';
+  var ajaxDiv = $('#ajaxDiv');
+  ajaxDiv.html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0 browser-default"><\/select><\/td><td><input class="userDepartment e-0"><\/input><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form>');
+  for (i = 0; i < companyCodes.length; i++) {
+    optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0,11) + '...<\/option>';
+  }
+  $('.userCompany.e-0').html(optionString);
+  // fixme: I'm being lazy here using append, instead of adding it on when I made the thing;
+  ajaxDiv.append('<a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
 }

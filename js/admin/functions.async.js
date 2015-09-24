@@ -1,6 +1,6 @@
 var $inputPicker = [], picker = [], saveTheDate = 0;
 
-function getPermissions() {
+function getExportPermissions() {
   $.ajax({
     type: 'POST',
     url: 'export_permissions.php',
