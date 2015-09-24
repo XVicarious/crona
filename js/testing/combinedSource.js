@@ -41,6 +41,7 @@ $(function() {
   $('#logout-button').click(function() {
 
   });
+  $(document).tooltip();
   $('#addemployeeButton').click(function() {
     var dialog = $('#dialog-timecard');
     dialog.attr('title', 'Add Employees');
