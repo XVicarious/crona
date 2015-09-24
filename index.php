@@ -5,6 +5,7 @@
     <link rel="shortcut icon" href="favicon.ico"/>
     <link rel="stylesheet" href="css/materialize.css">
     <link rel="stylesheet" href="css/material-extra.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/sticky-footer.css">
     <script src="js/lib/jquery.js"></script>
     <script src="js/lib/materialize.js"></script>
@@ -28,13 +29,13 @@
         </div>
         <div class="row">
             <div class="input-field col s12 l6 offset-l3">
-                <i class="mdi-action-account-circle prefix blue-text lighten-1"></i>
+                <i class="small material-icons prefix blue-text lighten-1">account_circle</i>
                 <input id="uname" type="text" placeholder="Username" class="validate">
             </div>
         </div>
         <div class="row">
             <div class="input-field col s12 l6 offset-l3">
-                <i class="mdi-communication-vpn-key prefix blue-text lighten-1"></i>
+                <i class="small material-icons prefix blue-text lighten-1">vpn_key</i>
                 <input id="drowp" type="password" placeholder="Password" class="validate">
             </div>
         </div>

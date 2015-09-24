@@ -15,6 +15,7 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/backgrid.css">
     <link rel="stylesheet" href="../css/material-extra.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
@@ -113,7 +114,7 @@ $_SESSION["lastAction"] = time();
     <div>
         <div class="row">
             <div class="col s12">
-                <div>
+                <div class="row">
                     <div id="ajaxDiv">
                         <div class="preloader-wrapper big active center">
                             <div class="spinner-layer spinner-blue-only">
@@ -207,3 +208,36 @@ $_SESSION["lastAction"] = time();
 </div>
 </body>
 </html>
+<!--<div class="col l4">
+    <div class="card green lighten-3">
+        <div class="card-image left">
+            <img class="person-image" src="../images/generic_profile_image.png">
+        </div>
+        <div class="card-content left">
+            <p class="flow-text">John Jacob Jingle Heimer Schmidt</p>
+            <div class="row">
+                <div class="col l6">
+                    Out: 5:00pm
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col l4">
+    <div class="card grey lighten-2">
+        <div class="card-image left">
+            <img class="person-image" src="../images/generic_profile_image.png">
+        </div>
+        <div class=card-content">
+        </div>
+    </div>
+</div>
+<div class="col l4">
+    <div class="card green lighten-3">
+        <div class="card-image left">
+            <img class="person-image" src="../images/generic_profile_image.png">
+        </div>
+        <div class="card-content">
+        </div>
+    </div>
+</div>-->
