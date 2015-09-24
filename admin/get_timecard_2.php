@@ -7,7 +7,7 @@ $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
-    $employeeId = $_POST['employee'];
+    $employeeId = intval($_POST['employee']);
     $range = $_POST['range'];
     // mode describes who is viewing the timecard
     // 0 = an employee with no modification rights
@@ -16,8 +16,8 @@ if (sessionCheck()) {
     $mode = intval($_POST['mode']);
     // todo: this might be a tad screwy because of timezones
     $day = date('w') + 1;
-    $date0 = date($dateTimeFormat24, strtotime("-$day days"));
-    $date1 = date($dateTimeFormat24, strtotime('+'.(7-$day).' days'));
+    $date0 = date($dateFormat, strtotime("-$day days"));
+    $date1 = date($dateFormat, strtotime('+'.(7-$day).' days'));
     if ($range === 'last') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks"));
         $date1 = date($dateTimeFormat24, strtotime('-'.($day).' days 23:59:59'));
@@ -88,12 +88,24 @@ if (sessionCheck()) {
         $userLast = 'null';
         $userStart = '1970-01-01';
     }
+    $date = new DateTime();
+    $date->setTimestamp(strtotime($date0));// + 86400);
+    $year = intval($date->format("Y"));
+    // I need to figure out this shit.
+    $week = intval($date->format("W")) + 1;
+    // Let us figure out if the timecard is locked
+    $lockedQuery = "SELECT EXISTS (SELECT 1 FROM approved_timecards
+                    WHERE apt_user = $employeeId AND apt_year = $year AND apt_week = $week)";
+    $isLocked = mysqli_query($sqlConnection, $lockedQuery);
+    $isLocked = mysqli_fetch_row($isLocked)[0];
+    $isLocked = intval($isLocked);
     // Make sure this is here before anything
     $echoMe = '';
     // Add the datepicker stuff.
     $echoMe .= '<input type="date" id="date0" class="datepicker"><input type="date" id="date1" class="datepicker">';
     // Add the table's opening tag
-    $echoMe .= "<table id=\"timecard\" user-id=\"$employeeId\">"; // todo: is there a better way to store the id?
+    // todo: is there a better way to store the id?
+    $echoMe .= "<table id=\"timecard\" user-id=\"$employeeId\" year=\"$year\" week=\"$week\">";
     // Add the header, sans range selector
     $echoMe .= "<tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userFirst $userLast's Timecard";
     // Add the select
@@ -129,7 +141,7 @@ if (sessionCheck()) {
         // Add the date column to $echoMe
         // todo: redo parts of code to use the day cell's id to remove 'stamp-day'
         $echoMe .= "<tr stamp-day=\"$day\" class=\"dataRow\">";
-        if ($mode === 2) {
+        if ($mode === 2 && !$isLocked) {
             $echoMe .= '<td class="newDate"><input class="newDate" type="button" value="<+"</td>';
         }
         $echoMe .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";
@@ -164,7 +176,7 @@ if (sessionCheck()) {
                     } elseif ($modifier === 'V') {
                         $val = 'VACATION';
                     }
-                } elseif ($mode === 0 || $mode === 1) {
+                } elseif ($mode === 0 || $mode === 1 || !$isLocked) {
                     $disabled = 'disabled readonly';
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
@@ -177,7 +189,7 @@ if (sessionCheck()) {
                 }
             }
         }
-        if ($mode === 2) {
+        if ($mode === 2 && !$isLocked) {
             $echoMe .= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
         }
         $timeTotal = 0;
@@ -199,11 +211,11 @@ if (sessionCheck()) {
         $echoMe .= '</tr>';
         $runningTotal += $timeTotal;
     }
-    if ($mode === 2) {
+    if ($mode === 2 && !$isLocked) {
         $echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"</td></tr>';
     }
     $push = $maxStamps;
-    if ($mode === 2) {
+    if ($mode === 2 && !$isLocked) {
         $push = $maxStamps * 2 + 1;
     }
     $echoMe .= "<tr class=\"dataRow\"><td colspan=\"$push\"></td><td class=\"dailyHours\">";
@@ -214,8 +226,8 @@ if (sessionCheck()) {
         $echoMe .= '<a class="btn-flat wave-effect wave-orange right" href="utility/export_timecard.html?userid=' .
                     $employeeId . '" target="_blank"><i class="material-icons">print</i></a>';
     }
-    if ($mode === 2) {
-        $echoMe .= '<a href="#" class="btn-flat right" title="Prevent further editing of the timecard"><i class="material-icons">lock</i></a>';
+    if ($mode === 2 && !$isLocked) {
+        $echoMe .= '<a id="lock-card" href="#" class="btn-flat right" title="Prevent further editing of the timecard"><i class="material-icons">lock</i></a>';
     }
     $echoMe .= '</th></tr>';
     $echoMe .= '</table>';
