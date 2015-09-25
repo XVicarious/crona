@@ -17,14 +17,19 @@ if (sessionCheck()) {
     $permissionsArrayCount = count($permissionsArray);
     foreach ($permissionsArray as $key => $permission) {
         $permissionSize = count($permission);
-        $adminPermissionPart .= "(user_companycode = \"$key\" AND (";
-        for ($i = 0; $i < $permissionSize; $i++) {
-            $adminPermissionPart .= 'user_department = ' . $permission[$i];
-            if ($i < $permissionSize - 1) {
-                $adminPermissionPart .= ' OR ';
+        $adminPermissionPart .= "(user_companycode = \"$key\"";
+        // if they have permission of department 000, they have permission to everyone at that property
+        if (!$permission === '000') {
+            $adminPermissionPart .= ' AND (';
+            for ($i = 0; $i < $permissionSize; $i++) {
+                $adminPermissionPart .= 'user_department = ' . $permission[$i];
+                if ($i < $permissionSize - 1) {
+                    $adminPermissionPart .= ' OR ';
+                }
             }
+            $adminPermissionPart .= ')';
         }
-        $adminPermissionPart .= '))';
+        $adminPermissionPart .= ')';
         if ($indexNumber < $permissionsArrayCount - 1) {
             $adminPermissionPart .= ' OR ';
         }
