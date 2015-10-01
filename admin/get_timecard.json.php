@@ -1,26 +1,24 @@
 <?php
 date_default_timezone_set('America/New_York'); // todo: make timezone configurable
-require '../admin_functions.php';
+require 'admin_functions.php';
 $sqlConnection = createSql();
 $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
-    $employeeId = $_POST['id'];
+    $employeeId = intval($_POST['employee']);
     $range = $_POST['range'];
     // todo: this might be a tad screwy because of timezones
-    $day = date('w');
-    $date0 = date($dateTimeFormat24, strtotime("-$day days"));
-    $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days'));
-    //$date0 = date($dateTimeFormat24, strtotime('last sunday'));
-    //$date1 = date($dateTimeFormat24, strtotime('next saturday 23:59:59'));
+    $day = date('w') + 1;
+    $date0 = date($dateFormat, strtotime("-$day days"));
+    $date1 = date($dateFormat, strtotime('+'.(7-$day).' days'));
     if ($range === 'last') {
-        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks")); //'last sunday -1 weeks'));
-        $date1 = date($dateTimeFormat24, strtotime('-'.($day+1).' days 23:59:59')); //'last sunday -1 days 23:59:59'));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks"));
+        $date1 = date($dateTimeFormat24, strtotime('-'.($day).' days 23:59:59'));
     } elseif ($range === 'next') {
-        $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks")); //'next sunday'));
-        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59')); //"next saturday 23:59:59 +1 weeks"));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
+        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59'));
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
         $date1 = date($dateTimeFormat24, $_POST['date1']);
@@ -61,7 +59,7 @@ if (sessionCheck()) {
         array_push($stamps, $stampId);
     }
     // todo: breaks could be an issue here!
-    // fixme: If there are no stamps, array_splice errors our!
+    // fixme: If there are no stamps, array_splice errors out!
     /*
     if (!in_array($timestamps[0][0][4], $stamps)) {
         // Remove the first entry of the array if it isn't right!
@@ -85,30 +83,12 @@ if (sessionCheck()) {
         $userLast = 'null';
         $userStart = '1970-01-01';
     }
-    // Make sure this is here before anything
-    $echoMe = '';
-    // Add the datepicker stuff.
-    //$echoMe .= '<input type="date" id="date0" class="datepicker"><input type="date" id="date1" class="datepicker">';
-    // Add the table's opening tag
-    $echoMe .= "<table id=\"timecard\" user-id=\"$employeeId\">"; // todo: is there a better way to store the id?
-    // Add the header, sans range selector
-    $echoMe .= "<tr id=\"topTR\"><th id=\"topTH\" colspan=\"100%\">$userFirst $userLast's Timecard";
-    // Add the select, close the header
-    //$echoMe .= '<select id="range" class="browser-default">
-    //             <option value="last">Previous Period</option>
-    //             <option value="this">Current Period</option>
-    //            </select></th></tr>';
-    /*
-     *           <option value="next">Next Period</option>
-                 <option value="w2d">Week to Date</option>
-                 <option value="specificDate">Specific Date</option>
-                 <option value="special">Specific Period</option>
-     */
-    // Finally for the head, the (shitty) header for date and junk
-    $echoMe .= '<tr><th>Date</th><th colspan="100%"></th></tr>';
-    /*
-     * Total addition for hours
-     */
+    mysqli_close($sqlConnection);
+    $date = new DateTime();
+    $date->setTimestamp(strtotime($date0));// + 86400);
+    $year = intval($date->format("Y"));
+    // I need to figure out this shit.
+    $week = intval($date->format("W")) + 1;
     $runningTotal = 0;
     $timestampsCount = count($timestamps);
     // We need the maximum number of stamps in a 'day', use this below to fill in rows that don't have as many
@@ -119,14 +99,11 @@ if (sessionCheck()) {
             $maxStamps = $countT;
         }
     }
-    foreach ($timestamps as $timestamp) {
+    foreach ($timestamps as &$timestamp) {
         $day = $timestamp['date'];
         $dayFormatted = date('D m/d', strtotime($day));
         // Add the date column to $echoMe
         // todo: redo parts of code to use the day cell's id to remove 'stamp-day'
-        $echoMe .= "<tr stamp-day=\"$day\" class=\"dataRow\">";
-        //$echoMe .= '<td class="newDate"><input class="newDate" type="button" value="<+"</td>';
-        $echoMe .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";
         $timestampCount = count($timestamp);
         $timeIn = [];
         $timeOut = [];
@@ -139,27 +116,11 @@ if (sessionCheck()) {
             $modifier = $stamp[2];
             // ['date'] will count as a $stamp, so make sure we are dealing with an array
             if (is_array($stamp)) {
-                //$echoMe .= '<td class="tstable addButton"><input class="addButton" type="button" value="+"></td>';
                 $realTime = date($timeFormat12, $stamp[1]);
                 $tri = '';
                 if (date($dateFormat, $stamp[1]) !== $day) {
                     $tri = 'overnight';
                 }
-                $val = $realTime;
-                $disabled = '';
-                if ($modifier !== '') {
-                    $disabled = 'readonly disabled';
-                    if ($modifier === 'S') {
-                        $val = 'SICK';
-                    } elseif ($modifier === 'F') {
-                        $val = 'BEREAVEMENT';
-                    } elseif ($modifier === 'V') {
-                        $val = 'VACATION';
-                    }
-                }
-                $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                             <input readonly disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" type=\"text\" value=\"$val\"></div>
-                            </td>";
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
                 } else {
@@ -167,28 +128,11 @@ if (sessionCheck()) {
                 }
             }
         }
-        //$echoMe .= '<td class="addButton after"><input class="addButton" type="button" value="+"></td>';
         $timeTotal = 0;
         for ($i = 0; $i < count($timeOut); ++$i) {
             $timeTotal += ($timeOut[$i] - $timeIn[$i]);
         }
-        for ($i = 0; $i < $maxStamps - $timestampCount; ++$i) {
-            // Fill in rows that don't have the maximum number of stamps.
-            $echoMe .= '<td colspan=2 class="overflow"></td>';
-        }
-        $timeTotal = round($timeTotal / 3600, 2);
-        $echoMe .= '<td class="dailyHours">';
-        $echoMe .= number_format($timeTotal, 2);
-        $echoMe .= '</td>';
-        $echoMe .= '</tr>';
-        $runningTotal += $timeTotal;
+        $timestamp['totalTime'] = $timeTotal;
     }
-    //$echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"</td></tr>';
-    $push = $maxStamps;
-    $echoMe .= "<tr class=\"dataRow\"><td colspan=\"$push\"></td><td class=\"dailyHours\">";
-    $echoMe .= number_format($runningTotal, 2);
-    $echoMe .= '</td></tr><tr><th colspan="100%">Timecard</th></tr>';
-    $echoMe .= '</table>';
-    mysqli_close($sqlConnection);
-    echo $echoMe;
-} else { echo "You are not authorized to access this information."; }
+    echo json_encode($timestamps);
+}

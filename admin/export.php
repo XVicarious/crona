@@ -36,7 +36,7 @@ if (isset($administrativeId)) {
             }
             // Retrieve the timestamps from the database
             $whereUserId .= ") AND datetime BETWEEN '$date0' AND '$date1'";
-            $query = "SELECT user_id_stamp,datetime,stamp_special,stamp_department FROM timestamp_list
+            $query = "SELECT user_id_stamp,tsl_stamp,stamp_special,stamp_department FROM timestamp_list
                       $whereUserId ORDER BY datetime";
             $timestampResults = mysqli_query($sqlConnection, $query);
             if (mysqli_num_rows($timestampResults) !== 0) {
