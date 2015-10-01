@@ -1,0 +1,9 @@
+<crona>
+	<timestampThresholds>
+		<timeInLate value="5" />
+		<timeInEarly value="5" />
+		<timeOutLate value="5" />
+		<timeOutEarly value="5" />
+	</timestampThresholds>
+	<applicationTimeout value="20" />
+</crona>
