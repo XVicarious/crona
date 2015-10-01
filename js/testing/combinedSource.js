@@ -30,7 +30,6 @@ var operationMode = getPermissions(),
                     ["ZVT", "Twenty Flint Rd LLC"]];
 
 $(function() {
-  var employeeDialog;
   if (operationMode) {
     getEmployees();
     getPermissions();
@@ -63,7 +62,6 @@ $(function() {
           // This on 'if' took me like 5 minutes to figure out.  I AM EXHAUSTED.  Like I could fall asleep right here...
           // 5:43pm on February 11th 2015
           if ((!($(this).hasClass('userEmail') || $(this).hasClass('userStart')))) {
-            console.log($(this));
             if ($(this).val() !== null && $(this).val().length) {
               $(this).removeClass('ui-state-error');
             } else {
@@ -84,6 +82,7 @@ $(function() {
     }
   });
   $(document).on('click', '#initial-confirm-add', function() {
+    console.log("FIRING");
     var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter; // Complicated!  Does this even work properly?
     var isGood = true,
         toAdd = [],
@@ -97,15 +96,15 @@ $(function() {
           if (($(this).hasClass('userEmail') || $(this).hasClass('userStart')) && $(this).val().length) {
             if ($(this).hasClass('userEmail')) {
               if (!validateEmail($(this).val())) {
+                console.log(i + ' does not have a valid email address');
                 isGood = false;
               }
             } else {
               if (!validMoment($(this).val())) {
+                console.log(i + ' does not have a valid start date');
                 isGood = false;
               }
             }
-          } else {
-            isGood = false;
           }
         } else {
           aTempEmployee.push($(this).val());
@@ -122,6 +121,7 @@ $(function() {
     // just use eCounter, because the first eCounter - 1 rows will NOT be clear, but the last one will always be
     // we can't do anything if it is empty
     if (!toAdd.length) {
+      console.log('There is nothing to add');
       return false;
     }
     // now we have to form the string of data
@@ -131,10 +131,17 @@ $(function() {
         dataString += '&';
       }
     }
+    console.log("about to execute ajax request!");
     $.ajax({
       type: "POST",
       url: "insert_user.php",
-      data: dataString
+      data: dataString,
+      success: function(data) {
+        console.log(data);
+      },
+      error: function(jqXHR, textStatus, errorThrown) {
+        console.log(jqXHR, textStatus, errorThrown);
+      }
     });
   });
   $(document).on('change', '#range', function() {
@@ -340,6 +347,7 @@ $(function() {
       url: 'admin_console.php',
       success: function(data) {
         $('#ajaxDiv').html(data);
+        $('.collapsible').collapsible();
       }
     });
   });
@@ -448,6 +456,10 @@ function getEmployees() {
   });
   var employeeListPageable = new EmployeeListPageable();
   var columns = [{
+    name: "",
+    cell: "select-row",
+    headerCell: "select-all"
+  }, {
     name: 'id',
     renderable: false,
     cell: Backgrid.IntegerCell.extend({
@@ -481,8 +493,11 @@ function getEmployees() {
   }];
   var ClickableRow = Backgrid.Row.extend({
     events: {'click': 'onClick'},
-    onClick: function() {
-      Backbone.trigger('rowclicked', this.model);
+    onClick: function(e) {
+      console.log(e.toElement.tagName);
+      if (e.toElement.tagName !== 'INPUT' && e.toElement.tagName !== 'LABEL') {
+        Backbone.trigger('rowclicked', this.model);
+      }
     }
   });
   Backbone.on('rowclicked', function(model) {
@@ -500,7 +515,18 @@ function getEmployees() {
   });
   $employeeList = $('#ajaxDiv');
   $employeeList.html(pageableGrid.render().el);
-  employeeListPageable.getFirstPage({fetch: true});
+  employeeListPageable.getFirstPage({fetch: true}).then(function() {
+    var n = 1;
+    var selectAll = $('.select-all-header-cell');
+    selectAll.find('input').attr('id',"0cell");
+    selectAll.append('<label for="0cell"></label>');
+    $('.select-row-cell').each(function() {
+      $(this).find('input').attr('id',n+"cell");
+      $(this).append('<label for="'+n+'cell"></label>');
+      n++;
+    });
+  });
+  // The following runs BEFORE the page is loaded, but we want it after
 }
 
 function fetchSchedule(parameters) {
