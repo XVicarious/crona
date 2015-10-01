@@ -15,6 +15,7 @@ $_SESSION["lastAction"] = time();
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
     <link rel="stylesheet" href="../css/backgrid.css">
     <link rel="stylesheet" href="../css/material-extra.css">
+    <link rel="stylesheet" href="../css/backgrid-select-all.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
@@ -32,6 +33,7 @@ $_SESSION["lastAction"] = time();
     <script src="../js/lib/jquery.contextMenu.js"></script>
     <script src="../js/lib/moment.min.js"></script>
     <script src="../js/lib/backgrid-moment-cell.js"></script>
+    <script src="../js/lib/backgrid-select-all.min.js"></script>
     <script src="../js/timeConstants.js"></script>
     <script src="../js/lib/jquery.pjax.js"></script>
     <script src="../js/admin/functions.async.js"></script>
