@@ -25,7 +25,7 @@ if (sessionCheck()) {
     $rangeQuery = "AND timestamp_list.datetime BETWEEN '$date0' AND '$date1'";
     $query = "SELECT timestamp_list.stamp_id,timestamp_list.datetime,timestamp_list.stamp_special,
               timestamp_list.stamp_department FROM timestamp_list WHERE timestamp_list.user_id_stamp = $employeeId " .
-              $rangeQuery . ' ORDER BY timestamp_list.datetime';
+              $rangeQuery . ' ORDER BY tsl_stamp';
     $queryResult = mysqli_query($sqlConnection, $query);
     if ($queryResult === false) {
         return;

@@ -35,8 +35,8 @@ if (sessionCheck()) {
     $query = "SELECT stamp_id,timestamp_list.datetime,stamp_special,stamp_department,stamp_partner
               FROM timestamp_list
               WHERE user_id_stamp = $employeeId
-              AND timestamp_list.datetime BETWEEN '$date0' AND '$date1'
-              ORDER BY timestamp_list.datetime";
+              AND tsl_stamp BETWEEN '$date0' AND '$date1'
+              ORDER BY tsl_stamp";
     $queryResult = mysqli_query($sqlConnection, $query);
     if ($queryResult === false) {
         // If the query was somehow broken, just die.
@@ -135,7 +135,7 @@ if (sessionCheck()) {
             $maxStamps = $countT;
         }
     }
-    foreach ($timestamps as $timestamp) {
+    foreach ($timestamps as &$timestamp) {
         $day = $timestamp['date'];
         $dayFormatted = date('D m/d', strtotime($day));
         // Add the date column to $echoMe
