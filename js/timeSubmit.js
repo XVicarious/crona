@@ -11,10 +11,11 @@ $(function() {
       $('#loginType').val();
     $.ajax({
       type: 'POST',
-      url: 'punch.php',
+      url: 'punch.new.php',
       data: dataString,
       success: function(data) {
-        var badLogin,
+        $('#ajaxDiv').html(data);
+        /*var badLogin,
             badLoginMessage;
         $('#ajaxDiv').html(data);
         badLogin = $('#bad-login');
@@ -39,7 +40,7 @@ $(function() {
         if ($('#not-accepted').length) {
           badLoginMessage.html('Your timestamp was <b>NOT<\/b> accepted.<br>This is usually because you\'re not on an approved IP address.');
           badLogin.openModal();
-        }
+        }*/
       }
     });
     return true;
