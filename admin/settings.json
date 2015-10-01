@@ -1,0 +1,13 @@
+{
+  "stampThresholds": {
+    "timeIn": {
+      "late": 5,
+      "early": 5
+    },
+    "timeOut": {
+      "late": 5,
+      "early": 5
+    }
+  },
+  "applicationTimeout": 20
+}
