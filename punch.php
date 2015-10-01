@@ -1,5 +1,6 @@
 <?php
 require 'function.php';
+require 'admin/admin_functions.php';
 if ($_POST) {
     //todo: convert to new sql system
     $conn = mysqli_connect("localhost", "bmaurer_pciven", "***REMOVED***", "bmaurer_hhemployee");
@@ -45,7 +46,7 @@ if ($_POST) {
                     if ($_SERVER['REMOTE_ADDR'] === '40.132.64.225') {
                         date_default_timezone_set('Atlantic/Reykjavik');
                         $now = date("Y-m-d H:i:s");
-                        $iquery = "INSERT INTO timestamp_list (user_id_stamp,timestamp_list.datetime)
+                        $iquery = "INSERT INTO timestamp_list (user_id_stamp,tsl_stamp)
                                    VALUES ($uid,'$now')";
                         mysqli_query($conn, $iquery);
                         echo '<div id="accepted"></div>';
