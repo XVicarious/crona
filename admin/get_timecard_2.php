@@ -32,7 +32,7 @@ if (sessionCheck()) {
         $date0 = date($dateTimeFormat24, strtotime('monday 00:00:00'));
         $date1 = date($dateTimeFormat24, strtotime('today 23:59:59'));
     }
-    $query = "SELECT stamp_id,timestamp_list.datetime,stamp_special,stamp_department,stamp_partner
+    $query = "SELECT stamp_id,tsl_stamp,stamp_special,stamp_department,stamp_partner
               FROM timestamp_list
               WHERE user_id_stamp = $employeeId
               AND tsl_stamp BETWEEN '$date0' AND '$date1'
@@ -176,7 +176,7 @@ if (sessionCheck()) {
                     } elseif ($modifier === 'V') {
                         $val = 'VACATION';
                     }
-                } elseif ($mode === 0 || $mode === 1 || !$isLocked) {
+                } elseif ($mode === 0 || $mode === 1 || $isLocked) {
                     $disabled = 'disabled readonly';
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
