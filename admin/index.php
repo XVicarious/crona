@@ -1,10 +1,6 @@
 <?php
-session_start();
-if ($_SESSION["lastAction"] + 10 * 60 < time()) {
-    session_destroy();
-    echo '<script>window.location.replace("http://xvss.net/devel/time?timeout=1");</script>';
-}
-$_SESSION["lastAction"] = time();
+require 'admin_functions.php';
+sessionCheck();
 ?>
 <!DOCTYPE html>
 <html>
@@ -210,36 +206,3 @@ $_SESSION["lastAction"] = time();
 </div>
 </body>
 </html>
-<!--<div class="col l4">
-    <div class="card green lighten-3">
-        <div class="card-image left">
-            <img class="person-image" src="../images/generic_profile_image.png">
-        </div>
-        <div class="card-content left">
-            <p class="flow-text">John Jacob Jingle Heimer Schmidt</p>
-            <div class="row">
-                <div class="col l6">
-                    Out: 5:00pm
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="col l4">
-    <div class="card grey lighten-2">
-        <div class="card-image left">
-            <img class="person-image" src="../images/generic_profile_image.png">
-        </div>
-        <div class=card-content">
-        </div>
-    </div>
-</div>
-<div class="col l4">
-    <div class="card green lighten-3">
-        <div class="card-image left">
-            <img class="person-image" src="../images/generic_profile_image.png">
-        </div>
-        <div class="card-content">
-        </div>
-    </div>
-</div>-->
