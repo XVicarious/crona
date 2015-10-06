@@ -494,7 +494,6 @@ function getEmployees() {
   var ClickableRow = Backgrid.Row.extend({
     events: {'click': 'onClick'},
     onClick: function(e) {
-      console.log(e.toElement.tagName);
       if (e.toElement.tagName !== 'INPUT' && e.toElement.tagName !== 'LABEL') {
         Backbone.trigger('rowclicked', this.model);
       }
@@ -697,4 +696,15 @@ function addEmployeesAction() {
   $('.userCompany.e-0').html(optionString);
   // fixme: I'm being lazy here using append, instead of adding it on when I made the thing;
   ajaxDiv.append('<a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
+}
+
+function testJson(user) {
+  $.ajax({
+    type: "POST",
+    url: 'get_timecard.json.php',
+    data: 'employee=' + user + '&range=last',
+    success: function(data) {
+      $('#ajaxDiv').html(data);
+    }
+  });
 }
