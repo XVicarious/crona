@@ -2,7 +2,10 @@
 
 function sessionCheck()
 {
-    session_start();
+    if (!isset($_SESSION)) {
+        error_log('No session, starting...', 0);
+        session_start();
+    }
     $lastAction = $_SESSION['lastAction'];
     if ($lastAction + 20 * 60 < time()) {
         session_destroy();
@@ -38,11 +41,8 @@ function createSql()
     return mysqli_connect($sql_server, $sql_username, $sql_password, $sql_database);
 }
 
-function javascriptLog($stringMessage) {
-    echo "<script>console.log(\"$stringMessage\")";
-}
-
-function createPDO() {
+function createPDO()
+{
     $sql_username = 'bmaurer_pciven';
     $sql_password = '3al12of4ut25';
     try {
