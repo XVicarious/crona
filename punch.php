@@ -1,80 +1,83 @@
 <?php
 require 'function.php';
 require 'admin/admin_functions.php';
+include 'admin/SqlStatements.php';
 if ($_POST) {
-    //todo: convert to new sql system
-    $conn = mysqli_connect("localhost", "bmaurer_pciven", "***REMOVED***", "bmaurer_hhemployee");
-    $myu = $_POST['uname'];
-    //$query = "SELECT user_id, user_name, user_password, user_password_set, user_emails FROM employee_list WHERE
-              //employee_list.user_name = \"$myu\"";
-    $query = "SELECT employee_list.user_id,
-                     user_hashes.uhsh_hash AS user_hash,
-                     user_hashes.uhsh_created AS user_created,
-                     user_salts.uslt_salt AS user_salt,
-                     user_emails.ueml_email AS user_email
-              FROM employee_list
-                  LEFT JOIN user_hashes ON employee_list.user_id = user_hashes.uhsh_user
-                  LEFT JOIN user_salts ON employee_list.user_id = user_salts.uslt_user
-                  LEFT JOIN user_emails ON employee_list.user_email_primary = user_emails.ueml_id
-              WHERE employee_list.user_name = \"$myu\"";
-    $result = mysqli_query($conn, $query);
-    if ($result !== false) {
-        if (mysqli_num_rows($result) !== 0) {
-            //list($uid, $uname, $upas, $udate, $uemail) = mysqli_fetch_row($result);
-            list($uid, $userHash, $userCreated, $userSalt, $userEmail) = mysqli_fetch_row($result);
-            if (validateLogin($_POST['drowp'], $userHash, $userSalt)) {
-                $passwordSetLapse = time() - $userCreated;
-                //todo: make password expiration configurable
-                if ($passwordSetLapse >= 15742080) {
-                    $data = http_build_query(['function' => 'sendEmail', 'email' => $userEmail]);
-                    $opts = ['http' => ['method' => 'POST', 'content' => $data]];
-                    $st = stream_context_create($opts);
-                    $fp = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $st);
-                    echo 'Password Expired!  Reset link set to your email.';
-                    return;
-                }
-                $query = 'SELECT eque_number FROM employee_questions WHERE eque_user = ' . $uid;
-                $result = mysqli_query($conn, $query);
-                if (mysqli_num_rows($result) < 3) {
+    $dbh = createPDO();
+    try {
+        $myUsername = $_POST['uname'];
+        $stmt = $dbh->prepare(SqlStatements::GET_USER_CREDENTIALS, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->bindParam(':username', $myUsername, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        if (!$result) {
+            error_log("The query has failed.", 0);
+            die();
+        } elseif ($result === 0) {
+            error_log("The query returned no values.", 0);
+            die();
+        }
+        // make the array easier to work with, this WILL only return one row
+        // because usernames are unique.
+        $result = $result[0];
+        if (validateLogin($_POST['drowp'], $result['user_hash'], $result['user_salt'])) {
+            $passwordSetLapse = time() - $result['user_created'];
+            if ($passwordSetLapse >= 15742080) {
+                $data = http_build_query(['function' => 'sendEmail', 'email' => $result['user_email']]);
+                $options = ['http' => ['method' => 'POST', 'content' => $data]];
+                $stream = stream_context_create($options);
+                $fileOpen = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $st);
+                echo 'Password Expired!  A link to reset your password has been sent to your email!';
+                return;
+            }
+            try {
+                $stmt = $dbh->prepare(SqlStatements::GET_SECURITY_QUESTIONS, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+                $stmt->bindParam(':userid', $result['user_id'], PDO::PARAM_INT);
+                $stmt->execute();
+                $userId = $result['user_id'];
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                if (count($result) < 3) {
                     session_start();
-                    $_SESSION["lastAction"] = time();
-                    $_SESSION["userId"] = $uid;
-                    echo '<script>$(location).attr("href","http://xvss.net/devel/time/set_security_questions.php")</script>';
+                    $_SESSION['lastAction'] = time();
+                    $_SESSION['userId'] = $userId;
+                    echo '$(location).attr("href","https://xvss.net/devel/time/forgot/set_security_questions.php");';
                     return;
                 }
-                if ($_POST["loginType"] === "timestamp") {
+                if ($_POST['loginType'] === 'timestamp') {
                     if ($_SERVER['REMOTE_ADDR'] === '40.132.64.225') {
                         date_default_timezone_set('Atlantic/Reykjavik');
-                        $now = date("Y-m-d H:i:s");
-                        $iquery = "INSERT INTO timestamp_list (user_id_stamp,tsl_stamp)
-                                   VALUES ($uid,'$now')";
-                        mysqli_query($conn, $iquery);
-                        echo '<div id="accepted"></div>';
+                        $now = date('Y-m-d H:i:s');
+                        try {
+                            $stmt = $dbh->prepare(SqlStatements::SET_INSERT_STAMP, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+                            $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
+                            $stmt->bindParam(':now', $now, PDO::PARAM_STR); // Is really of type DATETIME
+                            $dbh->beginTransaction(); // don't commit everything right away, does this work with this?
+                            $stmt->execute();
+                            // todo: Figure out better way to do this
+                            echo 'Materialize.toast("Timestamp Accepted!");';
+                        } catch (Exception $e) {
+                            $dbh->rollBack();
+                            error_log('Failure: '.$e->getMessage(), 0);
+                        }
                     } else {
-                        echo '<div id="not-accepted"></div>';
+                        // todo: Figure out better way to do this
+                        echo 'Materialize.toast("Timestamp NOT Accepted!");';
                     }
-                } elseif ($_POST["loginType"] === "cardAdmin") {
-                    session_start();
-                    $_SESSION["lastAction"] = time();
-                    $_SESSION["userId"] = $uid;
-                    echo "<div id=\"a\"></div>";
-                } else {
-                    date_default_timezone_set('America/New_York');
-                    session_start();
-                    $_SESSION["lastAction"] = time();
-                    $_SESSION["userId"] = $uid;
-                    setcookie("xvtss", "$uid", time() + 1200);
-                    echo "<div id=\"b\"></div>";
+                } elseif ($_POST['loginType'] === 'cardAdmin') {
+                    if (!isset($_SESSION)) {
+                        session_start();
+                    }
+                    $_SESSION['lastAction'] = time();
+                    $_SESSION['userId'] = $userId;
+                    echo '$(location).attr("href", "admin");';
                 }
-            } else {
-                echo "<div id=\"badup\"></div>";
+            } catch (Exception $e) {
+                error_log('Failed: '.$e->getMessage(), 0);
             }
-        } else {
-            echo "<div id=\"badup\"></div>";
         }
-    } else {
-        echo 'SEVERE ERROR: PLEASE REPORT TO ADMINISTRATOR';
-        echo "<div id=\"badup\"></div>";
+    } catch (Exception $e) {
+        error_log('Failed: '.$e->getMessage(), 0);
     }
-    mysqli_close($conn);
+    // Close the database
+    $dbh = null;
 }

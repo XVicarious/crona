@@ -8,7 +8,7 @@ $(function() {
     }
     dataString = 'uname=' + username.val() + '&drowp=' + password.val() + '&loginType=' + $('#loginType').val();
     $.ajax({
-      url: 'punch.new.php',
+      url: 'punch.php',
       type: 'POST',
       dataType: 'script',
       data: dataString
