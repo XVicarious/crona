@@ -1,7 +1,7 @@
 <?php
 date_default_timezone_set('America/New_York'); // todo: make timezone configurable
 require 'admin_functions.php';
-$sqlConnection = createSql();
+include 'SqlStatements.php';
 $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
@@ -14,7 +14,7 @@ if (sessionCheck()) {
     $date0 = date($dateFormat, strtotime("-$day days"));
     $date1 = date($dateFormat, strtotime('+'.(7-$day).' days'));
     if ($range === 'last') {
-        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks"));
+        $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks 00:00:00"));
         $date1 = date($dateTimeFormat24, strtotime('-'.($day).' days 23:59:59'));
     } elseif ($range === 'next') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
@@ -27,71 +27,61 @@ if (sessionCheck()) {
         $date0 = date($dateTimeFormat24, strtotime('monday 00:00:00'));
         $date1 = date($dateTimeFormat24, strtotime('today 23:59:59'));
     }
-    $query = "SELECT stamp_id,tsl_stamp,stamp_special,stamp_department,stamp_partner
-              FROM timestamp_list
-              WHERE user_id_stamp = $employeeId
-              AND tsl_stamp BETWEEN '$date0' AND '$date1'
-              ORDER BY tsl_stamp";
-    $queryResult = mysqli_query($sqlConnection, $query);
-    if ($queryResult === false) {
-        // If the query was somehow broken, just die.
-        return;
-    }
+    $dbh = createPDO();
     $timestamps = [];
-    $stamps = [];
-    while (list($stampId, $timestamp, $modifier, $department, $partnerId) = mysqli_fetch_row($queryResult)) {
-        $lastTimestamp = end($timestamps);
-        // We need the offset from the current timezone to GMT
-        $dateEDT = new DateTimeZone('America/New_York'); // todo: make timezone configurable
+    try {
+        $stmt = $dbh->prepare(SqlStatements::GET_STAMPS_EMPLOYEE_RANGE, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->bindParam(':userid', $employeeId, PDO::PARAM_INT);
+        $stmt->bindParam(':date0', $date0, PDO::PARAM_STR);
+        $stmt->bindParam(':date1', $date1, PDO::PARAM_STR);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $dateEDT = new DateTimeZone('America/New_York');
         $offsetSeconds = $dateEDT->getOffset(new DateTime('now'));
-        $thisDay = date($dateFormat, strtotime($timestamp) + $offsetSeconds);
-        $thisTime = date($timeFormat12, strtotime($timestamp) + $offsetSeconds);
-        $thisUnix = date('U', strtotime($timestamp) + $offsetSeconds);
-        if ($lastTimestamp['date'] === $thisDay || in_array($partnerId, $stamps)) {
-            // push things in for this day.  They can be for this day, or reference it
-            $timestampsCount = count($timestamps) - 1;
-            array_push($timestamps[$timestampsCount], [$stampId, $thisUnix, $modifier, $department, $partnerId]);
-        } else {
-            // if this is a new day (or it doesn't reference the previous day) then start a new day
-            array_push($timestamps, ['date'=>$thisDay, [$stampId, $thisUnix, $modifier, $department, $partnerId]]);
+        $stamps = [];
+        foreach ($result as $timestamp) {
+            $lastTimestamp = end($timestamps);
+            $tslTime = strtotime($timestamp['tsl_stamp']) + $offsetSeconds;
+            $thisDay = date($dateFormat, $tslTime);
+            $thisTime = date($timeFormat12, $tslTime);
+            $thisUnix = date('U', $tslTime);
+            if ($lastTimestamp['date'] === $thisDay || in_array($timestamp['stamp_partner'], $stamps)) {
+                // push things for the current day.  they can either be actually for this day, or reference stamps from it
+                $timestampsCount = count($timestamps) - 1;
+                array_push($timestamps[$timestampsCount], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]);
+            } else {
+                // if this a new day (or doesn't reference the previous day), then start a new day!
+                array_push($timestamps, ['date'=>$thisDay, [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]]);
+            }
+            array_push($stamps, $timestamp['stamp_id']);
         }
-        //  We need the stampIds to tell if the stamps reference one another
-        array_push($stamps, $stampId);
-    }
-    // todo: breaks could be an issue here!
-    // fixme: If there are no stamps, array_splice errors out!
-    /*
-    if (!in_array($timestamps[0][0][4], $stamps)) {
-        // Remove the first entry of the array if it isn't right!
-        array_splice($timestamps[0], 0, 1);
-        if (empty($timestamps[0])) {
-            // todo: this doesn't work properly because of [date]
-            // If we left the first array empty, get rid of it
-            array_splice($timestamps, 0, 1);
+        /*
+         * Then do some tricky bullshit that I don't even remember how it works
+         * -- Brian
+         */
+        try {
+            $stmt = $dbh->prepare(SqlStatements::GET_USER_NAME_DATE, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+            $stmt->bindParam(':userid', $employeeId);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            // this all seems woefully inefficient.
+            $timestamps['USER_INFO'] = ['user_first'=>'','user_last'=>'','user_start'=>''];
+            $timestamps['USER_INFO']['user_first'] = $result[0]['user_first'];
+            $timestamps['USER_INFO']['user_last'] = $result[0]['user_last'];
+            $timestamps['USER_INFO']['user_start'] = $result[0]['user_start'];
+            $dbh = null;
+        } catch (Exception $e) {
+            error_log('Failed: '.$e->getMessage());
         }
+    } catch (Exception $e) {
+        error_log('Failed: '.$e->getMessage());
     }
-    */
-    // todo: look into sunday of next week for matching stamps also
-    $employeeNameQuery = "SELECT user_first, user_last, user_start
-                          FROM employee_list
-                          WHERE user_id = $employeeId";
-    $nameResult = mysqli_query($sqlConnection, $employeeNameQuery);
-    if (mysqli_num_rows($nameResult) !== 0) {
-        list($userFirst, $userLast, $userStart) = mysqli_fetch_row($nameResult);
-    } else {
-        $userFirst = 'null';
-        $userLast = 'null';
-        $userStart = '1970-01-01';
-    }
-    mysqli_close($sqlConnection);
     $date = new DateTime();
-    $date->setTimestamp(strtotime($date0));// + 86400);
-    $year = intval($date->format("Y"));
-    // I need to figure out this shit.
-    $week = intval($date->format("W")) + 1;
+    $date->setTimestamp(strtotime($date0));
+    $year = intval($date->format('Y'));
+    $week = intval($date->format('W')) + 1;
     $runningTotal = 0;
     $timestampsCount = count($timestamps);
-    // We need the maximum number of stamps in a 'day', use this below to fill in rows that don't have as many
     $maxStamps = 0;
     foreach ($timestamps as $t) {
         $countT = count($t);
@@ -100,27 +90,10 @@ if (sessionCheck()) {
         }
     }
     foreach ($timestamps as &$timestamp) {
-        $day = $timestamp['date'];
-        $dayFormatted = date('D m/d', strtotime($day));
-        // Add the date column to $echoMe
-        // todo: redo parts of code to use the day cell's id to remove 'stamp-day'
-        $timestampCount = count($timestamp);
         $timeIn = [];
         $timeOut = [];
         foreach ($timestamp as $key => $stamp) {
-            $miss = '';
-            // todo: figure out how this works! Past me was obviously smarter
-            if (($timestampCount % 2 === 0 && $key === $timestampCount - 2)) {
-                $miss = 'missingTime';
-            }
-            $modifier = $stamp[2];
-            // ['date'] will count as a $stamp, so make sure we are dealing with an array
             if (is_array($stamp)) {
-                $realTime = date($timeFormat12, $stamp[1]);
-                $tri = '';
-                if (date($dateFormat, $stamp[1]) !== $day) {
-                    $tri = 'overnight';
-                }
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
                 } else {

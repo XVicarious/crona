@@ -31,7 +31,9 @@ class SqlStatements
     /**
      * Query to get set questions from the database for a specific employee
      */
-    const GET_SECURITY_QUESTIONS = 'SELECT eque_number FROM employee_questions WHERE eque_user = :userid';
+    const GET_SECURITY_QUESTIONS = 'SELECT eque_number
+                                    FROM employee_questions
+                                    WHERE eque_user = :userid';
     /**
      * Query to insert a stamp into the timestamp_list table
      */
@@ -39,5 +41,20 @@ class SqlStatements
     /**
      * Query to check if user has administrative permissions
      */
-    const GET_CHECK_PERMISSIONS = 'SELECT company_code, department_id FROM employee_supervisors WHERE user_id = :userid';
+    const GET_CHECK_PERMISSIONS = 'SELECT company_code, department_id
+                                   FROM employee_supervisors
+                                   WHERE user_id = :userid';
+    /**
+     * Query to get all stamps from employee from range
+     */
+    const GET_STAMPS_EMPLOYEE_RANGE = 'SELECT stamp_id,tsl_stamp,stamp_special,stamp_department,stamp_partner
+                                       FROM timestamp_list
+                                       WHERE user_id_stamp = :userid AND tsl_stamp BETWEEN :date0 AND :date1
+                                       ORDER BY tsl_stamp';
+    /**
+     * Query to get a user's name and start date
+     */
+    const GET_USER_NAME_DATE = 'SELECT user_first, user_last, user_start
+                                FROM employee_list
+                                WHERE user_id = :userid';
 }
