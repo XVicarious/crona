@@ -1,21 +1,12 @@
 <?php
 require 'function.php';
 require 'admin/admin_functions.php';
+include 'admin/SqlStatements.php';
 if ($_POST) {
     $dbh = createPDO();
     try {
         $myUsername = $_POST['uname'];
-        $query = "SELECT employee_list.user_id,
-                     user_hashes.uhsh_hash AS user_hash,
-                     user_hashes.uhsh_created AS user_created,
-                     user_salts.uslt_salt AS user_salt,
-                     user_emails.ueml_email AS user_email
-              FROM employee_list
-                  LEFT JOIN user_hashes ON employee_list.user_id = user_hashes.uhsh_user
-                  LEFT JOIN user_salts ON employee_list.user_id = user_salts.uslt_user
-                  LEFT JOIN user_emails ON employee_list.user_email_primary = user_emails.ueml_id
-              WHERE employee_list.user_name = :username";
-        $stmt = $dbh->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+        $stmt = $dbh->prepare(SqlStatements::GET_USER_CREDENTIALS, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->bindParam(':username', $myUsername, PDO::PARAM_STR);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -40,8 +31,7 @@ if ($_POST) {
                 return;
             }
             try {
-                $query = 'SELECT eque_number FROM employee_questions WHERE eque_user = :userid';
-                $stmt = $dbh->prepare($query, array(PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY));
+                $stmt = $dbh->prepare(SqlStatements::GET_SECURITY_QUESTIONS, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
                 $stmt->bindParam(':userid', $result['user_id'], PDO::PARAM_INT);
                 $stmt->execute();
                 $userId = $result['user_id'];
@@ -49,7 +39,8 @@ if ($_POST) {
                 if (count($result) < 3) {
                     session_start();
                     $_SESSION['lastAction'] = time();
-                    echo '<script>$(location).attr("href","https://xvss.net/devel/time/forgot/set_security_questions.php")</script>';
+                    $_SESSION['userId'] = $userId;
+                    echo '$(location).attr("href","https://xvss.net/devel/time/forgot/set_security_questions.php");';
                     return;
                 }
                 if ($_POST['loginType'] === 'timestamp') {
@@ -57,35 +48,35 @@ if ($_POST) {
                         date_default_timezone_set('Atlantic/Reykjavik');
                         $now = date('Y-m-d H:i:s');
                         try {
-                            $query = 'INSERT INTO timestamp_list (user_id_stamp, tsl_stamp)
-                                  VALUES (:userid, :now)';
-                            $stmt = $dbh->prepare($query, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+                            $stmt = $dbh->prepare(SqlStatements::SET_INSERT_STAMP, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
                             $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
                             $stmt->bindParam(':now', $now, PDO::PARAM_STR); // Is really of type DATETIME
                             $dbh->beginTransaction(); // don't commit everything right away, does this work with this?
                             $stmt->execute();
                             // todo: Figure out better way to do this
-                            echo '<script>Materialize.toast("Timestamp Accepted!")</script>';
+                            echo 'Materialize.toast("Timestamp Accepted!");';
                         } catch (Exception $e) {
                             $dbh->rollBack();
-                            javascriptLog('Failure: '.$e->getMessage());
+                            error_log('Failure: '.$e->getMessage(), 0);
                         }
                     } else {
                         // todo: Figure out better way to do this
-                        echo '<script>Materialize.toast("Timestamp NOT Accepted!")</script>';
+                        echo 'Materialize.toast("Timestamp NOT Accepted!");';
                     }
                 } elseif ($_POST['loginType'] === 'cardAdmin') {
-                    session_start();
+                    if (!isset($_SESSION)) {
+                        session_start();
+                    }
                     $_SESSION['lastAction'] = time();
-                    $_SESSION['user_id'] = $userId;
-                    // redirect to admin
+                    $_SESSION['userId'] = $userId;
+                    echo '$(location).attr("href", "admin");';
                 }
             } catch (Exception $e) {
-                javascriptLog('Failed: '.$e->getMessage());
+                error_log('Failed: '.$e->getMessage(), 0);
             }
         }
     } catch (Exception $e) {
-        javascriptLog('Failed: '.$e->getMessage());
+        error_log('Failed: '.$e->getMessage(), 0);
     }
     // Close the database
     $dbh = null;
