@@ -113,3 +113,11 @@ function generateUsername($sqlConnection, $baseUsername, $number = 0)
     }
     return strtolower($username);
 }
+
+function pre($string)
+{
+    echo '<pre>';
+    print_r($string);
+    echo '</pre>';
+    return;
+}
