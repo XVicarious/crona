@@ -12,12 +12,12 @@ sessionCheck();
     <link rel="stylesheet" href="../css/backgrid.css">
     <link rel="stylesheet" href="../css/material-extra.css">
     <link rel="stylesheet" href="../css/backgrid-select-all.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
     <link rel="stylesheet" href="../css/sticky-footer.css">
-    <link rel="stylesheet" href="../css/materialize.css?v=0.97">
+    <link rel="stylesheet" href="../css/materialize.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
     <script src="../js/lib/materialize.js?v=0.97"></script>
@@ -32,7 +32,6 @@ sessionCheck();
     <script src="../js/lib/backgrid-select-all.min.js"></script>
     <script src="../js/timeConstants.js"></script>
     <script src="../js/lib/jquery.pjax.js"></script>
-    <script src="../js/admin/functions.async.js"></script>
     <script src="../js/testing/combinedSource.js"></script>
     <script src="../js/admin/adminConsole.js"></script>
     <script>
