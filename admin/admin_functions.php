@@ -3,7 +3,6 @@
 function sessionCheck()
 {
     if (!isset($_SESSION)) {
-        error_log('No session, starting...', 0);
         session_start();
     }
     $lastAction = $_SESSION['lastAction'];
