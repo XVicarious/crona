@@ -1,5 +1,6 @@
 var operationMode = getPermissions(),
     $inputPicker = [],
+    pageableGrid,
     picker = [],
     saveTheDate = 0,
     eCounter = 0,
@@ -154,7 +155,7 @@ $(function() {
       getEmployee({id: userId});
     }
   });
-  $(document).on('click', 'input.addButton', function() {
+  $(document).on('click', 'button.addButton', function() {
     var timestamp, validTimestamp, userId, trueTime, thisParent = $(this).parent();
     if (thisParent.prev().children(':first-child').is('input')) {
       timestamp = thisParent.prev().children(':first-child').val();
@@ -388,63 +389,69 @@ function getEmployee(parameters) {
   extraString = extraString || '';
   $.ajax({
     type: 'POST',
-    url: 'get_timecard_2.php',
-    //container: '#ajaxDiv',
-    data: 'mode=' + mode + '&employee=' + id + '&range=' + range + extraString,
+    url: 'get_timecard.json.php',
+    data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
-      var datepicker, secondDate;
-      $('#ajaxDiv').html(data);
-      datepicker = $('#date0');
-      secondDate = $('#date1');
-      $inputPicker[0] = datepicker.pickadate({
-        selectMonths: true,
-        selectYears: true,
-        onSet: function(thing) {
-          var fixedDate = this.get('value');
-          var rangeChildren = $('#range').children(':selected');
-          var endOfDay = 0;
-          var extraString = '';
-          if (thing.select) {
-            fixedDate = moment(fixedDate + ' 00:00:00 ' + getOffsetString(), 'D MMMM, YYYY h:m:s Z').utc().unix();
-            if (rangeChildren.val() === 'specificDate') {
-              endOfDay += fixedDate + (TimeVar.SECONDS_IN_DAY - 1);
-              extraString += '&date0=' + fixedDate + '&date1=' + endOfDay;
-              getEmployee({id: id, range: 'specificDate', extraString: extraString});
-            } else if (rangeChildren.val() === 'special') {
-              saveTheDate = fixedDate;
-              picker[1].open(false);
-              this.close();
+      console.log(data);
+      $.ajax({
+        type: 'POST',
+        url: 'build_timecard.php',
+        data: 'timestamps=' + data,
+        success: function(data) {
+          var datepicker, secondDate;
+          $('#ajaxDiv').html(data);
+          datepicker = $('#date0');
+          secondDate = $('#date1');
+          $inputPicker[0] = datepicker.pickadate({
+            selectMonths: true,
+            selectYears: true,
+            onSet: function(thing) {
+              var fixedDate = this.get('value');
+              var rangeChildren = $('#range').children(':selected');
+              var endOfDay = 0;
+              var extraString = '';
+              if (thing.select) {
+                fixedDate = moment(fixedDate + ' 00:00:00 ' + getOffsetString(), 'D MMMM, YYYY h:m:s Z').utc().unix();
+                if (rangeChildren.val() === 'specificDate') {
+                  endOfDay += fixedDate + (TimeVar.SECONDS_IN_DAY - 1);
+                  extraString += '&date0=' + fixedDate + '&date1=' + endOfDay;
+                  getEmployee({id: id, range: 'specificDate', extraString: extraString});
+                } else if (rangeChildren.val() === 'special') {
+                  saveTheDate = fixedDate;
+                  picker[1].open(false);
+                  this.close();
+                }
+              }
             }
-          }
+          });
+          $inputPicker[1] = secondDate.pickadate({
+            selectMonths: true,
+            selectYears: true,
+            onSet: function(thing) {
+              var fixedDate = this.get('value');
+              var extraString = '';
+              if (thing.select) {
+                fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() +
+                  (TimeVar.SECONDS_IN_DAY - 1);
+                extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
+                getEmployee({id: id, range: 'specificDate', extraString: extraString});
+                this.close();
+              }
+            }
+          });
+          $inputPicker[1].css('display','none');
+          picker[1] = $inputPicker[1].pickadate('picker');
+          $inputPicker[0].css('display','none');
+          picker[0] = $inputPicker[0].pickadate('picker');
+          $('#range').val(range);
         }
       });
-      $inputPicker[1] = secondDate.pickadate({
-        selectMonths: true,
-        selectYears: true,
-        onSet: function(thing) {
-          var fixedDate = this.get('value');
-          var extraString = '';
-          if (thing.select) {
-            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() +
-              (TimeVar.SECONDS_IN_DAY - 1);
-            extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
-            getEmployee({id: id, range: 'specificDate', extraString: extraString});
-            this.close();
-          }
-        }
-      });
-      $inputPicker[1].css('display','none');
-      picker[1] = $inputPicker[1].pickadate('picker');
-      $inputPicker[0].css('display','none');
-      picker[0] = $inputPicker[0].pickadate('picker');
-      $('#range').val(range);
-      bindNewDate();
     }
   });
 }
 
 function getEmployees() {
-  var pageableGrid, $employeeList;
+  var $employeeList;
   var EmployeeList = Backbone.Model.extend({});
   var EmployeeListPageable = Backbone.PageableCollection.extend({
     model: EmployeeList,
@@ -492,19 +499,34 @@ function getEmployees() {
     editable: false
   }];
   var ClickableRow = Backgrid.Row.extend({
-    events: {'click': 'onClick'},
+    events: {'click': 'onClick', '': ''},
     onClick: function(e) {
       if (e.toElement.tagName !== 'INPUT' && e.toElement.tagName !== 'LABEL') {
         Backbone.trigger('rowclicked', this.model);
       }
+    },
+    remove: function() {
+      this.undelegateEvents();
+      this.off();
+      for (var i = 0; i < this.cells.length; i++) {
+        var cell = this.cells[i];
+        cell.remove.apply(cell, arguments);
+      }
+      return Backbone.View.prototype.remove.apply(this, arguments);
     }
   });
+  if (pageableGrid) {
+    pageableGrid.remove();
+  }
   Backbone.on('rowclicked', function(model) {
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
     if (mode === 'schedule') {
       fetchSchedule({userId: model.id});
     } else {
       getEmployee({id: model.id, range: 'this'});
+    }
+    if (pageableGrid) {
+      pageableGrid.remove();
     }
   });
   pageableGrid = new Backgrid.Grid({
@@ -525,7 +547,6 @@ function getEmployees() {
       n++;
     });
   });
-  // The following runs BEFORE the page is loaded, but we want it after
 }
 
 function fetchSchedule(parameters) {
@@ -696,15 +717,4 @@ function addEmployeesAction() {
   $('.userCompany.e-0').html(optionString);
   // fixme: I'm being lazy here using append, instead of adding it on when I made the thing;
   ajaxDiv.append('<a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
-}
-
-function testJson(user) {
-  $.ajax({
-    type: "POST",
-    url: 'get_timecard.json.php',
-    data: 'employee=' + user + '&range=last',
-    success: function(data) {
-      $('#ajaxDiv').html(data);
-    }
-  });
 }
