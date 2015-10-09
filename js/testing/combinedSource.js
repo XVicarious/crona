@@ -718,3 +718,14 @@ function addEmployeesAction() {
   // fixme: I'm being lazy here using append, instead of adding it on when I made the thing;
   ajaxDiv.append('<a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
 }
+
+function createStamp(userId, stamp) {
+    $.ajax({
+        type: 'POST',
+        url: 'timeEdit/create_stamp.php',
+       data: 'user=' + userId + '&date=' + stamp,
+       success: function() {
+          getEmployee({id: userId});
+        }
+   });
+}
