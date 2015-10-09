@@ -17,6 +17,7 @@ class SqlStatements
     //const SCROLL_CURSOR = [PDO::ATTR_CURSOR => PDO::CURSOR_SCROLL];
     /**
      * Query to get an employee and their credentials from the database
+     * @param string :username
      */
     const GET_USER_CREDENTIALS = 'SELECT employee_list.user_id,user_hashes.uhsh_hash
                                   AS user_hash,user_hashes.uhsh_created
@@ -30,6 +31,7 @@ class SqlStatements
                                   WHERE employee_list.user_name = :username';
     /**
      * Query to get set questions from the database for a specific employee
+     * @param int :userid
      */
     const GET_SECURITY_QUESTIONS = 'SELECT eque_number
                                     FROM employee_questions
@@ -57,4 +59,12 @@ class SqlStatements
     const GET_USER_NAME_DATE = 'SELECT user_first, user_last, user_start
                                 FROM employee_list
                                 WHERE user_id = :userid';
+    /**
+     * Query to return if a timecard is locked
+     * @param int :userid
+     * @param int :pyear
+     * @param int :pweek
+     */
+    const GET_IS_LOCKED = 'SELECT EXISTS (SELECT 1 FROM approved_timecards
+                                          WHERE apt_user = :userid AND apt_year = :pyear AND apt_week = :pweek)';
 }

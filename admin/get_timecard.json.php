@@ -1,4 +1,5 @@
 <?php
+$startTime = microtime(false);
 date_default_timezone_set('America/New_York'); // todo: make timezone configurable
 require 'admin_functions.php';
 include 'SqlStatements.php';
@@ -39,36 +40,46 @@ if (sessionCheck()) {
         $dateEDT = new DateTimeZone('America/New_York');
         $offsetSeconds = $dateEDT->getOffset(new DateTime('now'));
         $stamps = [];
+        $n = 1;
+        while ($n < 8) {
+            $dateOfWeek = date($dateFormat, strtotime("$date0 +$n days"));
+            array_push($timestamps, ['date'=>$dateOfWeek]);
+            $n++;
+        }
+        $datesCount = count($timestamps);
         foreach ($result as $timestamp) {
-            $lastTimestamp = end($timestamps);
-            $tslTime = strtotime($timestamp['tsl_stamp']) + $offsetSeconds;
-            $thisDay = date($dateFormat, $tslTime);
-            $thisTime = date($timeFormat12, $tslTime);
-            $thisUnix = date('U', $tslTime);
-            if ($lastTimestamp['date'] === $thisDay || in_array($timestamp['stamp_partner'], $stamps)) {
-                // push things for the current day.  they can either be actually for this day, or reference stamps from it
-                $timestampsCount = count($timestamps) - 1;
-                array_push($timestamps[$timestampsCount], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]);
-            } else {
-                // if this a new day (or doesn't reference the previous day), then start a new day!
-                array_push($timestamps, ['date'=>$thisDay, [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]]);
+            for ($i = 0; $i < $datesCount; ++$i) {
+                $tslTime = strtotime($timestamp['tsl_stamp']) + $offsetSeconds;
+                $thisDay = date($dateFormat, $tslTime);
+                $thisTime = date($timeFormat12, $tslTime);
+                $thisUnix = date('U', $tslTime);
+                if ($timestamps[$i]['date'] === $thisDay || in_array($timestamp['stamp_partner'], $stamps)) {
+                    // push things for the current day.  they can either be actually for this day, or reference stamps from it
+                    $timestampsCount = count($timestamps) - 1;
+                    array_push($timestamps[$i], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]);
+                } /*else {
+                    // if this a new day (or doesn't reference the previous day), then start a new day!
+                    array_push($timestamps, ['date'=>$thisDay, [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]]);
+                }*/
             }
             array_push($stamps, $timestamp['stamp_id']);
         }
         /*
          * Then do some tricky bullshit that I don't even remember how it works
          * -- Brian
+         * ps. its not in this version...
          */
         try {
             $stmt = $dbh->prepare(SqlStatements::GET_USER_NAME_DATE, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
-            $stmt->bindParam(':userid', $employeeId);
+            $stmt->bindParam(':userid', $employeeId, PDO::PARAM_INT);
             $stmt->execute();
             $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
             // this all seems woefully inefficient.
-            $timestamps['USER_INFO'] = ['user_first'=>'','user_last'=>'','user_start'=>''];
+            $timestamps['USER_INFO'] = ['user_first'=>'','user_last'=>'','user_start'=>'','user_id'];
             $timestamps['USER_INFO']['user_first'] = $result[0]['user_first'];
             $timestamps['USER_INFO']['user_last'] = $result[0]['user_last'];
             $timestamps['USER_INFO']['user_start'] = $result[0]['user_start'];
+            $timestamps['USER_INFO']['user_id'] = $employeeId;
             $dbh = null;
         } catch (Exception $e) {
             error_log('Failed: '.$e->getMessage());
@@ -109,3 +120,7 @@ if (sessionCheck()) {
     }
     echo json_encode($timestamps);
 }
+$endTime = microtime(false);
+$totalTime = $endTime - $startTime;
+$memory = memory_get_usage(true);
+error_log(__FILE__.' executed in '.$totalTime.' by userId:'.$_SESSION['userId'].' using '.$memory.'b', 0);
