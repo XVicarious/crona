@@ -4,8 +4,16 @@ table#timecard {
     width: 100%
 }
 
-table#timecard * {
+table#timecard *:not(.material-icons) {
     font-family: monospace
+}
+
+table#timecard td, table#timecard td {
+    padding: 5px 5px
+}
+
+table#timecard input {
+    margin: 0
 }
 
 table#timecard tr#topTR {
@@ -21,21 +29,12 @@ table#timecard tr.odd {
 }
 
 table#timecard td {
-    background: inherit
+    background: inherit;
+    white-space: nowrap
 }
 
 table#timecard td.overflow {
     border: none
-}
-
-table#timecard input[type=button].newDate {
-    padding-left: 2px;
-    padding-right: 2px
-}
-
-table#timecard .newDate.after {
-    height: 20px;
-    width: 100%
 }
 
 table#timecard input[type=text].times {
@@ -55,19 +54,12 @@ table#timecard td.times,table#timecard td.addButton {
     padding: 0
 }
 
-table#timecard td.newDate,table#timecard input[type=button].newDate {
+table#timecard td.addButton,table#timecard button.addButton {
     height: 100%;
-    padding: 0;
-    width: 27px
+    width: 25px
 }
 
-table#timecard td.addButton,table#timecard input[type=button].addButton {
-    height: 100%;
-    padding: 0;
-    width: 23px
-}
-
-table#timecard input[type=text].times,table#timecard input[type=button].addButton,table#timecard input[type=button].newDate {
+table#timecard input[type=text].times,table#timecard button.addButton {
     background: none;
     border: none !important;
     height: 100%;

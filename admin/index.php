@@ -185,7 +185,6 @@ sessionCheck();
                 <li class="yellow lighten-4 collection-item">When adding days after Monday in a timecard, you can add
                     past the selected period. For example, after adding Tuesday, you will be able to add NEXT Sunday.
                 </li>
-                <li class="yellow lighten-4 collection-item">Times are not perfectly centered in their boxes.</li>
                 <li class="yellow lighten-4 collection-item">Logout button overlays the username</li>
                 <li class="yellow lighten-4 collection-item">You sometimes can't add the day you want to a timecard,
                     you will have to add a previous day, and then try to add the day again.</li>
