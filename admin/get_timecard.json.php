@@ -41,7 +41,9 @@ if (sessionCheck()) {
         $offsetSeconds = $dateEDT->getOffset(new DateTime('now'));
         $stamps = [];
         $n = 1;
-        while ($n < 8) {
+        $days = strtotime($date1) - strtotime($date0);
+        $days = ($days / 86400) + 1;
+        while ($n < $days) {
             $dateOfWeek = date($dateFormat, strtotime("$date0 +$n days"));
             array_push($timestamps, ['date'=>$dateOfWeek]);
             $n++;
