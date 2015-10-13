@@ -53,15 +53,13 @@ if ($_POST) {
                             $stmt->bindParam(':now', $now, PDO::PARAM_STR); // Is really of type DATETIME
                             $dbh->beginTransaction(); // don't commit everything right away, does this work with this?
                             $stmt->execute();
-                            // todo: Figure out better way to do this
-                            echo 'Materialize.toast("Timestamp Accepted!");';
+                            echo 'Materialize.toast("Timestamp Accepted!", 4000);';
                         } catch (Exception $e) {
                             $dbh->rollBack();
                             error_log('Failure: '.$e->getMessage(), 0);
                         }
                     } else {
-                        // todo: Figure out better way to do this
-                        echo 'Materialize.toast("Timestamp NOT Accepted!");';
+                        echo 'Materialize.toast("Timestamp NOT Accepted!", 4000);';
                     }
                 } elseif ($_POST['loginType'] === 'cardAdmin') {
                     if (!isset($_SESSION)) {
