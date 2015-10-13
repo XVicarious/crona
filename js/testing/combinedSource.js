@@ -710,13 +710,11 @@ function getOffsetString() {
 function addEmployeesAction() {
   var optionString = '<option value="">(none)<\/option>';
   var ajaxDiv = $('#ajaxDiv');
-  ajaxDiv.html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0 browser-default"><\/select><\/td><td><input class="userDepartment e-0"><\/input><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form>');
+  ajaxDiv.html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0 browser-default"><\/select><\/td><td><input class="userDepartment e-0"><\/input><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form><a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
   for (i = 0; i < companyCodes.length; i++) {
     optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0,11) + '...<\/option>';
   }
   $('.userCompany.e-0').html(optionString);
-  // fixme: I'm being lazy here using append, instead of adding it on when I made the thing;
-  ajaxDiv.append('<a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
 }
 
 function createStamp(userId, stamp) {
