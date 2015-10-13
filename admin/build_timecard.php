@@ -12,6 +12,10 @@ if (sessionCheck()) {
     $mode = 2;
     $timestamps = json_decode($json, true);
     $firstDate = $timestamps[0]['date'];
+    $modifiable = true;
+    if (count($timestamps) > 8) {
+        $modifiable = false;
+    }
     $sundayYear = 0;
     $sundayWeek = 0;
     if ($firstDate) {
@@ -85,7 +89,7 @@ if (sessionCheck()) {
                         $miss = 'missingTime';
                     }
                     $modifier = $stamp[2];
-                    if ($mode === 2) {
+                    if ($mode === 2 && !$isLocked && $modifiable) {
                         $timestampTable .= "<td class=\"tstable addButton\">
                                              <button class=\"addButton\" type=\"button\">
                                               <i class=\"material-icons\">add</i>
@@ -114,7 +118,7 @@ if (sessionCheck()) {
                             default:
                                 break;
                         }
-                    } elseif ($mode === 0 || $mode === 1 || $isLocked) {
+                    } elseif ($mode === 0 || $mode === 1 || $isLocked || !$modifiable) {
                         $disabled = 'disabled readonly';
                     }
                     $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
@@ -124,13 +128,18 @@ if (sessionCheck()) {
                 }
             }
         }
-        if ($mode === 2 && !$isLocked) {
+        if ($mode === 2 && !$isLocked && $modifiable) {
             $colspan = ($maxStamps - $timestampCount + 0.5) * 2;
             $timestampTable .= "<td class=\"addButton after\" colspan=\"$colspan\">
                                  <button class=\"addButton\" type=\"button\">
                                   <i class=\"material-icons\">add</i>
                                  </button>
                                 </td>";
+        } else {
+            $colspan = ($maxStamps - $timestampCount);
+            if ($colspan !== 0) {
+                $timestampTable .= "<td colspan=\"$colspan\"></td>";
+            }
         }
         $colCount = $maxStamps - $timestampCount;
         $colspan = 0;
@@ -145,7 +154,7 @@ if (sessionCheck()) {
         $totalSeconds += $timeTotal;
     }
     $push = 1 + $maxStamps;
-    if ($mode === 2 && !$isLocked) {
+    if ($mode === 2 && !$isLocked && $modifiable) {
         $push = 2 + (2 * $maxStamps);
     }
     $timestampTable .= "<tr class=\"dataRow\">
@@ -161,7 +170,7 @@ if (sessionCheck()) {
                              <i class="material-icons">print</i>
                             </a>';
     }
-    if ($mode === 2 && !$isLocked) {
+    if ($mode === 2 && !$isLocked && $modifiable) {
         $timestampTable .= '<a id="lock-card" href="#" class="btn-flat right"
                                title="Prevent further editing of the timecard for this period">
                              <i class="material-icons">lock</i>
