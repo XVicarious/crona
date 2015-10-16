@@ -84,7 +84,9 @@ sessionCheck();
             </div>
         </li>
         <li class="bold">
-            <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards</a>
+            <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards
+                <span class="badge">0</span>
+            </a>
         </li>
         <li class="bold">
             <a href="#" id="manage-schedules" class="waves-effect waves-light">Manage Schedules</a>
