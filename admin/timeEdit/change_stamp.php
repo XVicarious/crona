@@ -12,7 +12,7 @@ if (sessionCheck()) {
         $stmt->bindParam(':stamp', $time, PDO::PARAM_STR);
         $stmt->bindParam(':stampid', $stampId, PDO::PARAM_INT);
         $stmt->execute();
-        logTransaction($sqlConnection, $stampId, "CHANGE", $defaultTime, $time);
+        logTransaction($dbh, $stampId, "CHANGE", $defaultTime, $time);
     } catch (PDOException $e) {
         error_log($e->getMessage(), 0);
     }
