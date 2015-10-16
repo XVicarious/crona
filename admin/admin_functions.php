@@ -9,7 +9,9 @@ function sessionCheck()
         session_start();
     }
     $lastAction = $_SESSION['lastAction'];
-    if ($lastAction + 20 * 60 < time()) {
+    $timeoutThreshold = readSetting(['applicationTimeout']);
+    $timeoutThreshold = intval($timeoutThreshold);
+    if ($lastAction + ($timeoutThreshold * 60) < time()) {
         session_destroy();
         echo '<script src="../js/lib/jquery.js"></script><script>$(location).attr("href","http://xvss.net/time?timeout=1")</script>';
         return false;
@@ -123,4 +125,20 @@ function pre($string)
     print_r($string);
     echo '</pre>';
     return;
+}
+
+/**
+ * @param array $settings - an array of the setting to retrieve, in the order they appear
+ * @param $file - the settings file, usually this is just settings.json
+ * @return array $settingsJson - can be anything... I didn't plan this out very well.  I guess array.  Yeah, that.
+ * ex. to get "timeout" "late", ['stampThresholds','timeOut','late']
+ */
+function readSetting(array $settings, $file = 'settings.json')
+{
+    $jsonString = file_get_contents($file);
+    $settingsJson = json_decode($jsonString, true);
+    foreach ($settings as $setting) {
+        $settingsJson = $settingsJson[$setting];
+    }
+    return $settingsJson;
 }
