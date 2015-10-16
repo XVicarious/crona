@@ -16,4 +16,5 @@ if (sessionCheck()) {
     } catch (PDOException $e) {
         error_log($e->getMessage(), 0);
     }
+    $dbh = null;
 }
