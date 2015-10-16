@@ -19,11 +19,11 @@ class SqlStatements
      * Query to get an employee and their credentials from the database
      * @param string :username
      */
-    const GET_USER_CREDENTIALS = 'SELECT employee_list.user_id,user_hashes.uhsh_hash
-                                  AS user_hash,user_hashes.uhsh_created
-                                  AS user_created,user_salts.uslt_salt
-                                  AS user_salt,user_emails.ueml_email
-                                  AS user_email
+    const GET_USER_CREDENTIALS = 'SELECT employee_list.user_id,
+                                         user_hashes.uhsh_hash AS user_hash,
+                                         user_hashes.uhsh_created AS user_created,
+                                         user_salts.uslt_salt AS user_salt,
+                                         user_emails.ueml_email AS user_email
                                   FROM employee_list
                                   LEFT JOIN user_hashes ON employee_list.user_id = user_hashes.uhsh_user
                                   LEFT JOIN user_salts ON employee_list.user_id = user_salts.uslt_user
@@ -67,4 +67,10 @@ class SqlStatements
      */
     const GET_IS_LOCKED = 'SELECT EXISTS (SELECT 1 FROM approved_timecards
                                           WHERE apt_user = :userid AND apt_year = :pyear AND apt_week = :pweek)';
+    /**
+     * Query to insert a new timestamp
+     * @param int :userid
+     * @param string :date
+     */
+    const INSERT_NEW_STAMP = 'INSERT INTO timestamp_list (user_id_stamp,tsl_stamp) VALUES (:userid, :date)';
 }
