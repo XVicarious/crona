@@ -23,10 +23,6 @@ if (sessionCheck()) {
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
         $date1 = date($dateTimeFormat24, $_POST['date1']);
-    } elseif ($range === 'w2d') {
-        // todo: is this REALLY needed?
-        $date0 = date($dateTimeFormat24, strtotime('monday 00:00:00'));
-        $date1 = date($dateTimeFormat24, strtotime('today 23:59:59'));
     }
     $dbh = createPDO();
     $timestamps = [];
