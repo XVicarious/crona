@@ -15,22 +15,6 @@ function sessionCheck()
     return true;
 }
 
-function getPermissions($sqlConnection)
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        sessionCheck();
-    }
-    $adminId = $_SESSION['userId'];
-    if (isset($adminId)) {
-        $permissionResult = mysqli_query($sqlConnection, "SELECT user_admin_perms FROM employee_list
-                                                          WHERE user_id = $adminId");
-        list($sa_permissions) = mysqli_fetch_row($permissionResult);
-        // permission "all" is a:1:{i:0;s:3:"all";}
-        return unserialize($sa_permissions);
-    }
-    return [];
-}
-
 function createSql()
 {
     $sql_server = 'localhost';
@@ -50,15 +34,6 @@ function createPDO()
         die('Unable to connect: ' . $e->getMessage());
     }
 }
-
-/*function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newValue)
-{
-    $transactionArray = [$stampId, $type, $originalValue, $newValue];
-    $transactionArray = serialize($transactionArray);
-    $adminId = $_SESSION['userId'];
-    $query = "INSERT INTO change_list (change_userid,change_from_to) VALUES ($adminId, '$transactionArray');";
-    mysqli_query($sqlConnection, $query);
-}*/
 
 function logTransaction(PDO &$databaseConnection, $stampId, $type, $originalValue, $newValue)
 {
