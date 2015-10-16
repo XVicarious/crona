@@ -12,7 +12,7 @@ if (sessionCheck()) {
         $stmt->bindParam(':userid', $userId, PDO::PARAM_INT);
         $stmt->bindParam(':date', $date, PDO::PARAM_STR);
         $stmt->execute();
-        logTransaction($sqlConnection, '?', 'ADD', 0, $date);
+        logTransaction($dbh, '?', 'ADD', 0, $date);
     } catch (PDOException $e) {
         error_log($e->getMessage(), 0);
     }

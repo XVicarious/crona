@@ -51,13 +51,30 @@ function createPDO()
     }
 }
 
-function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newValue)
+/*function logTransaction($sqlConnection, $stampId, $type, $originalValue, $newValue)
 {
     $transactionArray = [$stampId, $type, $originalValue, $newValue];
     $transactionArray = serialize($transactionArray);
     $adminId = $_SESSION['userId'];
     $query = "INSERT INTO change_list (change_userid,change_from_to) VALUES ($adminId, '$transactionArray');";
     mysqli_query($sqlConnection, $query);
+}*/
+
+function logTransaction(PDO &$databaseConnection, $stampId, $type, $originalValue, $newValue)
+{
+    $transactionArray = [$stampId, $type, $originalValue, $newValue];
+    $transactionArray = serialize($transactionArray);
+    $adminId = $_SESSION['userId'];
+    try {
+        $stmt = $databaseConnection->prepare(SqlStatements::LOG_TRANSACTION);
+        $stmt->bindParam(':adminid', $adminId, PDO::PARAM_INT);
+        $stmt->bindParam(':transaction', $transactionArray, PDO::PARAM_STR);
+        $stmt->execute();
+    } catch (Exception $e) {
+        error_log($e->getMessage(), 0);
+        return false;
+    }
+    return true;
 }
 
 function findExceptions($sqlConnection)

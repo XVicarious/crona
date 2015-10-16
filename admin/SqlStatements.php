@@ -84,4 +84,10 @@ class SqlStatements
      * @param int :stampid
      */
     const DELETE_STAMP_BY_ID = 'DELETE FROM timestamp_list WHERE stamp_id = :stampid';
+    /**
+     * Logs a transaction that happened to the database
+     * @param int :adminid
+     * @param string :transaction (should be a serialized array)
+     */
+    const LOG_TRANSACTION = 'INSERT INTO change_list (change_userid,change_from_to) VALUES (:adminid, :trasaction)';
 }
