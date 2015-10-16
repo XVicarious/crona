@@ -79,4 +79,9 @@ class SqlStatements
      * @param int :stampid
      */
     const MODIFY_STAMP = 'UPDATE timestamp_list SET tsl_stamp = :stamp WHERE stamp_id = :stampid';
+    /**
+     * Query to delete a stamp
+     * @param int :stampid
+     */
+    const DELETE_STAMP_BY_ID = 'DELETE FROM timestamp_list WHERE stamp_id = :stampid';
 }
