@@ -121,4 +121,6 @@ if (sessionCheck()) {
 $endTime = microtime(false);
 $totalTime = $endTime - $startTime;
 $memory = memory_get_usage(true);
-error_log(__FILE__.' executed in '.$totalTime.' by userId:'.$_SESSION['userId'].' using '.$memory.'b', 0);
+if ($totalTime < 0 || $totalTime >= 1) {
+    error_log(__FILE__.' executed in '.$totalTime.' by userId:'.$_SESSION['userId'].' using '.$memory.'b', 0);
+}
