@@ -48,6 +48,7 @@ function createPDO()
  */
 function logTransaction(PDO &$databaseConnection, $stampId, $type, $originalValue, $newValue)
 {
+    // todo: fix this mess, using a serialized array.  Disgusting.
     $transactionArray = [$stampId, $type, $originalValue, $newValue];
     $transactionArray = serialize($transactionArray);
     $adminId = $_SESSION['userId'];
