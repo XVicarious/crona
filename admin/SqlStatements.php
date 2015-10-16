@@ -73,4 +73,10 @@ class SqlStatements
      * @param string :date
      */
     const INSERT_NEW_STAMP = 'INSERT INTO timestamp_list (user_id_stamp,tsl_stamp) VALUES (:userid, :date)';
+    /**
+     * Query to modify a stamp
+     * @param string :stamp
+     * @param int :stampid
+     */
+    const MODIFY_STAMP = 'UPDATE timestamp_list SET tsl_stamp = :stamp WHERE stamp_id = :stampid';
 }
