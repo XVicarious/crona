@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @return bool - if the session is all good, true; if it timed out, destroy it
+ */
 function sessionCheck()
 {
     if (!isset($_SESSION)) {
@@ -35,6 +38,14 @@ function createPDO()
     }
 }
 
+/**
+ * @param PDO $databaseConnection - connection to the database
+ * @param $stampId - what stamp was modified
+ * @param $type - what kind of modification it was
+ * @param $originalValue - what the value was before
+ * @param $newValue - what the value is now
+ * @return bool - if the transaction logged successfully, true; if an error occurred, false
+ */
 function logTransaction(PDO &$databaseConnection, $stampId, $type, $originalValue, $newValue)
 {
     $transactionArray = [$stampId, $type, $originalValue, $newValue];
@@ -81,7 +92,7 @@ function randomSalt($useSpecial = true, $len = 8)
     $chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789`~!@#$%^&*()_+-=";
     $stringLength = strlen($chars) - 1;
     if (!$useSpecial) {
-        $stringLength = strlen($chars - 16) - 1;
+        $stringLength -= 16;
     }
     $str = '';
     for ($i = 0; $i < $len; ++$i) {
