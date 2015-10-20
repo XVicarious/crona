@@ -49,8 +49,10 @@ class SqlStatements
     /**
      * Query to get all stamps from employee from range
      */
-    const GET_STAMPS_EMPLOYEE_RANGE = 'SELECT stamp_id,tsl_stamp,stamp_special,stamp_department,stamp_partner
+    const GET_STAMPS_EMPLOYEE_RANGE = 'SELECT stamp_id,tsl_stamp,stamp_special,stamp_department,stamp_partner,
+                                              timestamp_comments.tsc_text AS tsl_comment
                                        FROM timestamp_list
+                                       LEFT JOIN timestamp_comments ON stamp_id = timestamp_comments.tsc_stamp_id
                                        WHERE user_id_stamp = :userid AND tsl_stamp BETWEEN :date0 AND :date1
                                        ORDER BY tsl_stamp';
     /**
