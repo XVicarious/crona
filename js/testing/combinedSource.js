@@ -251,10 +251,12 @@ $(function() {
         className: 'mod' + $trigger.attr('id'),
         callback: function(key, options) {
           if (key === 'add-comment') {
+            var stamp = $trigger.attr('id');
             var dialog = $('#dialog');
             var dialogContent = dialog.find('.modal-content');
+            var commentDiv = $('#timecard').find('input#'+stamp);
             dialogContent.find('.modal-title').text('Add Comment');
-            dialogContent.find('.modal-text').html('<textarea rows="16" />');
+            dialogContent.find('.modal-text').html('<textarea stamp-id="' + stamp + '" rows="16">' + commentDiv.attr('title') + '</textarea>');
             dialog.find('.modal-footer').html('<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-save-comment">Save Comment</a>' +
                                               '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Discard Changes</a>');
             dialog.openModal();
@@ -348,6 +350,39 @@ $(function() {
         getEmployee({id: userId});
       }
     });
+  });
+  $(document).on('click', '.modal-save-comment', function() {
+    var textArea = $('#dialog').find('.modal-content').find('.modal-text').find('textarea');
+    var stampid = textArea.attr('stamp-id');
+    var oldText = $('#timecard').find('input#'+stampid).attr('title');
+    if (textArea.val() === '') {
+      $.ajax({
+        type: 'POST',
+        url: 'timeEdit/delete_comment.php',
+        data: 'stampid=' + stampid,
+        success: function() {
+          getEmployee({id: $('#timecard').attr('user-id')});
+        }
+      });
+    } else if (oldText === '') {
+      $.ajax({
+        type: 'POST',
+        url: 'timeEdit/add_comment.php',
+        data: 'stampid=' + stampid + '&comment=' + textArea.val(),
+        success: function() {
+          getEmployee({id: $('#timecard').attr('user-id')});
+        }
+      });
+    } else if (oldText !== textArea.val()) {
+      $.ajax({
+        type: 'POST',
+        url: 'timeEdit/edit_comment.php',
+        data: 'stampid=' + stampid + '&comment=' + textArea.val(),
+        success: function() {
+          getEmployee({id: $('#timecard').attr('user-id')});
+        }
+      });
+    }
   });
   $('#view-employees').click(function() {
     mode = undefined;

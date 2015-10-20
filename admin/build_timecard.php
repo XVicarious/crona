@@ -129,6 +129,7 @@ if (sessionCheck()) {
                                              default-time=\"$realTime\"
                                              type=\"text\"
                                              value=\"$val\"
+                                             title=\"$stamp[5]\"
                                              $disabled>
                                      </div>";
                 }

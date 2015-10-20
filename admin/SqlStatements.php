@@ -92,4 +92,23 @@ class SqlStatements
      * @param string :transaction (should be a serialized array)
      */
     const LOG_TRANSACTION = 'INSERT INTO change_list (change_userid,change_from_to) VALUES (:adminid, :trasaction)';
+    /**
+     * @param int :stampid
+     * @param string :tscomment
+     */
+    const INSERT_STAMP_COMMENT = 'INSERT INTO timestamp_comments (tsc_stamp_id, tsc_text)
+                                         VALUES (:stampid, :tscomment)';
+    /**
+     * @param int :stampid
+     */
+    const GET_STAMP_COMMENT = 'SELECT tsc_text FROM timestamp_comments WHERE tsc_stamp_id = :stampid';
+    /**
+     * @param int :stampid
+     * @param string :tscomment
+     */
+    const MODIFY_COMMENT = 'UPDATE timestamp_comments SET tsc_text = :tscomment WHERE tsc_stamp_id = :stampid';
+    /**
+     * @param int :stampid
+     */
+    const DELETE_COMMENT = 'DELETE FROM timestamp_comments WHERE tsc_stamp_id = :stampid';
 }
