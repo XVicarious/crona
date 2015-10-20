@@ -16,7 +16,7 @@ if (sessionCheck()) {
     $date1 = date($dateFormat, strtotime('+'.(7-$day).' days'));
     if ($range === 'last') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks 00:00:00"));
-        $date1 = date($dateTimeFormat24, strtotime('-'.($day).' days 23:59:59'));
+        $date1 = date($dateTimeFormat24, strtotime('-'.($day + 1).' days 23:59:59'));
     } elseif ($range === 'next') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
         $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59'));
