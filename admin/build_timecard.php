@@ -20,8 +20,8 @@ if (sessionCheck()) {
     $sundayWeek = 0;
     if ($firstDate) {
         $day = date('w', strtotime($firstDate));
-        $sundayYear = date('Y', strtotime('-'.$day.' days'));
-        $sundayWeek = date('W', strtotime('-'.$day.' days')) + 1;
+        $sundayYear = date('Y', strtotime($firstDate.' -'.$day.' days'));
+        $sundayWeek = date('W', strtotime($firstDate.' -'.$day.' days')) + 1;
     } else {
         // todo: figure out what I should do here!
         die();
@@ -123,7 +123,13 @@ if (sessionCheck()) {
                     }
                     $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
                                      <div class=\"draggableTimes\">
-                                      <input $disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" default-time=\"$realTime\" type=\"text\" value=\"$val\">
+                                      <input class=\"times context-menu\"
+                                             stamp-id=\"$stamp[0]\"
+                                             id=\"$stamp[0]\"
+                                             default-time=\"$realTime\"
+                                             type=\"text\"
+                                             value=\"$val\"
+                                             $disabled>
                                      </div>";
                 }
             }
