@@ -54,11 +54,8 @@ if (sessionCheck()) {
                 if ($timestamps[$i]['date'] === $thisDay || in_array($timestamp['stamp_partner'], $stamps)) {
                     // push things for the current day.  they can either be actually for this day, or reference stamps from it
                     $timestampsCount = count($timestamps) - 1;
-                    array_push($timestamps[$i], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]);
-                } /*else {
-                    // if this a new day (or doesn't reference the previous day), then start a new day!
-                    array_push($timestamps, ['date'=>$thisDay, [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner']]]);
-                }*/
+                    array_push($timestamps[$i], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner'], $timestamp['tsl_comment']]);
+                }
             }
             array_push($stamps, $timestamp['stamp_id']);
         }

@@ -249,7 +249,22 @@ $(function() {
     build: function($trigger) {
       return {
         className: 'mod' + $trigger.attr('id'),
+        callback: function(key, options) {
+          if (key === 'add-comment') {
+            var dialog = $('#dialog');
+            var dialogContent = dialog.find('.modal-content');
+            dialogContent.find('.modal-title').text('Add Comment');
+            dialogContent.find('.modal-text').html('<textarea rows="16" />');
+            dialog.find('.modal-footer').html('<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-save-comment">Save Comment</a>' +
+                                              '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Discard Changes</a>');
+            dialog.openModal();
+          }
+        },
         items: {
+          'add-comment': {
+            name: 'Comment...',
+            className: 'stamp-comment'
+          },
           'department-transfer': {
             name: 'Department',
             className: 'department-transfer',
