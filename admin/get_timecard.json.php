@@ -63,6 +63,7 @@ if (sessionCheck()) {
          * Then do some tricky bullshit that I don't even remember how it works
          * -- Brian
          * ps. its not in this version...
+         * pss.  im not even sure it was needed
          */
         try {
             $stmt = $dbh->prepare(SqlStatements::GET_USER_NAME_DATE, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
