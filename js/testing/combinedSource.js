@@ -51,7 +51,10 @@ $(function() {
     $.ajax({
       type: "POST",
       url: "lock_timecard.php",
-      data: "user=" + userId + "&week=" + week + "&year=" + year
+      data: "user=" + userId + "&week=" + week + "&year=" + year,
+      success: function() {
+        getEmployee({id: userId});
+      }
     });
   });
   $(document).on('change', '[class|="e"]', function() {
