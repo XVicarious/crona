@@ -135,7 +135,6 @@ $(function() {
         dataString += '&';
       }
     }
-    console.log("about to execute ajax request!");
     $.ajax({
       type: "POST",
       url: "insert_user.php",
