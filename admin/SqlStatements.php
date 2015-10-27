@@ -111,4 +111,12 @@ class SqlStatements
      * @param int :stampid
      */
     const DELETE_COMMENT = 'DELETE FROM timestamp_comments WHERE tsc_stamp_id = :stampid';
+    /**
+     * @param int :userid
+     * @param int :syear
+     * @param int :sweek
+     */
+    const GET_SCHEDULE = 'SELECT schedule_id, schedule_day, schedule_in, schedule_out, schedule_department
+                          FROM employee_schedule
+                          WHERE employee_id = :userid AND schedule_week = :sweek AND schedule_year = :syear';
 }

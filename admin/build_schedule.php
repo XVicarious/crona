@@ -11,36 +11,42 @@ if (sessionCheck()) {
     $json = $_POST['timestamps'];
     $mode = 2;
     $timestamps = json_decode($json, true);
-    $firstDate = $timestamps[0]['date'];
     $modifiable = true;
-    if (count($timestamps) > 8) {
-        $modifiable = false;
-    }
-    $sundayYear = 0;
-    $sundayWeek = 0;
-    if ($firstDate) {
-        $day = date('w', strtotime($firstDate));
-        $sundayYear = date('Y', strtotime($firstDate.' -'.$day.' days'));
-        $sundayWeek = date('W', strtotime($firstDate.' -'.$day.' days')) + 1;
-    } else {
-        // todo: figure out what I should do here!
-        die();
+    $sundayYear = $timestamps[0]['year'];
+    $sundayWeek = $timestamps[0]['week'];
+    $countStamps = count($timestamps) - 1;
+    if ($countStamps < 7) {
+        $checkDay = 0;
+        while ($checkDay < 7) {
+            $sDay = intval($timestamps[$checkDay+1]['schedule_day']);
+            if ($sDay > $checkDay) {
+                $insert = ['schedule_day'=>$checkDay];
+                array_splice($timestamps, $checkDay+1, 0, array($insert));
+            } else {
+                $checkDay++;
+            }
+        }
+        $countStamps = count($timestamps);
+        for ($i = $countStamps; $i < 8; $i++) {
+            array_push($timestamps, ['schedule_day'=>$i-1]);
+        }
     }
     $countStamps = count($timestamps);
+    pre($timestamps);
     $timestampTable = '<input type="date" id="date0" class="datepicker">
                        <input type="date" id="date1" class="datepicker">
                        <table id="timecard" user-id="'.$timestamps['USER_INFO']['user_id'].'" year="'.$sundayYear.'" week="'.$sundayWeek.'">
                         <tr id="topTR">
                          <th id="topTH" colspan="100%">
                           '.$timestamps['USER_INFO']['user_first'].' '.$timestamps['USER_INFO']['user_last'].'\'s Timecard
-                          <select id="range" class="browser-default">
+                          <!--<select id="range" class="browser-default">
                            <option value="last">Previous Period</option>
                            <option value="this">Current Period</option>
                            <option value="next">Next Period</option>
                            <option value="w2d">Week to Date</option>
                            <option value="specificDate">Specific Date</option>
                            <option value="special">Specific Period</option>
-                          </select>
+                          </select>-->
                          </th>
                         </tr>
                         <tr>
@@ -55,9 +61,12 @@ if (sessionCheck()) {
             $maxStamps = $countT;
         }
     }
-    for ($i = 0; $i < $countStamps - 1; ++$i) {
+    for ($i = 1; $i < $countStamps - 1; ++$i) {
         $tempStamp = $timestamps[$i];
-        $day = $tempStamp['date'];
+        echo $sundayYear.'-'.$sundayWeek.'-'.$tempStamp['schedule_day'].'<br/>';
+        $day = new DateTime();
+        $day->setISODate($sundayYear, $sundayWeek, $tempStamp['schedule_day']);
+        $day = $day->format('Y-m-d');
         $dayFormatted = date('D m/d', strtotime($day));
         $timestampTable .= "<tr stamp-day=\"$day\" class=\"dataRow\">";
         $timestampTable .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";

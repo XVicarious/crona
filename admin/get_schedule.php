@@ -1,37 +1,27 @@
 <?php
 require "admin_functions.php";
-$sqlConnection = createSql();
+include 'SqlStatements.php';
 if (sessionCheck()) {
     // Use this to select the starting page
     // todo: fringe cases where the year changes in the middle of the week.  These dates will not be fetched!
-    $employee = $_GET['userId'];
-    $year = $_GET['year'];
-    $week = $_GET['week'];
-    $q = "SELECT schedule_id,schedule_day,schedule_in,schedule_out,schedule_department FROM employee_schedule
-          WHERE employee_id = $employee AND schedule_week = $week AND schedule_year = $year";
-    $scheduleResult = mysqli_query($sqlConnection, $q);
-    $a_masterSchedule = [];
-    if (mysqli_num_rows($scheduleResult) !== 0) {
-        while (list($scheduleId,$scheduleDay,$scheduleIn,$scheduleOut,$scheduleDepartment) = mysqli_fetch_row($scheduleResult)) {
-            array_push($a_masterSchedule, ["id" => $scheduleId,
-                                           "day" => $scheduleDay,
-                                           "in" => $scheduleIn,
-                                           "out" => $scheduleOut,
-                                           "department" => $scheduleDepartment]);
-        }
+    $employee = $_POST['userId'];
+    $year = $_POST['year'];
+    $week = $_POST['week'];
+    $dbh = createPDO();
+    $result = null;
+    try {
+        $stmt = $dbh->prepare(SqlStatements::GET_SCHEDULE, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+        $stmt->bindParam(':userid', $employee, PDO::PARAM_INT);
+        $stmt->bindParam(':sweek', $week, PDO::PARAM_INT);
+        $stmt->bindParam(':syear', $year, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        array_unshift($result, ['year'=>$year, 'week'=>$week]);
+        echo json_encode($result, JSON_NUMERIC_CHECK);
+    } catch (PDOException $e) {
+        error_log($e->getMessage(), 0);
+    } catch (Exception $e) {
+        error_log($e->getMessage(), 0);
+        die();
     }
-    // If the schedule doesn't contain every day of the week, add them
-    $scheduledDays = [];
-    foreach ($a_masterSchedule as $day) {
-        array_push($scheduledDays, $day['day']);
-    }
-    for ($i = 1; $i <= 7; $i++) {
-        if (!in_array($i, $scheduledDays)) {
-            // Only send the day and default department
-            array_push($a_masterSchedule, ['day' => $i,
-                                           'department' => 0]);
-        }
-    }
-    echo json_encode($a_masterSchedule, JSON_NUMERIC_CHECK);
-    mysqli_close($sqlConnection);
 }

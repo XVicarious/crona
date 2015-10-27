@@ -574,7 +574,7 @@ function getEmployees() {
   Backbone.on('rowclicked', function(model) {
     $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
     if (mode === 'schedule') {
-      fetchSchedule({userId: model.id});
+      fetchSchedule({userId: model.id, year: 2015, week: 44});
     } else {
       getEmployee({id: model.id, range: 'this'});
     }
@@ -606,126 +606,22 @@ function fetchSchedule(parameters) {
   var userId = parameters.userId;
   var week = parameters.week;
   var year = parameters.year;
-  var data, Schedule, ScheduleList, scheduleDays, grid, columns, $schedule;
-  // It is useless if we weren't provided a userId
-  if (userId === 'undefined') {
-    return false;
-  }
-  // If the week or year isn't defined, get the current one
-  week = week || moment().week();
-  year = year || moment().year();
-  data = {userId: userId, week: week, year: year};
-  Schedule = Backbone.Model.extend({});
-  ScheduleList = Backbone.Collection.extend({
-    model: Schedule,
-    url: 'get_schedule.php'
-  });
-  columns = [{
-    name: 'id',
-    renderable: false,
-    cell: 'integer'
-  },{
-    id: 'day',
-    name: 'day',
-    label: 'Day',
-    editable: false,
-    cell: 'string',
-    formatter: _.extend({}, Backgrid.CellFormatter.prototype, {
-      fromRaw: function(rawValue) {
-        var rawDay = rawValue;
-        var myMoment;
-        //Parse the values from this fetch to display a proper date
-        moment.locale('en-US');
-        // Have to subtract one from rawValue for a hotfix.  Unknown as to why it thinks Monday is the start of the
-        // week in the en-US locale.
-        myMoment = moment(year + ' ' + week + ' ' + --rawDay, 'YYYY WW E');
-        return myMoment.format('ddd MM/DD');
-      }
-    })
-  },{
-    name: 'in',
-    label: 'In',
-    cell: Backgrid.Extension.MomentCell.extend({
-      modelFormat: 'X',
-      displayFormat: 'h:mm a',
-      displayInUTC: false
-    }),
-    formatter: _.extend({}, Backgrid.Extension.MomentFormatter.prototype, {
-      toRaw: function(formattedValue, model) {
-        var day = model.attributes.day;
-        var builtString = year + ' ' + week + ' ' + --day + ' ' + formattedValue;
-        // Format that like I want to...
-        var mom = moment(builtString, 'YYYY WW E h:mm a');
-        return mom.format('X');
-      }
-    })
-  },{
-    name: 'out',
-    label: 'Out',
-    cell: Backgrid.Extension.MomentCell.extend({
-      modelFormat: 'X',
-      displayFormat: 'h:mm a',
-      displayInUTC: false
-    }),
-    formatter: _.extend({}, Backgrid.Extension.MomentFormatter.prototype, {
-      toRaw: function(formattedValue, model) {
-        var day = model.attributes.day;
-        var builtString = year + ' ' + week + ' ' + --day + ' ' + formattedValue;
-        // Format that like I want to...
-        var mom = moment(builtString, 'YYYY WW E h:mm a');
-        return mom.format('X');
-      }
-    })
-  },{
-    name: 'department',
-    label: 'Department',
-    cell: 'integer'
-  }];
-  scheduleDays = new ScheduleList();
-  grid = new Backgrid.Grid({columns: columns, collection: scheduleDays});
-  $schedule = $('#ajaxDiv');
-  grid.listenTo(scheduleDays, "backgrid:edited", function(model, column) {
-    var siblingName, sibling, newValue;
-    if (column.attributes.name !== 'department') {
-      // we need in if out, and out if in
-      siblingName = column.attributes.name === 'in' ? 'out' : 'in';
-      // the cells like to change the values to strings, make sure they're ints, because we're about to work with them
-      newValue = parseInt(model.attributes[column.attributes.name]);
-      sibling = parseInt(model.attributes[siblingName]);
-      // todo: make sure to tell the user they're wrong
-      if (siblingName === 'in' && newValue < sibling) {
-        // throw an error, you can't leave before you get there
-        model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
-      } else if (siblingName === 'out' && sibling < newValue) {
-        // same thing, different sibling
-        model.attributes[column.attributes.name] = model._previousAttributes[column.attributes.name];
-      }
-    }
-    if (model.attributes.id) {
+  $.ajax({
+    type: 'POST',
+    url: 'get_schedule.php',
+    data: 'userId=' + userId + '&year=' + year + '&week=' + week,
+    success: function(data) {
+      console.log(data);
       $.ajax({
         type: 'POST',
-        url: 'timeEdit/change_schedule.php',
-        data: 'id=' + model.attributes.id + '&' + column.attributes.name + '=' + newValue,
-        success: function() {
-          scheduleDays.fetch({data: data, reset: true});
-        }
-      });
-    } else {
-      $.ajax({
-        type: 'POST',
-        url: 'timeEdit/add_schedule.php',
-        data: 'userId=' + userId + '&' + column.attributes.name + '=' + model.attributes[column.attributes.name],
-        success: function() {
-          scheduleDays.fetch({data: data, reset:true});
+        url: 'build_schedule.php',
+        data: 'timestamps=' + data,
+        success: function(data) {
+          $('#ajaxDiv').html(data);
         }
       });
     }
   });
-  grid.render().sort('day','ascending');
-  $schedule.html(grid.render().el);
-  scheduleDays.fetch({data: data, reset: true});
-  $schedule.prepend('<a id="schedule-range-button" class="btn"><i class="mdi-action-event center"><\/i><\/a>');
-  return true;
 }
 
 function getOffsetString() {
