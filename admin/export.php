@@ -1,4 +1,5 @@
 <?php
+// todo: update SQL
 session_start();
 require 'admin_functions.php';
 $sqlConnection = createSql();
