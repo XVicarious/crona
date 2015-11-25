@@ -1,4 +1,5 @@
 <?php
+// todo: update SQL?
 date_default_timezone_set('America/New_York'); // todo: make timezone configurable
 require '../admin_functions.php';
 $sqlConnection = createSql();

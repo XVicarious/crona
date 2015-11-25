@@ -1,4 +1,5 @@
 <?php
+// todo: update SQL
 // todo: see admin_functions.php@51
 require 'admin_functions.php';
 $sqlConnection = createSql();

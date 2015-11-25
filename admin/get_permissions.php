@@ -11,7 +11,7 @@ if (sessionCheck()) {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         echo json_encode($result);
     } catch (Exception $e) {
-        javascriptLog('Failed: '.$e->getMessage());
+        error_log('Failed: '.$e->getMessage(), 0);
     }
     $permissionArray = [];
     /*while(list($companyCode, $departmentId) = mysqli_fetch_row($result)) {

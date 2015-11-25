@@ -1,4 +1,5 @@
 <?php
+// todo: update SQL
 require "../admin_functions.php";
 $sqlConnection = createSql();
 if (sessionCheck()) {
