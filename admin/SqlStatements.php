@@ -119,4 +119,12 @@ class SqlStatements
     const GET_SCHEDULE = 'SELECT schedule_id, schedule_day, schedule_in, schedule_out, schedule_department
                           FROM employee_schedule
                           WHERE employee_id = :userid AND schedule_week = :sweek AND schedule_year = :syear';
+    /**
+     * @param int :userid
+     * @param int :syear
+     * @param int :sweek
+     * @param int :sday
+     */
+    const INSERT_SCHEDULE = 'INSERT INTO employee_schedule (employee_id, schedule_year, schedule_week, schedule_day)
+                                    VALUES (:userid, :syear, :sweek, :sday)';
 }

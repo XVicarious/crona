@@ -21,7 +21,7 @@ if (sessionCheck()) {
             $sDay = intval($timestamps[$checkDay+1]['schedule_day']);
             if ($sDay > $checkDay) {
                 $insert = ['schedule_day'=>$checkDay];
-                array_splice($timestamps, $checkDay+1, 0, array($insert));
+                array_splice($timestamps, $checkDay+1, 0, [$insert]);
             } else {
                 $checkDay++;
             }
@@ -32,10 +32,9 @@ if (sessionCheck()) {
         }
     }
     $countStamps = count($timestamps);
-    pre($timestamps);
     $timestampTable = '<input type="date" id="date0" class="datepicker">
                        <input type="date" id="date1" class="datepicker">
-                       <table id="timecard" user-id="'.$timestamps['USER_INFO']['user_id'].'" year="'.$sundayYear.'" week="'.$sundayWeek.'">
+                       <table id="timecard" user-id="'.$timestamps[0]['userid'].'" year="'.$sundayYear.'" week="'.$sundayWeek.'">
                         <tr id="topTR">
                          <th id="topTH" colspan="100%">
                           '.$timestamps['USER_INFO']['user_first'].' '.$timestamps['USER_INFO']['user_last'].'\'s Timecard
@@ -61,11 +60,8 @@ if (sessionCheck()) {
             $maxStamps = $countT;
         }
     }
-    echo 'starting to make date rows with $countStamps = '.$countStamps;
     for ($i = 1; $i < $countStamps; ++$i) {
-        echo $i.'<br>';
         $tempStamp = $timestamps[$i];
-        echo $sundayYear.'-'.$sundayWeek.'-'.$tempStamp['schedule_day'].'<br/>';
         $day = new DateTime();
         $day->setISODate($sundayYear, $sundayWeek, $tempStamp['schedule_day']);
         $day = $day->format('Y-m-d');
