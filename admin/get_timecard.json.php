@@ -12,14 +12,14 @@ if (sessionCheck()) {
     $range = $_POST['range'];
     // todo: this might be a tad screwy because of timezones
     $day = date('w') + 1;
-    $date0 = date($dateFormat, strtotime("-$day days"));
-    $date1 = date($dateFormat, strtotime('+'.(7-$day).' days'));
+    $date0 = date($dateTimeFormat24, strtotime("-$day days 00:00:00"));
+    $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days 23:59:59'));
     if ($range === 'last') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days -1 weeks 00:00:00"));
         $date1 = date($dateTimeFormat24, strtotime('-'.($day + 1).' days 23:59:59'));
     } elseif ($range === 'next') {
         $date0 = date($dateTimeFormat24, strtotime("-$day days +1 weeks"));
-        $date1 = date($dateTimeFormat24, strtotime('+'.(6-$day).' days +1 weeks 23:59:59'));
+        $date1 = date($dateTimeFormat24, strtotime('+'.(7-$day).' days +1 weeks 23:59:59'));
     } elseif ($range === 'specificDate') {
         $date0 = date($dateTimeFormat24, $_POST['date0']);
         $date1 = date($dateTimeFormat24, $_POST['date1']);
@@ -39,6 +39,7 @@ if (sessionCheck()) {
         $n = 1;
         $days = strtotime($date1) - strtotime($date0);
         $days = ($days / 86400) + 1;
+        $days = round($days, 0);
         while ($n < $days) {
             $dateOfWeek = date($dateFormat, strtotime("$date0 +$n days"));
             array_push($timestamps, ['date'=>$dateOfWeek]);

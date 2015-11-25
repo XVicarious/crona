@@ -14,6 +14,7 @@ if (sessionCheck()) {
     $firstDate = $timestamps[0]['date'];
     $modifiable = true;
     if (count($timestamps) > 8) {
+        pre($timestamps);
         $modifiable = false;
     }
     $sundayYear = 0;
@@ -90,7 +91,7 @@ if (sessionCheck()) {
                     }
                     $modifier = $stamp[2];
                     if ($mode === 2 && !$isLocked && $modifiable) {
-                        $timestampTable .= "<td class=\"tstable addButton\">
+                        $timestampTable .= "<td class=\"tstable addButton ts-card\">
                                              <button class=\"addButton\" type=\"button\">
                                               <i class=\"material-icons\">add</i>
                                              </button>
@@ -121,9 +122,9 @@ if (sessionCheck()) {
                     } elseif ($mode === 0 || $mode === 1 || $isLocked || !$modifiable) {
                         $disabled = 'disabled readonly';
                     }
-                    $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
+                    $timestampTable .= "<td class=\"droppableTimes times ts-card tstable $tri $miss\">
                                      <div class=\"draggableTimes\">
-                                      <input class=\"times context-menu\"
+                                      <input class=\"times ts-card context-menu\"
                                              stamp-id=\"$stamp[0]\"
                                              id=\"$stamp[0]\"
                                              default-time=\"$realTime\"
@@ -137,8 +138,8 @@ if (sessionCheck()) {
         }
         if ($mode === 2 && !$isLocked && $modifiable) {
             $colspan = ($maxStamps - $timestampCount + 0.5) * 2;
-            $timestampTable .= "<td class=\"addButton after\" colspan=\"$colspan\">
-                                 <button class=\"addButton\" type=\"button\">
+            $timestampTable .= "<td class=\"addButton after ts-card\" colspan=\"$colspan\">
+                                 <button class=\"addButton ts-card\" type=\"button\">
                                   <i class=\"material-icons\">add</i>
                                  </button>
                                 </td>";
