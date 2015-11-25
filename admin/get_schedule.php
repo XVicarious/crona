@@ -18,12 +18,14 @@ if (sessionCheck()) {
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         $fixedSchedule = [];
         foreach ($result as $scheduleDay) {
-            $last = &end($fixedSchedule);
+            $last = end($fixedSchedule);
             if ($last !== null) {
                 if ($scheduleDay['schedule_year'] === $last[0]['schedule_year'] &&
                     $scheduleDay['schedule_week'] === $last[0]['schedule_week'] &&
                     $scheduleDay['schedule_day'] === $last[0]['schedule_day']) {
-                    array_push($last, $scheduleDay);
+                    $fixedScheduleCount = count($fixedSchedule) - 1;
+                    error_log('pushing to already created array', 0);
+                    array_push($fixedSchedule[$fixedScheduleCount], $scheduleDay);
                 } else {
                     array_push($fixedSchedule, $scheduleDay);
                 }
@@ -32,7 +34,7 @@ if (sessionCheck()) {
                 array_push($last, $scheduleDay);
             }
         }
-        array_unshift($result, ['year'=>$year, 'week'=>$week]);
+        array_unshift($result, ['year'=>$year, 'week'=>$week, 'userid'=>$employee]);
         echo json_encode($result, JSON_NUMERIC_CHECK);
     } catch (PDOException $e) {
         error_log($e->getMessage(), 0);

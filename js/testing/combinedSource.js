@@ -159,10 +159,14 @@ $(function() {
     }
     validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp;
     userId = $('#timecard').attr('user-id');
-    trueTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a').format('X'));
+    var momentTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a'));
     if (mode === 'schedule') {
-      // add schedule stamp!
+      var syear = momentTime.format('YYYY');
+      var sweek = momentTime.format('W');
+      var sday  = momentTime.format('d');
+      createSchedulePair(userId, {year: syear, week: sweek, day: sday});
     } else {
+      trueTime = momentTime.format('X');
       createStamp(userId, trueTime);
     }
   });
@@ -676,12 +680,17 @@ function createStamp(userId, stamp) {
 }
 
 function createSchedulePair(userId, schedule) {
+  // schedule = {year: <year>, week: <week>, day: <day>}
+  var year = schedule.year,
+      week = schedule.week,
+      day  = schedule.day;
+  console.log(userId);
   $.ajax({
     type: 'POST',
     url: 'timeEdit/add_schedule.php',
-    data: 'userId=' + userId + '&day=' + schedule,
+    data: 'userId=' + userId + '&day=' + day + '&week=' + week + '&year=' + year,
     success: function() {
-      // we need to refresh here, but I need to get the variables and stuff
+      fetchSchedule({userId: userId, week: week, year: year});
     }
   });
 }
