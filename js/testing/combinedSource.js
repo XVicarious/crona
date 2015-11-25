@@ -1,34 +1,34 @@
 var operationMode = getPermissions(),
-    $inputPicker = [],
-    pageableGrid,
-    picker = [],
-    saveTheDate = 0,
-    eCounter = 0,
-    mode = '',
-    i = 0,
-    offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
-    offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
-    companyCodes = [["48N", "HNB Venture Ptrs LLC"],
-                    ["49C", "Hampton Inn Boston/Natick"],
-                    ["49D", "Crowne Plaza Boston"],
-                    ["49E", "Holiday Inn Somervil"],
-                    ["7IS", "Skybokx 109 Natick"],
-                    ["9NI", "Hart Hotels DLC, LLC"],
-                    ["ANY", "FLH Development, LLC"],
-                    ["FB1", "Madison Beach Hotel"],
-                    ["GE3", "Distinctive Hospitality Group"],
-                    ["GG8", "Seneca Market 1"],
-                    ["H4G", "DDH Hotel Mystic LLC"],
-                    ["HUG", "ATA Associates"],
-                    ["HXH", "Portland Harbor Hotel"],
-                    ["KZH", "Clayton Harbor Hotel"],
-                    ["L99", "Lenroc, L.P."],
-                    ["NPJ", "WPH Midtown Associates"],
-                    ["NPM", "WPH Airport Associates"],
-                    ["PPP", "Golden Triangle Associates"],
-                    ["Q56", "Hart Management Group"],
-                    ["RK3", "HBK Restaurant LLC"],
-                    ["ZVT", "Twenty Flint Rd LLC"]];
+  $inputPicker = [],
+  pageableGrid,
+  picker = [],
+  saveTheDate = 0,
+  eCounter = 0,
+  mode = '',
+  i = 0,
+  offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
+  offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
+  companyCodes = [["48N", "HNB Venture Ptrs LLC"],
+    ["49C", "Hampton Inn Boston/Natick"],
+    ["49D", "Crowne Plaza Boston"],
+    ["49E", "Holiday Inn Somervil"],
+    ["7IS", "Skybokx 109 Natick"],
+    ["9NI", "Hart Hotels DLC, LLC"],
+    ["ANY", "FLH Development, LLC"],
+    ["FB1", "Madison Beach Hotel"],
+    ["GE3", "Distinctive Hospitality Group"],
+    ["GG8", "Seneca Market 1"],
+    ["H4G", "DDH Hotel Mystic LLC"],
+    ["HUG", "ATA Associates"],
+    ["HXH", "Portland Harbor Hotel"],
+    ["KZH", "Clayton Harbor Hotel"],
+    ["L99", "Lenroc, L.P."],
+    ["NPJ", "WPH Midtown Associates"],
+    ["NPM", "WPH Airport Associates"],
+    ["PPP", "Golden Triangle Associates"],
+    ["Q56", "Hart Management Group"],
+    ["RK3", "HBK Restaurant LLC"],
+    ["ZVT", "Twenty Flint Rd LLC"]];
 
 $(function() {
   if (operationMode) {
@@ -86,14 +86,13 @@ $(function() {
     }
   });
   $(document).on('click', '#initial-confirm-add', function() {
-    console.log("FIRING");
     var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter; // Complicated!  Does this even work properly?
     var isGood = true,
-        toAdd = [],
-        dataString = '',
-        aTempEmployee = [];
+      toAdd = [],
+      dataString = '',
+      aTempEmployee = [];
     for (i = 0; i < toThis; i++) {
-      $('input.e-'+i+',select.e-'+i).each(function() {
+      $('input.e-' + i + ',select.e-' + i).each(function() {
         if ($(this).val() === null || !$(this).val().length) {
           // we allow userEmail and userStart to be empty, because they have default values
           // userStart will be today, and userEmail will be derived from the immediate superior's email
@@ -138,13 +137,7 @@ $(function() {
     $.ajax({
       type: "POST",
       url: "insert_user.php",
-      data: dataString,
-      success: function(data) {
-        console.log(data);
-      },
-      error: function(jqXHR, textStatus, errorThrown) {
-        console.log(jqXHR, textStatus, errorThrown);
-      }
+      data: dataString
     });
   });
   $(document).on('change', '#range', function() {
@@ -167,7 +160,11 @@ $(function() {
     validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp;
     userId = $('#timecard').attr('user-id');
     trueTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a').format('X'));
-    createStamp(userId, trueTime);
+    if (mode === 'schedule') {
+      // add schedule stamp!
+    } else {
+      createStamp(userId, trueTime);
+    }
   });
   $(document).on('focus', 'input.times', function() {
     $(this).select();
@@ -253,11 +250,11 @@ $(function() {
             var stamp = $trigger.attr('id');
             var dialog = $('#dialog');
             var dialogContent = dialog.find('.modal-content');
-            var commentDiv = $('#timecard').find('input#'+stamp);
+            var commentDiv = $('#timecard').find('input#' + stamp);
             dialogContent.find('.modal-title').text('Add Comment');
             dialogContent.find('.modal-text').html('<textarea stamp-id="' + stamp + '" rows="16">' + commentDiv.attr('title') + '</textarea>');
             dialog.find('.modal-footer').html('<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-save-comment">Save Comment</a>' +
-                                              '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Discard Changes</a>');
+              '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Discard Changes</a>');
             dialog.openModal();
           }
         },
@@ -353,7 +350,7 @@ $(function() {
   $(document).on('click', '.modal-save-comment', function() {
     var textArea = $('#dialog').find('.modal-content').find('.modal-text').find('textarea');
     var stampid = textArea.attr('stamp-id');
-    var oldText = $('#timecard').find('input#'+stampid).attr('title');
+    var oldText = $('#timecard').find('input#' + stampid).attr('title');
     if (textArea.val() === '') {
       $.ajax({
         type: 'POST',
@@ -404,6 +401,8 @@ $(function() {
       }
     });
   });
+  /* Schedule buttons */
+
 });
 
 function getPermissions() {
@@ -425,7 +424,7 @@ function getExportPermissions() {
     success: function(data) {
       $('#exportC').html(data);
       $('#export-times').find('.modal-export').click(function() {
-        $.getScript('export.php?companyCode='+$('#companyCode').val());
+        $.getScript('export.php?companyCode=' + $('#companyCode').val());
       });
     }
   });
@@ -483,17 +482,17 @@ function getEmployee(parameters) {
               var fixedDate = this.get('value');
               var extraString = '';
               if (thing.select) {
-                fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() +
+                fixedDate = moment(fixedDate + ' 00:00:00 ' + getOffsetString(), 'D MMMM, YYYY h:m:s Z').utc().unix() +
                   (TimeVar.SECONDS_IN_DAY - 1);
-                extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
+                extraString += '&date0=' + saveTheDate + '&date1=' + fixedDate;
                 getEmployee({id: id, range: 'specificDate', extraString: extraString});
                 this.close();
               }
             }
           });
-          $inputPicker[1].css('display','none');
+          $inputPicker[1].css('display', 'none');
           picker[1] = $inputPicker[1].pickadate('picker');
-          $inputPicker[0].css('display','none');
+          $inputPicker[0].css('display', 'none');
           picker[0] = $inputPicker[0].pickadate('picker');
           $('#range').val(range);
         }
@@ -591,11 +590,11 @@ function getEmployees() {
   employeeListPageable.getFirstPage({fetch: true}).then(function() {
     var n = 1;
     var selectAll = $('.select-all-header-cell');
-    selectAll.find('input').attr('id',"0cell");
+    selectAll.find('input').attr('id', "0cell");
     selectAll.append('<label for="0cell"></label>');
     $('.select-row-cell').each(function() {
-      $(this).find('input').attr('id',n+"cell");
-      $(this).append('<label for="'+n+'cell"></label>');
+      $(this).find('input').attr('id', n + "cell");
+      $(this).append('<label for="' + n + 'cell"></label>');
       n++;
     });
   });
@@ -640,9 +639,9 @@ function getOffsetString() {
   offset = absoluteOffsetMinutes / TimeVar.MINUTES_IN_HOUR;
   flooredOffset = Math.floor(offset);
   if (flooredOffset < 10) {
-    offsetString += '0'+flooredOffset;
+    offsetString += '0' + flooredOffset;
   } else {
-    offsetString += ''+flooredOffset;
+    offsetString += '' + flooredOffset;
   }
   if (flooredOffset !== offset) {
     extraOffset = absoluteOffsetMinutes - (flooredOffset * TimeVar().MINUTES_IN_HOUR);
@@ -650,7 +649,7 @@ function getOffsetString() {
   if (extraOffset < 10) {
     offsetString += '00';
   } else {
-    offsetString += ''+extraOffset;
+    offsetString += '' + extraOffset;
   }
   return offsetString;
 }
@@ -660,18 +659,29 @@ function addEmployeesAction() {
   var ajaxDiv = $('#ajaxDiv');
   ajaxDiv.html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0 browser-default"><\/select><\/td><td><input class="userDepartment e-0"><\/input><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form><a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
   for (i = 0; i < companyCodes.length; i++) {
-    optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0,11) + '...<\/option>';
+    optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...<\/option>';
   }
   $('.userCompany.e-0').html(optionString);
 }
 
 function createStamp(userId, stamp) {
-    $.ajax({
-        type: 'POST',
-        url: 'timeEdit/create_stamp.php',
-       data: 'user=' + userId + '&date=' + stamp,
-       success: function() {
-          getEmployee({id: userId});
-        }
-   });
+  $.ajax({
+    type: 'POST',
+    url: 'timeEdit/create_stamp.php',
+    data: 'user=' + userId + '&date=' + stamp,
+    success: function() {
+      getEmployee({id: userId});
+    }
+  });
+}
+
+function createSchedulePair(userId, schedule) {
+  $.ajax({
+    type: 'POST',
+    url: 'timeEdit/add_schedule.php',
+    data: 'userId=' + userId + '&day=' + schedule,
+    success: function() {
+      // we need to refresh here, but I need to get the variables and stuff
+    }
+  });
 }

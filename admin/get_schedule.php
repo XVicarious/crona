@@ -16,6 +16,22 @@ if (sessionCheck()) {
         $stmt->bindParam(':syear', $year, PDO::PARAM_INT);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $fixedSchedule = [];
+        foreach ($result as $scheduleDay) {
+            $last = &end($fixedSchedule);
+            if ($last !== null) {
+                if ($scheduleDay['schedule_year'] === $last[0]['schedule_year'] &&
+                    $scheduleDay['schedule_week'] === $last[0]['schedule_week'] &&
+                    $scheduleDay['schedule_day'] === $last[0]['schedule_day']) {
+                    array_push($last, $scheduleDay);
+                } else {
+                    array_push($fixedSchedule, $scheduleDay);
+                }
+            } else {
+                $last = [];
+                array_push($last, $scheduleDay);
+            }
+        }
         array_unshift($result, ['year'=>$year, 'week'=>$week]);
         echo json_encode($result, JSON_NUMERIC_CHECK);
     } catch (PDOException $e) {

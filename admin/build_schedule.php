@@ -14,8 +14,8 @@ if (sessionCheck()) {
     $modifiable = true;
     $sundayYear = $timestamps[0]['year'];
     $sundayWeek = $timestamps[0]['week'];
-    $countStamps = count($timestamps) - 1;
-    if ($countStamps < 7) {
+    $countStamps = count($timestamps);
+    if ($countStamps < 8) {
         $checkDay = 0;
         while ($checkDay < 7) {
             $sDay = intval($timestamps[$checkDay+1]['schedule_day']);
@@ -55,13 +55,15 @@ if (sessionCheck()) {
                         </tr>';
     $totalSeconds = 0;
     $maxStamps = 0;
-    for ($i = 0; $i < $countStamps - 1; ++$i) {
+    for ($i = 0; $i < $countStamps; ++$i) {
         $countT = count($timestamps[$i]) - 2;
         if ($countT > $maxStamps) {
             $maxStamps = $countT;
         }
     }
-    for ($i = 1; $i < $countStamps - 1; ++$i) {
+    echo 'starting to make date rows with $countStamps = '.$countStamps;
+    for ($i = 1; $i < $countStamps; ++$i) {
+        echo $i.'<br>';
         $tempStamp = $timestamps[$i];
         echo $sundayYear.'-'.$sundayWeek.'-'.$tempStamp['schedule_day'].'<br/>';
         $day = new DateTime();
