@@ -162,8 +162,9 @@ $(function() {
     var momentTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a'));
     if (mode === 'schedule') {
       var syear = momentTime.format('YYYY');
-      var sweek = momentTime.format('W');
+      var sweek = parseInt(momentTime.format('W')) + 1; // add 1 to this, because?
       var sday  = momentTime.format('d');
+      sweek = parseInt(sweek) + 1;
       createSchedulePair(userId, {year: syear, week: sweek, day: sday});
     } else {
       trueTime = momentTime.format('X');
