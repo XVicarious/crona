@@ -628,35 +628,11 @@ function fetchSchedule(parameters) {
 }
 
 function getOffsetString() {
-  var offsetMinutes = (new Date()).getTimezoneOffset(),
-    absoluteOffsetMinutes = offsetMinutes + Math.abs(offsetMinutes),
-    offsetString = '',
-    extraOffset = 0;
-  var offset,
-    flooredOffset;
-  if (absoluteOffsetMinutes) {
-    offsetString = '-';
-    absoluteOffsetMinutes = offsetMinutes;
-  } else {
-    offsetString = '+';
-    absoluteOffsetMinutes = Math.abs(offsetMinutes);
+  var offset = moment().utcOffset();
+  if (offset > 0) {
+    return '+' + offset;
   }
-  offset = absoluteOffsetMinutes / TimeVar.MINUTES_IN_HOUR;
-  flooredOffset = Math.floor(offset);
-  if (flooredOffset < 10) {
-    offsetString += '0' + flooredOffset;
-  } else {
-    offsetString += '' + flooredOffset;
-  }
-  if (flooredOffset !== offset) {
-    extraOffset = absoluteOffsetMinutes - (flooredOffset * TimeVar().MINUTES_IN_HOUR);
-  }
-  if (extraOffset < 10) {
-    offsetString += '00';
-  } else {
-    offsetString += '' + extraOffset;
-  }
-  return offsetString;
+  return offset;
 }
 
 function addEmployeesAction() {
