@@ -630,7 +630,7 @@ function fetchSchedule(parameters) {
 function getOffsetString() {
   var offset = moment().utcOffset();
   if (offset > 0) {
-    return '+' + offset;
+    offset = '+' + offset;
   }
   return offset;
 }
