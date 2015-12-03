@@ -31,8 +31,9 @@ var operationMode = getPermissions(),
     ["ZVT", "Twenty Flint Rd LLC"]];
 
 $(function() {
+  Backbone.history.start({pushState: true});
   if (operationMode) {
-    getEmployees();
+    getEmployees2();
     getPermissions();
     getExportPermissions();
   } else {
@@ -387,11 +388,13 @@ $(function() {
   });
   $('#view-employees').click(function() {
     mode = undefined;
-    getEmployees();
+    $('.page-title').find('a').text('Crona Timestamp');
+    getEmployees2();
   });
   $('#manage-schedules').click(function() {
     mode = 'schedule';
-    getEmployees();
+    $('.page-title').find('a').text('Crona Timestamp - Schedule');
+    getEmployees2();
   });
   $('#add-employees').click(function() {
     addEmployeesAction();
@@ -405,6 +408,16 @@ $(function() {
         $('.collapsible').collapsible();
       }
     });
+  });
+  $(document).on('click', 'td', function() {
+    var trId = $(this).parent().attr('user-id');
+    if (trId) {
+      if (mode === 'schedule') {
+        fetchSchedule({userid: trId, year: 2015, week: 44});
+      } else {
+        getEmployee({id: trId});
+      }
+    }
   });
   /* Schedule buttons */
 
@@ -443,13 +456,14 @@ function getEmployee(parameters) {
   var mode = 2; //parameters.mode;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
+  // todo: convert to stuff
   $.ajax({
     type: 'POST',
     url: 'get_timecard.json.php',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
-      console.log(data);
       $.ajax({
+        replace: true,
         type: 'POST',
         url: 'build_timecard.php',
         data: 'timestamps=' + data,
@@ -502,6 +516,16 @@ function getEmployee(parameters) {
           $('#range').val(range);
         }
       });
+    }
+  });
+}
+
+function getEmployees2() {
+  $.ajax({
+    type: 'POST',
+    url: 'get_employees.json.php',
+    success: function(data) {
+      $('#ajaxDiv').html(data);
     }
   });
 }
@@ -614,7 +638,6 @@ function fetchSchedule(parameters) {
     url: 'get_schedule.php',
     data: 'userId=' + userId + '&year=' + year + '&week=' + week,
     success: function(data) {
-      console.log(data);
       $.ajax({
         type: 'POST',
         url: 'build_schedule.php',
@@ -661,7 +684,6 @@ function createSchedulePair(userId, schedule) {
   var year = schedule.year,
       week = schedule.week,
       day  = schedule.day;
-  console.log(userId);
   $.ajax({
     type: 'POST',
     url: 'timeEdit/add_schedule.php',
