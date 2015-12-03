@@ -462,7 +462,7 @@ function getEmployee(parameters) {
         replace: true,
         type: 'POST',
         url: 'build_timecard.php',
-        data: 'timestamps=' + data,
+        data: 'timestamps=' + data + '&mode=' + mode,
         success: function(data) {
           var datepicker, secondDate;
           $('#ajaxDiv').html(data);
