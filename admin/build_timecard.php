@@ -54,7 +54,6 @@ if (sessionCheck()) {
                            <option value="last">Previous Period</option>
                            <option value="this">Current Period</option>
                            <option value="next">Next Period</option>
-                           <option value="w2d">Week to Date</option>
                            <option value="specificDate">Specific Date</option>
                            <option value="special">Specific Period</option>
                           </select>
