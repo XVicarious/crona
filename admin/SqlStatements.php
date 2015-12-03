@@ -128,4 +128,8 @@ class SqlStatements
      */
     const INSERT_SCHEDULE = 'INSERT INTO employee_schedule (employee_id, schedule_year, schedule_week, schedule_day)
                                     VALUES (:userid, :syear, :sweek, :sday)';
+    /**
+     * @param int :userid
+     */
+    const GET_PERMISSIONS = 'SELECT company_code, department_id FROM employee_supervisors WHERE user_id = :userid';
 }
