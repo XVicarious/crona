@@ -143,8 +143,6 @@ $(function() {
     var userId = $('#timecard').attr('user-id');
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
       picker[0].open(false);
-    } else if ($(this).val() === 'w2d') {
-      getEmployee({id: userId, range: 'w2d'});
     } else {
       getEmployee({id: userId});
     }
