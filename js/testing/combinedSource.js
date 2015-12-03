@@ -1,6 +1,5 @@
 var operationMode = getPermissions(),
   $inputPicker = [],
-  pageableGrid,
   picker = [],
   saveTheDate = 0,
   eCounter = 0,
@@ -33,7 +32,7 @@ var operationMode = getPermissions(),
 $(function() {
   Backbone.history.start({pushState: true});
   if (operationMode) {
-    getEmployees2();
+    getEmployees();
     getPermissions();
     getExportPermissions();
   } else {
@@ -389,12 +388,12 @@ $(function() {
   $('#view-employees').click(function() {
     mode = undefined;
     $('.page-title').find('a').text('Crona Timestamp');
-    getEmployees2();
+    getEmployees();
   });
   $('#manage-schedules').click(function() {
     mode = 'schedule';
     $('.page-title').find('a').text('Crona Timestamp - Schedule');
-    getEmployees2();
+    getEmployees();
   });
   $('#add-employees').click(function() {
     addEmployeesAction();
@@ -520,112 +519,13 @@ function getEmployee(parameters) {
   });
 }
 
-function getEmployees2() {
+function getEmployees() {
   $.ajax({
     type: 'POST',
     url: 'get_employees.json.php',
     success: function(data) {
       $('#ajaxDiv').html(data);
     }
-  });
-}
-
-function getEmployees() {
-  var $employeeList;
-  var EmployeeList = Backbone.Model.extend({});
-  var EmployeeListPageable = Backbone.PageableCollection.extend({
-    model: EmployeeList,
-    url: 'get_employees.json.php',
-    state: {
-      pageSize: 10
-    },
-    mode: 'client'
-  });
-  var employeeListPageable = new EmployeeListPageable();
-  var columns = [{
-    name: "",
-    cell: "select-row",
-    headerCell: "select-all"
-  }, {
-    name: 'id',
-    renderable: false,
-    cell: Backgrid.IntegerCell.extend({
-      orderSeparator: ''
-    }),
-    editable: false
-  }, {
-    name: 'adpid',
-    label: 'ADP ID',
-    cell: Backgrid.IntegerCell.extend({
-      orderSeparator: ''
-    }),
-    editable: false
-  }, {
-    name: 'name',
-    label: 'Employee Name (Last, First)',
-    cell: 'string',
-    editable: false
-  }, {
-    name: 'companycode',
-    label: 'Company Code',
-    cell: 'string',
-    editable: false
-  }, {
-    name: 'departmentcode',
-    label: 'Department Code',
-    cell: Backgrid.IntegerCell.extend({
-      orderSeparator: ''
-    }),
-    editable: false
-  }];
-  var ClickableRow = Backgrid.Row.extend({
-    events: {'click': 'onClick', '': ''},
-    onClick: function(e) {
-      if (e.toElement.tagName !== 'INPUT' && e.toElement.tagName !== 'LABEL') {
-        Backbone.trigger('rowclicked', this.model);
-      }
-    },
-    remove: function() {
-      this.undelegateEvents();
-      this.off();
-      for (var i = 0; i < this.cells.length; i++) {
-        var cell = this.cells[i];
-        cell.remove.apply(cell, arguments);
-      }
-      return Backbone.View.prototype.remove.apply(this, arguments);
-    }
-  });
-  if (pageableGrid) {
-    pageableGrid.remove();
-  }
-  Backbone.on('rowclicked', function(model) {
-    $('.spinner').css('padding-top', '1%').css('padding-bottom', '1%');
-    if (mode === 'schedule') {
-      fetchSchedule({userId: model.id, year: 2015, week: 44});
-    } else {
-      getEmployee({id: model.id, range: 'this'});
-    }
-    if (pageableGrid) {
-      pageableGrid.remove();
-    }
-  });
-  pageableGrid = new Backgrid.Grid({
-    row: ClickableRow,
-    columns: columns,
-    collection: employeeListPageable
-  });
-  $employeeList = $('#ajaxDiv');
-  $employeeList.html(pageableGrid.render().el);
-  employeeListPageable.getFirstPage({fetch: true}).then(function() {
-    var n = 1;
-    var selectAll = $('.select-all-header-cell');
-    selectAll.find('input').attr('id', "0cell");
-    selectAll.append('<label for="0cell"></label>');
-    $('.select-row-cell').each(function() {
-      $(this).find('input').attr('id', n + "cell");
-      $(this).append('<label for="' + n + 'cell"></label>');
-      n++;
-    });
   });
 }
 
