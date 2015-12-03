@@ -21,15 +21,9 @@ sessionCheck();
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script src="../js/lib/jquery.js"></script>
     <script src="../js/lib/materialize.js?v=0.97"></script>
-    <script src="../js/lib/underscore.js"></script>
-    <script src="../js/lib/backbone.js"></script>
-    <script src="../js/lib/backgrid.js"></script>
-    <script src="../js/lib/backbone.paginator.js"></script>
     <script src="../js/lib/jquery-ui.js"></script>
     <script src="../js/lib/jquery.contextMenu.js"></script>
     <script src="../js/lib/moment.min.js"></script>
-    <script src="../js/lib/backgrid-moment-cell.js"></script>
-    <script src="../js/lib/backgrid-select-all.min.js"></script>
     <script src="../js/timeConstants.js"></script>
     <script src="../js/lib/jquery.pjax.js"></script>
     <script src="../js/testing/combinedSource.js"></script>
@@ -185,6 +179,8 @@ sessionCheck();
                 <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will
                     not close when you choose an option.</li>
                 <li class="yellow lighten-4 collection-item">Logout button overlays the username</li>
+                <li class="yellow lighten-4 collection-item">If you are timed out, clicking "logout" will not bring
+                    you to the signin screen.</li>
             </ul>
             <ul class="collection with-header">
                 <li class="collection-header"><h6>Features In Development</h6></li>
