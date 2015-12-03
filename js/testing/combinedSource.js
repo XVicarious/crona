@@ -30,7 +30,6 @@ var operationMode = getPermissions(),
     ["ZVT", "Twenty Flint Rd LLC"]];
 
 $(function() {
-  Backbone.history.start({pushState: true});
   if (operationMode) {
     getEmployees();
     getPermissions();
