@@ -384,12 +384,12 @@ $(function() {
   });
   $('#view-employees').click(function() {
     mode = undefined;
-    $('.page-title').find('a').text('Crona Timestamp');
+    $('a.page-title').text('Crona Timestamp');
     getEmployees();
   });
   $('#manage-schedules').click(function() {
     mode = 'schedule';
-    $('.page-title').find('a').text('Crona Timestamp - Schedule');
+    $('a.page-title').text('Crona Timestamp - Schedule');
     getEmployees();
   });
   $('#add-employees').click(function() {
