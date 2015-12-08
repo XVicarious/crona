@@ -9,9 +9,7 @@ sessionCheck();
     <link rel="shortcut icon" href="../favicon.ico"/>
     <link rel="stylesheet" href="../css/jquery.contextMenu.css">
     <link rel="stylesheet" href="../css/jquery-ui.min.css">
-    <link rel="stylesheet" href="../css/backgrid.css">
     <link rel="stylesheet" href="../css/material-extra.css">
-    <link rel="stylesheet" href="../css/backgrid-select-all.min.css">
     <link rel="stylesheet" href="../css/xvss-logo.css">
     <link rel="stylesheet" href="../css/timecard.css">
     <link rel="stylesheet" href="../css/cellCases.css">
