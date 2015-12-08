@@ -65,3 +65,8 @@ div.col.s12 {
     height: 150px;
     width: 150px !important;
 }
+
+table#employees-all thead tr th, table#employees-all tbody tr td {
+    padding-top: 2px;
+    padding-bottom: 2px
+}
