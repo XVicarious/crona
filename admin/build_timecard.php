@@ -9,7 +9,7 @@ $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $json = $_POST['timestamps'];
-    $mode = $_POST['mode'];
+    $mode = intval($_POST['mode']);
     $timestamps = json_decode($json, true);
     $firstDate = $timestamps[0]['date'];
     $modifiable = true;
@@ -80,6 +80,7 @@ if (sessionCheck()) {
         $timestampCount = count($tempStamp) - 2;
         if ($timestampCount > 0) {
             foreach ($tempStamp as $key => $stamp) {
+                pre($stamp);
                 // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
                 if (is_array($stamp)) {
                     $miss = '';
