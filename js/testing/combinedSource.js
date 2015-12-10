@@ -159,9 +159,9 @@ $(function() {
     var momentTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a'));
     if (mode === 'schedule') {
       var syear = momentTime.format('YYYY');
-      var sweek = parseInt(momentTime.format('W')) + 1; // add 1 to this, because?
+      var sweek = parseInt(momentTime.format('W'));
       var sday  = momentTime.format('d');
-      sweek = parseInt(sweek) + 1;
+      sweek = parseInt(sweek);
       createSchedulePair(userId, {year: syear, week: sweek, day: sday});
     } else {
       trueTime = momentTime.format('X');
@@ -407,9 +407,12 @@ $(function() {
   });
   $(document).on('click', 'td', function() {
     var trId = $(this).parent().attr('user-id');
+    var year, week;
     if (trId) {
       if (mode === 'schedule') {
-        fetchSchedule({userid: trId, year: 2015, week: 44});
+        year = moment().isoWeekYear();
+        week = moment().isoWeek();
+        fetchSchedule({userId: trId, year: year, week: week});
       } else {
         getEmployee({id: trId});
       }
