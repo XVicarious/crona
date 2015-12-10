@@ -42,7 +42,7 @@
         <div class="row">
             <div class="col s12 l6 offset-l3">
                 <label for="loginType">Login Type</label>
-                <select class="browser-default" id="loginType">
+                <select id="loginType">
                     <option value="timestamp" selected>Timestamp</option>
                     <option value="viewCards">View Card</option>
                     <option value="cardAdmin">Administer</option>
