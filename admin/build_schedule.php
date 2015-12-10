@@ -7,30 +7,17 @@ $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
+const SCHD_ID = 'scheudle_id';
+const TIME_IN = 'schedule_in';
+const TIME_OUT = 'schedule_out';
 if (sessionCheck()) {
     $json = $_POST['timestamps'];
     $mode = 2;
     $timestamps = json_decode($json, true);
+    pre($timestamps);
     $modifiable = true;
     $sundayYear = $timestamps[0]['year'];
     $sundayWeek = $timestamps[0]['week'];
-    $countStamps = count($timestamps);
-    if ($countStamps < 8) {
-        $checkDay = 0;
-        while ($checkDay < 7) {
-            $sDay = intval($timestamps[$checkDay+1]['schedule_day']);
-            if ($sDay > $checkDay) {
-                $insert = ['schedule_day'=>$checkDay];
-                array_splice($timestamps, $checkDay+1, 0, [$insert]);
-            } else {
-                $checkDay++;
-            }
-        }
-        $countStamps = count($timestamps);
-        for ($i = $countStamps; $i < 8; $i++) {
-            array_push($timestamps, ['schedule_day'=>$i-1]);
-        }
-    }
     $countStamps = count($timestamps);
     $timestampTable = '<input type="date" id="date0" class="datepicker">
                        <input type="date" id="date1" class="datepicker">
@@ -70,16 +57,16 @@ if (sessionCheck()) {
         $timestampTable .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";
         $timestampCount = count($tempStamp) - 2;
         if ($timestampCount > 0) {
-            foreach ($tempStamp as $key => $stamp) {
+            //foreach ($tempStamp as $key => $stamp) {
                 // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
-                if (is_array($stamp)) {
+                if (is_array($tempStamp)) {
                     $miss = '';
                     // if the number of timestamps is ODD, and this stamp is the last in the array,
                     // there is a time missing
                     if ($timestampCount % 2 === 1 && $key === $timestampCount - 1) {
                         $miss = 'missingTime';
                     }
-                    $modifier = $stamp[2];
+                    $modifier = $tempStamp[2];
                     if ($mode === 2 && !$isLocked && $modifiable) {
                         $timestampTable .= "<td class=\"tstable addButton\">
                                              <button class=\"addButton\" type=\"button\">
@@ -87,24 +74,36 @@ if (sessionCheck()) {
                                              </button>
                                             </td>";
                     }
-                    $realTime = date($timeFormat12, $stamp[1]);
+                    $realTime = date($timeFormat12, $tempStamp[1]);
                     $tri = ''; //tri stood for something... I forget what though
                     if (date($dateFormat, $stamp[1]) !== $day) {
                         $tri = 'overnight';
                     }
                     $val = $realTime;
+                    // add the time in
                     $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
                                      <div class=\"draggableTimes\">
                                       <input class=\"times context-menu\"
-                                             stamp-id=\"$stamp[0]\"
-                                             id=\"$stamp[0]\"
+                                             stamp-id=\"$tempStamp[TIME_IN]\"
+                                             id=\"$tempStamp[SCHD_ID]\"
                                              default-time=\"$realTime\"
                                              type=\"text\"
                                              value=\"$val\"
-                                             title=\"$stamp[5]\">
+                                             title=\"$tempStamp[5]\">
+                                     </div>";
+                    // add the time out
+                    $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
+                                     <div class=\"draggableTimes\">
+                                      <input class=\"times context-menu\"
+                                             stamp-id=\"$tempStamp[TIME_OUT]\"
+                                             id=\"$tempStamp[SCHD_ID]\"
+                                             default-time=\"$realTime\"
+                                             type=\"text\"
+                                             value=\"$val\"
+                                             title=\"$tempStamp[5]\">
                                      </div>";
                 }
-            }
+            //}
         }
         if ($mode === 2 && !$isLocked && $modifiable) {
             $colspan = ($maxStamps - $timestampCount + 0.5) * 2;

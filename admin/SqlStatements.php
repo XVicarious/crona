@@ -118,7 +118,8 @@ class SqlStatements
      */
     const GET_SCHEDULE = 'SELECT schedule_id, schedule_day, schedule_in, schedule_out, schedule_department
                           FROM employee_schedule
-                          WHERE employee_id = :userid AND schedule_week = :sweek AND schedule_year = :syear
+                          WHERE employee_id = :userid AND ((schedule_week = :sweek AND schedule_day != 7) OR (schedule_week = :sweek + 1 AND schedule_day = 7))
+                                AND schedule_year = :syear
                           ORDER BY schedule_day';
     /**
      * @param int :userid
