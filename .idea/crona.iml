@@ -4,7 +4,9 @@
     <content url="file://$MODULE_DIR$" />
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="backbone" level="application" />
-    <orderEntry type="library" name="backgrid" level="application" />
+    <orderEntry type="library" name="jquery" level="application" />
+    <orderEntry type="library" name="jquery-ui" level="application" />
+    <orderEntry type="library" name="jquery.contextMenu" level="application" />
+    <orderEntry type="library" name="moment" level="application" />
   </component>
 </module>
