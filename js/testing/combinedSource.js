@@ -30,8 +30,33 @@ var operationMode = getPermissions(),
     ["ZVT", "Twenty Flint Rd LLC"]];
 
 $(function() {
+  var a = location.pathname.split('/'),
+    myInt,
+    week,
+    year;
+  a = a.filter(function(e){return e.replace(/(\r\n|\n|\r)/gm,"");});
+  console.log(a);
   if (operationMode) {
-    getEmployees();
+    if (a.length > 3 && a[3] === 'schedule') {
+      mode = 'schedule';
+      $('a.page-title').text('Crona Timestamp - Schedule');
+      if (a.length > 4) {
+        myInt = parseInt(a[4]);
+
+        // next is 7 because we want both the year and week
+        if (a.length > 6) {
+          year = parseInt(a[5]);
+          week = parseInt(a[6]);
+          fetchSchedule({userId: myInt, year: year, week: week});
+        } else {
+          fetchSchedule({userId: myInt});
+        }
+      } else {
+        getEmployees();
+      }
+    } else {
+      getEmployees();
+    }
     getPermissions();
     getExportPermissions();
   } else {
@@ -49,7 +74,7 @@ $(function() {
     var year = timecard.attr('year');
     $.ajax({
       type: "POST",
-      url: "lock_timecard.php",
+      url: "/devel/time/admin/lock_timecard.php",
       data: "user=" + userId + "&week=" + week + "&year=" + year,
       success: function() {
         getEmployee({id: userId});
@@ -187,7 +212,37 @@ $(function() {
       $(this).parent().next('td').children('input.times').focus();
     }
   });
-  $(document).on('blur', 'input[type=text].times', function() {
+  $(document).on('blur', 'input[type=text].times.sched', function() {
+    var meThis = $(this),
+      fieldContents = meThis.val(),
+      defaultTime = meThis.attr('default-time'),
+      scheduleId = meThis.attr('stamp-id'),
+      changed = 'in',
+      validTimestamp, myMoment, formattedTime;
+    if (fieldContents.length) {
+      if (fieldContents !== defaultTime) {
+        validTimestamp = fieldContents + ' ' + getOffsetString();
+        myMoment = moment(validTimestamp, ['hh:mm:ss a Z', 'hh:mm a Z', 'hh: a Z', 'HH: Z', 'HH:mm:ss Z', 'HH:mm Z']);
+        formattedTime = myMoment.utc().format('HH:mm:ss');
+        if (meThis.hasClass('sched-out')) {
+          changed = 'out';
+        }
+        $.ajax({
+          type: 'POST',
+          data: 'id=' + scheduleId + '&' + changed + '=' + formattedTime,
+          url: '/devel/time/admin/timeEdit/change_schedule.php',
+          success: function() {
+            var table = meThis.closest('table'),
+              userId = table.attr('user-id'),
+              year = table.attr('year'),
+              week = table.attr('week');
+            fetchSchedule({userId: userId, year: year, week: week});
+          }
+        });
+      }
+    }
+  });
+  $(document).on('blur', 'input[type=text].times.ts-card', function() {
     var fieldContents = $(this).val(),
       me = $(this),
       stampId = $(this).attr('stamp-id'),
@@ -206,7 +261,7 @@ $(function() {
         trueTime = myMoment.format('X');
         $.ajax({
           type: 'POST',
-          url: 'timeEdit/change_stamp.php',
+          url: '/devel/time/admin/timeEdit/change_stamp.php',
           data: 'sid=' + stampId + '&time=' + trueTime + '&dtime=' + defaultTime,
           success: function() {
             getEmployee({id: userId});
@@ -230,7 +285,7 @@ $(function() {
           confirmModal.find('.modal-okay').click(function() {
             $.ajax({
               type: 'POST',
-              url: 'timeEdit/delete_stamp.php',
+              url: '/devel/time/admin/timeEdit/delete_stamp.php',
               data: 'sid=' + stampId + '&dtime=' + defaultTime,
               success: function() {
                 getEmployee({id: userId});
@@ -247,12 +302,13 @@ $(function() {
     build: function($trigger) {
       return {
         className: 'mod' + $trigger.attr('id'),
-        callback: function(key, options) {
+        callback: function(key) {
+          var stamp, dialog, dialogContent, commentDiv;
           if (key === 'add-comment') {
-            var stamp = $trigger.attr('id');
-            var dialog = $('#dialog');
-            var dialogContent = dialog.find('.modal-content');
-            var commentDiv = $('#timecard').find('input#' + stamp);
+            stamp = $trigger.attr('id');
+            dialog = $('#dialog');
+            dialogContent = dialog.find('.modal-content');
+            commentDiv = $('#timecard').find('input#' + stamp);
             dialogContent.find('.modal-title').text('Add Comment');
             dialogContent.find('.modal-text').html('<textarea stamp-id="' + stamp + '" rows="16">' + commentDiv.attr('title') + '</textarea>');
             dialog.find('.modal-footer').html('<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-save-comment">Save Comment</a>' +
@@ -277,7 +333,7 @@ $(function() {
                   var userId = $('#timecard').attr('user-id');
                   $.ajax({
                     type: 'POST',
-                    url: 'timeEdit/change_department.php',
+                    url: '/devel/time/admin/timeEdit/change_department.php',
                     data: 'sid=' + stampId + '&modifier=' + $(this).val(),
                     success: function() {
                       getEmployee({id: userId});
@@ -342,7 +398,7 @@ $(function() {
     });
     $.ajax({
       type: 'POST',
-      url: 'timeEdit/change_modifier.php',
+      url: '/devel/time/admin/timeEdit/change_modifier.php',
       data: 'sids=' + stampString + '&modifier=' + modifier,
       success: function() {
         getEmployee({id: userId});
@@ -356,7 +412,7 @@ $(function() {
     if (textArea.val() === '') {
       $.ajax({
         type: 'POST',
-        url: 'timeEdit/delete_comment.php',
+        url: '/devel/time/admin/timeEdit/delete_comment.php',
         data: 'stampid=' + stampid,
         success: function() {
           getEmployee({id: $('#timecard').attr('user-id')});
@@ -365,7 +421,7 @@ $(function() {
     } else if (oldText === '') {
       $.ajax({
         type: 'POST',
-        url: 'timeEdit/add_comment.php',
+        url: '/devel/time/admin/timeEdit/add_comment.php',
         data: 'stampid=' + stampid + '&comment=' + textArea.val(),
         success: function() {
           getEmployee({id: $('#timecard').attr('user-id')});
@@ -374,7 +430,7 @@ $(function() {
     } else if (oldText !== textArea.val()) {
       $.ajax({
         type: 'POST',
-        url: 'timeEdit/edit_comment.php',
+        url: '/devel/time/admin/timeEdit/edit_comment.php',
         data: 'stampid=' + stampid + '&comment=' + textArea.val(),
         success: function() {
           getEmployee({id: $('#timecard').attr('user-id')});
@@ -385,11 +441,13 @@ $(function() {
   $('#view-employees').click(function() {
     mode = undefined;
     $('a.page-title').text('Crona Timestamp');
+    History.pushState(null, null, 'https://xvss.net/devel/time/admin/');
     getEmployees();
   });
   $('#manage-schedules').click(function() {
     mode = 'schedule';
     $('a.page-title').text('Crona Timestamp - Schedule');
+    History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/');
     getEmployees();
   });
   $('#add-employees').click(function() {
@@ -412,6 +470,7 @@ $(function() {
       if (mode === 'schedule') {
         year = moment().isoWeekYear();
         week = moment().isoWeek();
+        History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
         fetchSchedule({userId: trId, year: year, week: week});
       } else {
         getEmployee({id: trId});
@@ -425,7 +484,7 @@ $(function() {
 function getPermissions() {
   var permissions = null;
   $.ajax({
-    url: 'get_permissions.php',
+    url: '/devel/time/admin/get_permissions.php',
     async: false,
     success: function(data) {
       permissions = JSON.parse(data);
@@ -437,11 +496,11 @@ function getPermissions() {
 function getExportPermissions() {
   $.ajax({
     type: 'POST',
-    url: 'export_permissions.php',
+    url: '/devel/time/admin/export_permissions.php',
     success: function(data) {
       $('#exportC').html(data);
       $('#export-times').find('.modal-export').click(function() {
-        $.getScript('export.php?companyCode=' + $('#companyCode').val());
+        $.getScript('/devel/time/admin/export.php?companyCode=' + $('#companyCode').val());
       });
     }
   });
@@ -458,13 +517,13 @@ function getEmployee(parameters) {
   // todo: convert to stuff
   $.ajax({
     type: 'POST',
-    url: 'get_timecard.json.php',
+    url: '/devel/time/admin/get_timecard.json.php',
     data: 'employee=' + id + '&range=' + range + extraString,
     success: function(data) {
       $.ajax({
         replace: true,
         type: 'POST',
-        url: 'build_timecard.php',
+        url: '/devel/time/admin/build_timecard.php',
         data: 'timestamps=' + data + '&mode=' + mode,
         success: function(data) {
           var datepicker, secondDate;
@@ -522,7 +581,7 @@ function getEmployee(parameters) {
 function getEmployees() {
   $.ajax({
     type: 'POST',
-    url: 'get_employees.json.php',
+    url: '/devel/time/admin/get_employees.json.php',
     success: function(data) {
       $('#ajaxDiv').html(data);
     }
@@ -531,16 +590,17 @@ function getEmployees() {
 
 function fetchSchedule(parameters) {
   var userId = parameters.userId;
-  var week = parameters.week;
-  var year = parameters.year;
+  console.log(parameters.week);
+  var week = parameters.week || moment().isoWeek();
+  var year = parameters.year || moment().isoWeekYear();
   $.ajax({
     type: 'POST',
-    url: 'get_schedule.php',
+    url: '/devel/time/admin/get_schedule.php',
     data: 'userId=' + userId + '&year=' + year + '&week=' + week,
     success: function(data) {
       $.ajax({
         type: 'POST',
-        url: 'build_schedule.php',
+        url: '/devel/time/admin/build_schedule.php',
         data: 'timestamps=' + data,
         success: function(data) {
           $('#ajaxDiv').html(data);
@@ -571,7 +631,7 @@ function addEmployeesAction() {
 function createStamp(userId, stamp) {
   $.ajax({
     type: 'POST',
-    url: 'timeEdit/create_stamp.php',
+    url: '/devel/time/admin/timeEdit/create_stamp.php',
     data: 'user=' + userId + '&date=' + stamp,
     success: function() {
       getEmployee({id: userId});
@@ -583,13 +643,27 @@ function createSchedulePair(userId, schedule) {
   // schedule = {year: <year>, week: <week>, day: <day>}
   var year = schedule.year,
       week = schedule.week,
-      day  = schedule.day;
+      day  = parseInt(schedule.day);
+  console.log(year,week,day);
+  // adding to sunday technically adds to the previous week
+  if (day === 0) {
+    console.log('day is 0, fixing');
+    day = 7;
+  }
   $.ajax({
     type: 'POST',
-    url: 'timeEdit/add_schedule.php',
+    url: '/devel/time/admin/timeEdit/add_schedule.php',
     data: 'userId=' + userId + '&day=' + day + '&week=' + week + '&year=' + year,
     success: function() {
       fetchSchedule({userId: userId, week: week, year: year});
     }
+  });
+}
+
+function generateExceptions() {
+  $.ajax({
+    type: 'POST',
+    data: 'exceptionMode=gather',
+    url: '/devel/time/admin/generate_exceptions.php'
   });
 }
