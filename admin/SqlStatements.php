@@ -118,7 +118,9 @@ class SqlStatements
      */
     const GET_SCHEDULE = 'SELECT schedule_id, schedule_day, schedule_in, schedule_out, schedule_department
                           FROM employee_schedule
-                          WHERE employee_id = :userid AND ((schedule_week = :sweek AND schedule_day != 7) OR (schedule_week = :sweek + 1 AND schedule_day = 7))
+                          WHERE employee_id = :userid
+                                AND ((schedule_week = :sweek AND schedule_day != 7)
+                                OR (schedule_week = :sweek - 1 AND schedule_day = 7))
                                 AND schedule_year = :syear
                           ORDER BY schedule_day';
     /**
@@ -133,4 +135,13 @@ class SqlStatements
      * @param int :userid
      */
     const GET_PERMISSIONS = 'SELECT company_code, department_id FROM employee_supervisors WHERE user_id = :userid';
+    /**
+     * @param int :userid
+     */
+    const GET_LAST_EXCEPTION_GENERATION_BY_USER = 'SELECT UNIX_TIMESTAMP(exh_time), exh_department, exh_property
+                                                   FROM exception_history
+                                                     INNER JOIN employee_supervisors
+                                                     ON employee_supervisors.user_id = :userid
+                                                     WHERE exh_property = employee_supervisors.company_code
+                                                     AND exh_department = employee_supervisors.department_id';
 }
