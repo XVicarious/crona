@@ -56,7 +56,6 @@ if (sessionCheck()) {
     } else {
         echo 'No employees found!';
     }
-    //echo json_encode($a_employeeList, JSON_NUMERIC_CHECK);
     $_SESSION['json'] = json_encode($a_employeeList, JSON_NUMERIC_CHECK);
     mysqli_close($sqlConnection);
     header('Location: build_employees.php');
