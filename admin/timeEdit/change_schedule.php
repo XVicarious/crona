@@ -6,18 +6,17 @@ if (sessionCheck()) {
     $id = $_POST['id'];
     $in = $_POST['in'];
     $out = $_POST['out'];
+
     $department = $_POST['department'];
     $query = 'UPDATE employee_schedule SET ';
     if (isset($in)) {
-        $in = intval($in);
-        $query .= "schedule_in = $in";
+        $query .= "schedule_in = \"$in\"";
         if (isset($out) || isset($department)) {
             $query .= ', ';
         }
     }
     if (isset($out)) {
-        $out = intval($out);
-        $query .= "schedule_out = $out";
+        $query .= "schedule_out = \"$out\"";
         if (isset($department)) {
             $query .= ', ';
         }
