@@ -1,20 +1,20 @@
 <?php
 $startTime = microtime(false);
-date_default_timezone_set('America/New_York'); // todo: make timezone configurable
+date_default_timezone_set('UTC'); // todo: make timezone configurable
 require 'admin_functions.php';
 include 'SqlStatements.php';
 $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
-const SCHD_ID = 'scheudle_id';
+const SCHD_ID = 'schedule_id';
 const TIME_IN = 'schedule_in';
 const TIME_OUT = 'schedule_out';
 if (sessionCheck()) {
     $json = $_POST['timestamps'];
     $mode = 2;
     $timestamps = json_decode($json, true);
-    pre($timestamps);
+    //header('X-PJAX-URL: https://xvss.net/devel/time/admin/schedule/'.$timestamps[0]['userid']);
     $modifiable = true;
     $sundayYear = $timestamps[0]['year'];
     $sundayWeek = $timestamps[0]['week'];
@@ -58,51 +58,58 @@ if (sessionCheck()) {
         $timestampCount = count($tempStamp) - 2;
         if ($timestampCount > 0) {
             //foreach ($tempStamp as $key => $stamp) {
-                // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
-                if (is_array($tempStamp)) {
-                    $miss = '';
-                    // if the number of timestamps is ODD, and this stamp is the last in the array,
-                    // there is a time missing
-                    if ($timestampCount % 2 === 1 && $key === $timestampCount - 1) {
-                        $miss = 'missingTime';
-                    }
-                    $modifier = $tempStamp[2];
-                    if ($mode === 2 && !$isLocked && $modifiable) {
-                        $timestampTable .= "<td class=\"tstable addButton\">
+            // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
+            if (is_array($tempStamp)) {
+                //$miss = '';
+                // if the number of timestamps is ODD, and this stamp is the last in the array,
+                // there is a time missing
+                //if ($timestampCount % 2 === 1 && $key === $timestampCount - 1) {
+                //    $miss = 'missingTime';
+                //}
+                //$modifier = $tempStamp[2];
+                if ($mode === 2 && !$isLocked && $modifiable) {
+                    $timestampTable .= "<td class=\"tstable addButton\">
                                              <button class=\"addButton\" type=\"button\">
                                               <i class=\"material-icons\">add</i>
                                              </button>
                                             </td>";
-                    }
-                    $realTime = date($timeFormat12, $tempStamp[1]);
-                    $tri = ''; //tri stood for something... I forget what though
-                    if (date($dateFormat, $stamp[1]) !== $day) {
-                        $tri = 'overnight';
-                    }
-                    $val = $realTime;
-                    // add the time in
-                    $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                                     <div class=\"draggableTimes\">
-                                      <input class=\"times context-menu\"
-                                             stamp-id=\"$tempStamp[TIME_IN]\"
-                                             id=\"$tempStamp[SCHD_ID]\"
-                                             default-time=\"$realTime\"
-                                             type=\"text\"
-                                             value=\"$val\"
-                                             title=\"$tempStamp[5]\">
-                                     </div>";
-                    // add the time out
-                    $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                                     <div class=\"draggableTimes\">
-                                      <input class=\"times context-menu\"
-                                             stamp-id=\"$tempStamp[TIME_OUT]\"
-                                             id=\"$tempStamp[SCHD_ID]\"
-                                             default-time=\"$realTime\"
-                                             type=\"text\"
-                                             value=\"$val\"
-                                             title=\"$tempStamp[5]\">
-                                     </div>";
                 }
+                $timeZone = new DateTimeZone('America/New_York');
+                $realTimeIn = new DateTime($tempStamp[TIME_IN] . ' GMT');
+                $realTimeIn->setTimezone($timeZone);
+                //$realTimeIn = date($timeFormat12, strtotime($tempStamp[TIME_IN]));
+                $realTimeOut = new DateTime($tempStamp[TIME_OUT] . ' GMT');
+                $realTimeOut->setTimezone($timeZone);
+                $tri = ''; //tri stood for something... I forget what though
+                //if (date($dateFormat, $stamp[1]) !== $day) {
+                //    $tri = 'overnight';
+                //}
+                error_log($realTimeIn->getTimestamp(), 0);
+                $valIn = $realTimeIn->format($timeFormat12);
+                $valOut = $realTimeOut->format($timeFormat12);
+                // add the time in
+                $timestampTable .= "<td class=\"droppableTimes times tstable\">
+                                     <div class=\"draggableTimes\">
+                                      <input class=\"times context-menu sched-in sched\"
+                                             stamp-id=\"".$tempStamp[SCHD_ID]."\"
+                                             id=\"".$tempStamp[SCHD_ID]."\"
+                                             default-time=\"\"
+                                             type=\"text\"
+                                             value=\"$valIn\"
+                                             title=\"".$tempStamp[5]."\">
+                                     </div>";
+                // add the time out
+                $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
+                                     <div class=\"draggableTimes\">
+                                      <input class=\"times context-menu sched-out sched\"
+                                             stamp-id=\"".$tempStamp[SCHD_ID]."\"
+                                             id=\"".$tempStamp[SCHD_ID]."\"
+                                             default-time=\"\"
+                                             type=\"text\"
+                                             value=\"$valOut\"
+                                             title=\"".$tempStamp[5]."\">
+                                     </div>";
+            }
             //}
         }
         if ($mode === 2 && !$isLocked && $modifiable) {
