@@ -129,8 +129,9 @@ class SqlStatements
      * @param int :sweek
      * @param int :sday
      */
-    const INSERT_SCHEDULE = 'INSERT INTO employee_schedule (employee_id, schedule_year, schedule_week, schedule_day)
-                                    VALUES (:userid, :syear, :sweek, :sday)';
+    const INSERT_SCHEDULE = 'INSERT INTO employee_schedule (employee_id, schedule_unix) VALUES (:userid, :sched);
+                             INSERT INTO employee_schedule (employee_id, schedule_unix, schedule_pair)
+                                         VALUES (:userid, :sched, LAST_INSERT_ID())';
     /**
      * @param int :userid
      */
