@@ -590,7 +590,6 @@ function getEmployees() {
 
 function fetchSchedule(parameters) {
   var userId = parameters.userId;
-  console.log(parameters.week);
   var week = parameters.week || moment().isoWeek();
   var year = parameters.year || moment().isoWeekYear();
   $.ajax({
