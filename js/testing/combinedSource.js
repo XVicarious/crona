@@ -643,7 +643,6 @@ function createSchedulePair(userId, schedule) {
   var year = schedule.year,
       week = schedule.week,
       day  = parseInt(schedule.day);
-  console.log(year,week,day);
   // adding to sunday technically adds to the previous week
   if (day === 0) {
     console.log('day is 0, fixing');
