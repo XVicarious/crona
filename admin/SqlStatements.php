@@ -123,6 +123,10 @@ class SqlStatements
                                 OR (schedule_week = :sweek - 1 AND schedule_day = 7))
                                 AND schedule_year = :syear
                           ORDER BY schedule_day';
+    // todo: OR it's schedule_pair fulfills those requirements
+    const GET_SCHEDULE_2 = 'SELECT schedule_id, schedule_unix, schedule_pair FROM employee_schedule
+                            WHERE employee_id = :userid
+                            AND (schedule_unix >= :ustart AND schedule_unix <= :uends)';
     /**
      * @param int :userid
      * @param int :syear

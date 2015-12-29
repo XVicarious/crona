@@ -5,8 +5,8 @@ if (sessionCheck()) {
     // Use this to select the starting page
     // todo: fringe cases where the year changes in the middle of the week.  These dates will not be fetched!
     $employee = $_POST['userId'];
-    $year = $_POST['year'];
-    $week = $_POST['week'];
+    $year = $_POST['ustart'];
+    $week = $_POST['uend'];
     $dbh = createPDO();
     $result = null;
     try {
