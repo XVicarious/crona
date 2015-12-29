@@ -3,10 +3,12 @@ var operationMode = getPermissions(),
   picker = [],
   saveTheDate = 0,
   eCounter = 0,
-  mode = '',
+  mode = EditMode.TIMECARD,
   i = 0,
   offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
   offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
+  timeDateFormats = ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z',
+                     'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'],
   companyCodes = [["48N", "HNB Venture Ptrs LLC"],
     ["49C", "Hampton Inn Boston/Natick"],
     ["49D", "Crowne Plaza Boston"],
@@ -82,7 +84,7 @@ $(function() {
     var employeeClass = $(this).attr('class').match(/e-[0-9][\w-]*\b/),
       employeeCounter = 0,
       optionString;
-    employeeClass = praseInt(employeeClass[0].substr(2), 10);
+    employeeClass = parseInt(employeeClass[0].substr(2), 10);
     for (i = 0; i < employeeCounter + 1; i++) {
       if (!rowClear('e-' + i)) {
         $('.e-' + i + ':not(tr)').each(function() {
@@ -107,11 +109,11 @@ $(function() {
     }
   });
   $(document).on('click', '#initial-confirm-add', function() {
-    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter; // Complicated!  Does this even work properly?
-    var isGood = true,
-      toAdd = [],
-      dataString = '',
-      aTempEmployee = [];
+    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter, // Complicated!  Does this even work properly?
+        isGood = true,
+        toAdd = [],
+        dataString = '',
+        aTempEmployee = [];
     for (i = 0; i < toThis; i++) {
       $('input.e-' + i + ',select.e-' + i).each(function() {
         if ($(this).val() === null || !$(this).val().length) {
@@ -196,13 +198,14 @@ $(function() {
     $(this).select();
   });
   $(document).on('keyup', 'input[type=text].times', function(e) {
+    var validTimestamp;
     e.preventDefault();
     if (e.keyCode === $.ui.keyCode.ENTER) {
       $(this).blur();
     } else {
       // todo: this works, however am/pm does not work with this format
-      var validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -' + offsetInHours + '00';
-      $(this).css('color', moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']).isValid() ? 'inherit' : 'red');
+      validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + $(this).val() + ' -' + offsetInHours + '00';
+      $(this).css('color', moment(validTimestamp, timeDateFormats).isValid() ? 'inherit' : 'red');
     }
   });
   $(document).on('keydown', '.times', function(e) {
@@ -253,7 +256,7 @@ $(function() {
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
         validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
-        myMoment = moment(validTimestamp, ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z']);
+        myMoment = moment(validTimestamp, timeDateFormats);
         if (!myMoment.isValid()) {
           return;
         }
@@ -463,8 +466,8 @@ $(function() {
     });
   });
   $(document).on('click', 'td', function() {
-    var trId = $(this).parent().attr('user-id');
-    var year, week;
+    var trId = $(this).parent().attr('user-id'),
+        year, week;
     if (trId) {
       if (mode === EditMode.SCHEDULE) {
         year = moment().isoWeekYear();
