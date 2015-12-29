@@ -24,6 +24,7 @@ sessionCheck();
     <script src="/devel/time/js/lib/jquery.contextMenu.js"></script>
     <script src="/devel/time/js/lib/moment.min.js"></script>
     <script src="/devel/time/js/timeConstants.js"></script>
+    <script src="/devel/time/js/modes.js"></script>
     <script src="/devel/time/js/lib/jquery.pjax.js"></script>
     <script src="/devel/time/js/testing/combinedSource.js"></script>
     <script src="/devel/time/js/admin/adminConsole.js"></script>
