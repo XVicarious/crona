@@ -438,13 +438,13 @@ $(function() {
     }
   });
   $('#view-employees').click(function() {
-    mode = undefined;
+    mode = EditMode.TIMECARD;
     $('a.page-title').text('Crona Timestamp');
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/');
     getEmployees();
   });
   $('#manage-schedules').click(function() {
-    mode = 'schedule';
+    mode = EditMode.SCHEDULE;
     $('a.page-title').text('Crona Timestamp - Schedule');
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/');
     getEmployees();
@@ -466,7 +466,7 @@ $(function() {
     var trId = $(this).parent().attr('user-id');
     var year, week;
     if (trId) {
-      if (mode === 'schedule') {
+      if (mode === EditMode.SCHEDULE) {
         year = moment().isoWeekYear();
         week = moment().isoWeek();
         History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
