@@ -35,7 +35,6 @@ $(function() {
     week,
     year;
   a = a.filter(function(e){return e.replace(/(\r\n|\n|\r)/gm,"");});
-  console.log(a);
   if (operationMode) {
     if (a.length > 3 && a[3] === 'schedule') {
       mode = 'schedule';
@@ -63,9 +62,7 @@ $(function() {
     getEmployee();
   }
   $('.modal-trigger').leanModal();
-  $('#logout-button').click(function() {
-
-  });
+  //$('#logout-button').click(function() {});
   $(document).tooltip();
   $(document).on('click', '#lock-card', function() {
     var timecard = $('#timecard');
@@ -82,14 +79,14 @@ $(function() {
     });
   });
   $(document).on('change', '[class|="e"]', function() {
-    var myeclass = $(this).attr('class').match(/e-[0-9][\w-]*\b/);
-    myeclass = parseInt(myeclass[0].substr(2), 10);
-    for (i = 0; i < eCounter + 1; i++) {
+    var employeeClass = $(this).attr('class').match(/e-[0-9][\w-]*\b/),
+      employeeCounter = 0,
+      optionString;
+    employeeClass = praseInt(employeeClass[0].substr(2), 10);
+    for (i = 0; i < employeeCounter + 1; i++) {
       if (!rowClear('e-' + i)) {
-        $('.e-' + i + ":not(tr)").each(function() {
-          // This on 'if' took me like 5 minutes to figure out.  I AM EXHAUSTED.  Like I could fall asleep right here...
-          // 5:43pm on February 11th 2015
-          if ((!($(this).hasClass('userEmail') || $(this).hasClass('userStart')))) {
+        $('.e-' + i + ':not(tr)').each(function() {
+          if (!($(this).hasClass('userEmail') || $(this).hasClass('userStart'))) {
             if ($(this).val() !== null && $(this).val().length) {
               $(this).removeClass('ui-state-error');
             } else {
@@ -99,11 +96,11 @@ $(function() {
         });
       }
     }
-    if (myeclass === eCounter && eCounter < 10) {
-      eCounter++;
-      $('#timecard').append('<tr class="e-' + eCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + eCounter + '"\/><\/td><td><select class="userCompany browser-default e-' + eCounter + '"><\/select><\/td><td><input class="userDepartment e-' + eCounter + '"><\/input><\/td><td><input maxlength="6" size="6" class="userADPID e-' + eCounter + '" \/><\/td><td><input class="userEmail e-' + eCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + eCounter + '" \/><\/td><\/tr>');
-      var optionString = '<option value="">(none)<\/option>';
-      for (var j = 0; j < companyCodes.length; j++) {
+    if (employeeClass === employeeCounter && employeeCounter < 10) {
+      employeeCounter++;
+      $('#timecard').append('<tr class="e-' + employeeCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + employeeCounter + '"\/><\/td><td><select class="userCompany browser-default e-' + employeeCounter + '"><\/select><\/td><td><input class="userDepartment e-' + employeeCounter + '"><\/input><\/td><td><input maxlength="6" size="6" class="userADPID e-' + employeeCounter + '" \/><\/td><td><input class="userEmail e-' + employeeCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + employeeCounter + '" \/><\/td><\/tr>');
+      optionString = '<option value="">(none)<\/option>';
+      for (j = 0; j < companyCodes.length; j++) {
         optionString += '<option value="' + companyCodes[j][0] + '">[' + companyCodes[j][0] + '] ' + companyCodes[j][1].substring(0, 11) + '...<\/option>';
       }
       $('.userCompany.e-' + i).html(optionString);
@@ -173,23 +170,25 @@ $(function() {
     }
   });
   $(document).on('click', 'button.addButton', function() {
-    var timestamp, validTimestamp, userId, trueTime, thisParent = $(this).parent();
-    if (thisParent.prev().children(':first-child').is('input')) {
-      timestamp = thisParent.prev().children(':first-child').val();
-    } else if (thisParent.next().children(':first-child').is('input')) {
-      timestamp = thisParent.next().children(':first-child').val();
+    var thisParent = $(this).parent(),
+      thisPrevChild = thisParent.prev().children(':first-child'),
+      thisNextChild = thisParent.next().children(':first-child'),
+      userId = $('#timecard').attr('user-id'),
+      timestamp, validTimestamp, trueTime, syear, sweek, sday, momentTime;
+    if (thisPrevChild.is('input')) {
+      timestamp = thisPrevChild.val();
+    } else if (thisNextChild.is('input')) {
+      timestamp = thisNextChild.val();
     }
     validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + timestamp;
-    userId = $('#timecard').attr('user-id');
-    var momentTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a'));
-    if (mode === 'schedule') {
-      var syear = momentTime.format('YYYY');
-      var sweek = parseInt(momentTime.format('W'));
-      var sday  = momentTime.format('d');
-      sweek = parseInt(sweek);
+    momentTime = (moment(validTimestamp, 'YYYY-MM-DD h:m:s a'));
+    if (mode === EditMode.SCHEDULE) {
+      syear = momentTime.isoWeekYear();
+      sweek = momentTime.isoWeek();
+      sday = momentTime.isoWeekday();
       createSchedulePair(userId, {year: syear, week: sweek, day: sday});
-    } else {
-      trueTime = momentTime.format('X');
+    } else if (mode === EditMode.TIMECARD) {
+      trueTime = momentTime.unix();
       createStamp(userId, trueTime);
     }
   });
@@ -589,13 +588,19 @@ function getEmployees() {
 }
 
 function fetchSchedule(parameters) {
-  var userId = parameters.userId;
-  var week = parameters.week || moment().isoWeek();
-  var year = parameters.year || moment().isoWeekYear();
+  var userId = parameters.userId,
+    week = parameters.week || moment().isoWeek(),
+    year = parameters.year || moment().isoWeekYear(),
+    unixStart, unixEnd;
+  var scheduleMoment = moment().isoWeekYear(year).isoWeek(week).isoWeekday(1).hour(0).minute(0).second(0);
+  scheduleMoment.subtract(1, 'days');
+  unixStart = scheduleMoment.unix();
+  scheduleMoment.endOf('week').subtract(1, 'days');
+  unixEnd = scheduleMoment.unix();
   $.ajax({
     type: 'POST',
     url: '/devel/time/admin/get_schedule.php',
-    data: 'userId=' + userId + '&year=' + year + '&week=' + week,
+    data: 'userId=' + userId + '&ustart=' + unixStart + '&uend=' + unixEnd,
     success: function(data) {
       $.ajax({
         type: 'POST',
@@ -641,17 +646,19 @@ function createStamp(userId, stamp) {
 function createSchedulePair(userId, schedule) {
   // schedule = {year: <year>, week: <week>, day: <day>}
   var year = schedule.year,
-      week = schedule.week,
-      day  = parseInt(schedule.day);
+    week = schedule.week,
+    day  = parseInt(schedule.day),
+    scheduleMoment, unixStamp;
   // adding to sunday technically adds to the previous week
   if (day === 0) {
-    console.log('day is 0, fixing');
     day = 7;
   }
+  scheduleMoment = moment().isoWeekYear(year).isoWeek(week).isoWeekday(day).hour(0).minute(0).second(0);
+  unixStamp = scheduleMoment.unix();
   $.ajax({
     type: 'POST',
     url: '/devel/time/admin/timeEdit/add_schedule.php',
-    data: 'userId=' + userId + '&day=' + day + '&week=' + week + '&year=' + year,
+    data: 'userId=' + userId + '&unix=' + unixStamp,
     success: function() {
       fetchSchedule({userId: userId, week: week, year: year});
     }
