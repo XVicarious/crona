@@ -80,89 +80,6 @@ $(function() {
       }
     });
   });
-  $(document).on('change', '[class|="e"]', function() {
-    var employeeClass = $(this).attr('class').match(/e-[0-9][\w-]*\b/),
-      employeeCounter = 0,
-      optionString;
-    employeeClass = parseInt(employeeClass[0].substr(2), 10);
-    for (i = 0; i < employeeCounter + 1; i++) {
-      if (!rowClear('e-' + i)) {
-        $('.e-' + i + ':not(tr)').each(function() {
-          if (!($(this).hasClass('userEmail') || $(this).hasClass('userStart'))) {
-            if ($(this).val() !== null && $(this).val().length) {
-              $(this).removeClass('ui-state-error');
-            } else {
-              $(this).addClass('ui-state-error');
-            }
-          }
-        });
-      }
-    }
-    if (employeeClass === employeeCounter && employeeCounter < 10) {
-      employeeCounter++;
-      $('#timecard').append('<tr class="e-' + employeeCounter + '"><td><input class="userLast e-' + eCounter + '"\/><\/td><td><input class="userFirst e-' + employeeCounter + '"\/><\/td><td><select class="userCompany browser-default e-' + employeeCounter + '"><\/select><\/td><td><input class="userDepartment e-' + employeeCounter + '"><\/input><\/td><td><input maxlength="6" size="6" class="userADPID e-' + employeeCounter + '" \/><\/td><td><input class="userEmail e-' + employeeCounter + '" \/><\/td><td><input maxlength="10" size="10" class="userStart e-' + employeeCounter + '" \/><\/td><\/tr>');
-      optionString = '<option value="">(none)<\/option>';
-      for (j = 0; j < companyCodes.length; j++) {
-        optionString += '<option value="' + companyCodes[j][0] + '">[' + companyCodes[j][0] + '] ' + companyCodes[j][1].substring(0, 11) + '...<\/option>';
-      }
-      $('.userCompany.e-' + i).html(optionString);
-    }
-  });
-  $(document).on('click', '#initial-confirm-add', function() {
-    var toThis = eCounter === 9 ? (rowClear('e-9') ? 9 : 10) : eCounter, // Complicated!  Does this even work properly?
-        isGood = true,
-        toAdd = [],
-        dataString = '',
-        aTempEmployee = [];
-    for (i = 0; i < toThis; i++) {
-      $('input.e-' + i + ',select.e-' + i).each(function() {
-        if ($(this).val() === null || !$(this).val().length) {
-          // we allow userEmail and userStart to be empty, because they have default values
-          // userStart will be today, and userEmail will be derived from the immediate superior's email
-          if (($(this).hasClass('userEmail') || $(this).hasClass('userStart')) && $(this).val().length) {
-            if ($(this).hasClass('userEmail')) {
-              if (!validateEmail($(this).val())) {
-                console.log(i + ' does not have a valid email address');
-                isGood = false;
-              }
-            } else {
-              if (!validMoment($(this).val())) {
-                console.log(i + ' does not have a valid start date');
-                isGood = false;
-              }
-            }
-          }
-        } else {
-          aTempEmployee.push($(this).val());
-        }
-        return true;
-      });
-      toAdd.push(aTempEmployee);
-    }
-    if (!isGood) {
-      return isGood;
-    }
-    // first we need to gather all our information.  if we hit the max number of rows, we want to test if the last row
-    // is empty.  if so, we only want the first 9, otherwise we will take the 10th.  if eCounter is NOT full, we will
-    // just use eCounter, because the first eCounter - 1 rows will NOT be clear, but the last one will always be
-    // we can't do anything if it is empty
-    if (!toAdd.length) {
-      console.log('There is nothing to add');
-      return false;
-    }
-    // now we have to form the string of data
-    for (i = 0; i < toAdd.length; i++) {
-      dataString += (i + '=' + JSON.stringify(toAdd[i]));
-      if (i < toAdd.length - 1) {
-        dataString += '&';
-      }
-    }
-    $.ajax({
-      type: "POST",
-      url: "insert_user.php",
-      data: dataString
-    });
-  });
   $(document).on('change', '#range', function() {
     var userId = $('#timecard').attr('user-id');
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
@@ -451,9 +368,6 @@ $(function() {
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/');
     getEmployees();
   });
-  $('#add-employees').click(function() {
-    addEmployeesAction();
-  });
   $('#system-admin').click(function() {
     $.ajax({
       type: 'POST',
@@ -622,16 +536,6 @@ function getOffsetString() {
     offset = '+' + offset;
   }
   return offset;
-}
-
-function addEmployeesAction() {
-  var optionString = '<option value="">(none)<\/option>';
-  var ajaxDiv = $('#ajaxDiv');
-  ajaxDiv.html('<form><table id="timecard"><tr><th>Last Name<\/th><th>First Name<\/th><th>Company Code<\/th><th>Department Code<\/th><th>ADP ID<\/th><th>Email Address<\/th><th>Start Date<\/th><\/tr><tr class="e-0"><td><input class="userLast e-0"\/><\/td><td><input class="userFirst e-0"\/><\/td><td><select class="userCompany e-0 browser-default"><\/select><\/td><td><input class="userDepartment e-0"><\/input><\/td><td><input class="userADPID e-0" maxlength="6" size="6" \/><\/td><td><input class="userEmail e-0" \/><\/td><td><input maxlength="10" size="10" class="userStart e-0" \/><\/td><\/tr><\/table><\/form><a id="initial-confirm-add" href="#" class="btn green right">Add Employee(s)</a>');
-  for (i = 0; i < companyCodes.length; i++) {
-    optionString += '<option value="' + companyCodes[i][0] + '">[' + companyCodes[i][0] + '] ' + companyCodes[i][1].substring(0, 11) + '...<\/option>';
-  }
-  $('.userCompany.e-0').html(optionString);
 }
 
 function createStamp(userId, stamp) {
