@@ -250,9 +250,7 @@ $(function() {
       stampId = $(this).attr('stamp-id'),
       userId = $('#timecard').attr('user-id'),
       defaultTime = $(this).attr('default-time'),
-      validTimestamp,
-      myMoment,
-      trueTime;
+      validTimestamp, myMoment, trueTime, confirmModal;
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
         validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
@@ -271,7 +269,7 @@ $(function() {
         });
       }
     } else {
-      var confirmModal = $('#dialog');
+      confirmModal = $('#dialog');
       confirmModal.find('.modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
       confirmModal.find('.modal-footer').html(
         '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay<\/a>' +
@@ -330,9 +328,10 @@ $(function() {
             value: $trigger.parent().attr('department-special'),
             events: {
               keyup: function(e) {
+                var stampId, userId;
                 if (e.keyCode === $.ui.keyCode.ENTER) {
-                  var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
-                  var userId = $('#timecard').attr('user-id');
+                  stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
+                  userId = $('#timecard').attr('user-id');
                   $.ajax({
                     type: 'POST',
                     url: '/devel/time/admin/timeEdit/change_department.php',
