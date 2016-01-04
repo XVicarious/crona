@@ -7,35 +7,37 @@ var operationMode = getPermissions(),
   offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
   offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
   timeDateFormats = ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z',
-                     'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'];
-  /*companyCodes = [["48N", "HNB Venture Ptrs LLC"],
-    ["49C", "Hampton Inn Boston/Natick"],
-    ["49D", "Crowne Plaza Boston"],
-    ["49E", "Holiday Inn Somervil"],
-    ["7IS", "Skybokx 109 Natick"],
-    ["9NI", "Hart Hotels DLC, LLC"],
-    ["ANY", "FLH Development, LLC"],
-    ["FB1", "Madison Beach Hotel"],
-    ["GE3", "Distinctive Hospitality Group"],
-    ["GG8", "Seneca Market 1"],
-    ["H4G", "DDH Hotel Mystic LLC"],
-    ["HUG", "ATA Associates"],
-    ["HXH", "Portland Harbor Hotel"],
-    ["KZH", "Clayton Harbor Hotel"],
-    ["L99", "Lenroc, L.P."],
-    ["NPJ", "WPH Midtown Associates"],
-    ["NPM", "WPH Airport Associates"],
-    ["PPP", "Golden Triangle Associates"],
-    ["Q56", "Hart Management Group"],
-    ["RK3", "HBK Restaurant LLC"],
-    ["ZVT", "Twenty Flint Rd LLC"]];*/
+    'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'];
+/*companyCodes = [["48N", "HNB Venture Ptrs LLC"],
+ ["49C", "Hampton Inn Boston/Natick"],
+ ["49D", "Crowne Plaza Boston"],
+ ["49E", "Holiday Inn Somervil"],
+ ["7IS", "Skybokx 109 Natick"],
+ ["9NI", "Hart Hotels DLC, LLC"],
+ ["ANY", "FLH Development, LLC"],
+ ["FB1", "Madison Beach Hotel"],
+ ["GE3", "Distinctive Hospitality Group"],
+ ["GG8", "Seneca Market 1"],
+ ["H4G", "DDH Hotel Mystic LLC"],
+ ["HUG", "ATA Associates"],
+ ["HXH", "Portland Harbor Hotel"],
+ ["KZH", "Clayton Harbor Hotel"],
+ ["L99", "Lenroc, L.P."],
+ ["NPJ", "WPH Midtown Associates"],
+ ["NPM", "WPH Airport Associates"],
+ ["PPP", "Golden Triangle Associates"],
+ ["Q56", "Hart Management Group"],
+ ["RK3", "HBK Restaurant LLC"],
+ ["ZVT", "Twenty Flint Rd LLC"]];*/
 
 $(function() {
   var a = location.pathname.split('/'),
     myInt,
     week,
     year;
-  a = a.filter(function(e){return e.replace(/(\r\n|\n|\r)/gm,"");});
+  a = a.filter(function(e) {
+    return e.replace(/(\r\n|\n|\r)/gm, "");
+  });
   if (operationMode) {
     if (a.length > 3 && a[3] === 'schedule') {
       mode = 'schedule';
@@ -379,7 +381,7 @@ $(function() {
   });
   $(document).on('click', 'td', function() {
     var trId = $(this).parent().attr('user-id'),
-        year, week;
+      year, week;
     if (trId) {
       if (mode === EditMode.SCHEDULE) {
         year = moment().isoWeekYear();
@@ -552,7 +554,7 @@ function createSchedulePair(userId, schedule) {
   // schedule = {year: <year>, week: <week>, day: <day>}
   var year = schedule.year,
     week = schedule.week,
-    day  = parseInt(schedule.day),
+    day = parseInt(schedule.day),
     scheduleMoment, unixStamp;
   // adding to sunday technically adds to the previous week
   if (day === 0) {
