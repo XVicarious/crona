@@ -2,14 +2,13 @@ var operationMode = getPermissions(),
   $inputPicker = [],
   picker = [],
   saveTheDate = 0,
-  eCounter = 0,
   mode = EditMode.TIMECARD,
   i = 0,
   offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
   offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
   timeDateFormats = ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z',
-                     'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'],
-  companyCodes = [["48N", "HNB Venture Ptrs LLC"],
+                     'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'];
+  /*companyCodes = [["48N", "HNB Venture Ptrs LLC"],
     ["49C", "Hampton Inn Boston/Natick"],
     ["49D", "Crowne Plaza Boston"],
     ["49E", "Holiday Inn Somervil"],
@@ -29,7 +28,7 @@ var operationMode = getPermissions(),
     ["PPP", "Golden Triangle Associates"],
     ["Q56", "Hart Management Group"],
     ["RK3", "HBK Restaurant LLC"],
-    ["ZVT", "Twenty Flint Rd LLC"]];
+    ["ZVT", "Twenty Flint Rd LLC"]];*/
 
 $(function() {
   var a = location.pathname.split('/'),
