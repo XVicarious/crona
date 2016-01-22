@@ -519,6 +519,7 @@ function fetchSchedule(parameters) {
     url: '/devel/time/admin/get_schedule.php',
     data: 'userId=' + userId + '&ustart=' + unixStart + '&uend=' + unixEnd,
     success: function(data) {
+      console.log("schedule", data);
       $.ajax({
         type: 'POST',
         url: '/devel/time/admin/build_schedule.php',
