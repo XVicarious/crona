@@ -1,5 +1,5 @@
 <?php
-$startTime = microtime(false);
+$startTime = microtime(true);
 date_default_timezone_set('UTC'); // todo: make timezone configurable
 require 'admin_functions.php';
 include 'SqlStatements.php';
@@ -7,21 +7,16 @@ $dateFormat = 'Y-m-d';
 $timeFormat24 = 'H:i:s';
 $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
-const SCHD_ID = 'schedule_id';
-const TIME_IN = 'schedule_in';
-const TIME_OUT = 'schedule_out';
 if (sessionCheck()) {
     $json = $_POST['timestamps'];
     $mode = 2;
     $timestamps = json_decode($json, true);
     //header('X-PJAX-URL: https://xvss.net/devel/time/admin/schedule/'.$timestamps[0]['userid']);
     $modifiable = true;
-    $sundayYear = $timestamps[0]['year'];
-    $sundayWeek = $timestamps[0]['week'];
     $countStamps = count($timestamps);
     $timestampTable = '<input type="date" id="date0" class="datepicker">
                        <input type="date" id="date1" class="datepicker">
-                       <table id="timecard" user-id="'.$timestamps[0]['userid'].'" year="'.$sundayYear.'" week="'.$sundayWeek.'">
+                       <table id="timecard" user-id="'.$timestamps[0]['userid'].'">
                         <tr id="topTR">
                          <th id="topTH" colspan="100%">
                           '.$timestamps['USER_INFO']['user_first'].' '.$timestamps['USER_INFO']['user_last'].'\'s Timecard
@@ -47,26 +42,32 @@ if (sessionCheck()) {
             $maxStamps = $countT;
         }
     }
+    $day = new DateTime();
     for ($i = 1; $i < $countStamps; ++$i) {
-        $tempStamp = $timestamps[$i];
-        $day = new DateTime();
-        $day->setISODate($sundayYear, $sundayWeek, $tempStamp['schedule_day']);
-        $day = $day->format('Y-m-d');
-        $dayFormatted = date('D m/d', strtotime($day));
-        $timestampTable .= "<tr stamp-day=\"$day\" class=\"dataRow\">";
-        $timestampTable .= "<td class=\"dayCell\" id=\"$day\">$dayFormatted</td>";
-        $timestampCount = count($tempStamp) - 2;
-        if ($timestampCount > 0) {
-            //foreach ($tempStamp as $key => $stamp) {
-            // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
+        $day->setTimestamp($timestamps[$i][0]['schedule_unix']);
+        $date = $day->format($dateFormat);
+        $displayDate = $day->format('D m/d');
+        $timestampTable .= "<tr stamp-day=\"$date\" class=\"dataRow\">";
+        $timestampTable .= "<td class=\"dayCell\" id=\"\">$displayDate</td>";
+        $timestampCount = count($timestamps[$i]) - 2;
+        foreach ($timestamps as $key => $tempStamp) {
+            $day->setTimestamp($tempStamp['schedule_unix']);
+            $stampTime = $day->format($timeFormat12);
             if (is_array($tempStamp)) {
-                //$miss = '';
-                // if the number of timestamps is ODD, and this stamp is the last in the array,
-                // there is a time missing
-                //if ($timestampCount % 2 === 1 && $key === $timestampCount - 1) {
-                //    $miss = 'missingTime';
-                //}
-                //$modifier = $tempStamp[2];
+                $timestampTable .= "<td class=\"droppableTimes times tstable\">
+                                     <div class=\"draggableTimes\">
+                                      <input class=\"times context-menu sched-in sched\"
+                                             stamp-id=\"".$tempStamp['schedule_id']."\"
+                                             id=\"\"
+                                             default-time=\"\"
+                                             type=\"text\"
+                                             value=\"$stampTime\"
+                                             title=\"\">
+                                     </div></td>";
+            }
+        }
+        /*if ($timestampCount > 0) {
+            if (is_array($tempStamp)) {
                 if ($mode === 2 && !$isLocked && $modifiable) {
                     $timestampTable .= "<td class=\"tstable addButton\">
                                              <button class=\"addButton\" type=\"button\">
@@ -75,43 +76,10 @@ if (sessionCheck()) {
                                             </td>";
                 }
                 $timeZone = new DateTimeZone('America/New_York');
-                $realTimeIn = new DateTime($tempStamp[TIME_IN] . ' GMT');
-                $realTimeIn->setTimezone($timeZone);
-                //$realTimeIn = date($timeFormat12, strtotime($tempStamp[TIME_IN]));
-                $realTimeOut = new DateTime($tempStamp[TIME_OUT] . ' GMT');
-                $realTimeOut->setTimezone($timeZone);
-                $tri = ''; //tri stood for something... I forget what though
-                //if (date($dateFormat, $stamp[1]) !== $day) {
-                //    $tri = 'overnight';
-                //}
-                error_log($realTimeIn->getTimestamp(), 0);
-                $valIn = $realTimeIn->format($timeFormat12);
-                $valOut = $realTimeOut->format($timeFormat12);
-                // add the time in
-                $timestampTable .= "<td class=\"droppableTimes times tstable\">
-                                     <div class=\"draggableTimes\">
-                                      <input class=\"times context-menu sched-in sched\"
-                                             stamp-id=\"".$tempStamp[SCHD_ID]."\"
-                                             id=\"".$tempStamp[SCHD_ID]."\"
-                                             default-time=\"\"
-                                             type=\"text\"
-                                             value=\"$valIn\"
-                                             title=\"".$tempStamp[5]."\">
-                                     </div>";
-                // add the time out
-                $timestampTable .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                                     <div class=\"draggableTimes\">
-                                      <input class=\"times context-menu sched-out sched\"
-                                             stamp-id=\"".$tempStamp[SCHD_ID]."\"
-                                             id=\"".$tempStamp[SCHD_ID]."\"
-                                             default-time=\"\"
-                                             type=\"text\"
-                                             value=\"$valOut\"
-                                             title=\"".$tempStamp[5]."\">
-                                     </div>";
+                $stampTime = $day->format($timeFormat12);
+
             }
-            //}
-        }
+        }*/
         if ($mode === 2 && !$isLocked && $modifiable) {
             $colspan = ($maxStamps - $timestampCount + 0.5) * 2;
             $timestampTable .= "<td class=\"addButton after\" colspan=\"$colspan\">
@@ -163,7 +131,7 @@ if (sessionCheck()) {
     $timestampTable .= '</th></tr></table>';
     echo $timestampTable;
 }
-$endTime = microtime(false);
+$endTime = microtime(true);
 $totalTime = $endTime - $startTime;
 $memory = memory_get_usage(true);
 if ($totalTime < 0 || $totalTime >= 1) {
