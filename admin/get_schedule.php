@@ -36,13 +36,6 @@ if (sessionCheck()) {
                 }
             }
         }
-        //$dayArray = ['1','2','3','4','5','6','0'];
-        //foreach ($dayArray as $weekDay) {
-        //    if (array_search($weekDay, array_column($result, 'schedule_day')) === false) {
-        //        array_push($result, ['schedule_day' => $weekDay]);
-        //    }
-        //}
-        //usort($result, 'csort');
         array_unshift($fixedSchedule, ['userid'=>$employee]);
         echo json_encode($fixedSchedule, JSON_NUMERIC_CHECK);
     } catch (PDOException $e) {
@@ -51,16 +44,6 @@ if (sessionCheck()) {
         error_log($e->getMessage(), 0);
         die();
     }
-}
-
-function schErr($user, $message)
-{
-    error_log('get_schedule.php id='.$user.' : '.$message, 0);
-}
-
-function csort($left, $right, $column = 'schedule_day')
-{
-    return $left[$column] > $right[$column];
 }
 
 function searchInArray($needle, $haystack, $key, $strict = false)
