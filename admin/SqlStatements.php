@@ -149,4 +149,43 @@ class SqlStatements
                                                      ON employee_supervisors.user_id = :userid
                                                      WHERE exh_property = employee_supervisors.company_code
                                                      AND exh_department = employee_supervisors.department_id';
+    /**
+     * @param int :questionNumber
+     * @param int :userID
+     */
+    const GET_USER_SECURITY_QUESTIONS = 'SELECT eque_answer FROM employee_questions
+                                         WHERE eque_number = :questionNumber AND eque_user = :userID';
+    /**
+     * @param int :userID
+     * @param string :hashWord
+     * @param int :timeUnix
+     * @param string :salt
+     * @param string :resetString
+     */
+    const INSERT_NEW_USER_PASSWORD = 'INSERT INTO user_hashes (uhsh_user, uhsh_hash, uhsh_created)
+                                      VALUES (:userID, :hashWord, :timeUnix);
+                                      INSERT INTO user_salts (uslt_user, uslt_salt) VALUES (:userID, :salt);
+                                      DELETE FROM reset_list WHERE reset_string = :resetString';
+    /**
+     * @param string :userName
+     */
+    const GET_USER_EMAIL = 'SELECT user_id, user_emails.ueml_email AS user_email FROM employee_list
+                            LEFT JOIN user_emails ON user_email_primary = user_emails.ueml_id
+                            WHERE user_name = :userName';
+    /**
+     * @param int :userID
+     * @param string :resetString
+     */
+    const INSERT_NEW_RESET_STRING = 'DELETE FROM reset_list WHERE reset_uid = :userID;
+                                     INSERT INTO reset_list (reset_uid, reset_string) VALUES (:userID, :resetString);';
+    /**
+     * @param string :resetString
+     */
+    const DELETE_RESET_BY_STRING = 'DELETE FROM reset_list WHERE reset_string = :resetString;';
+    /**
+     * @param int :userID
+     */
+    const SELECT_RANDOM_SECURITY_QUESTION = 'SELECT sque_id, sque_question FROM security_questions WHERE sque_id IN
+                                             (SELECT eque_number FROM employee_questions WHERE eque_user = :userID)
+                                             ORDER BY RAND() LIMIT 1';
 }
