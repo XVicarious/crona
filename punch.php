@@ -26,7 +26,7 @@ if ($_POST) {
                 $data = http_build_query(['function' => 'sendEmail', 'email' => $result['user_email']]);
                 $options = ['http' => ['method' => 'POST', 'content' => $data]];
                 $stream = stream_context_create($options);
-                $fileOpen = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $st);
+                $fileOpen = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $stream);
                 echo 'Password Expired!  A link to reset your password has been sent to your email!';
                 return;
             }
