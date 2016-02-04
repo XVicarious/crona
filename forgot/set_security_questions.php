@@ -30,7 +30,7 @@ $_SESSION["lastAction"] = time();
     $userId = $_SESSION['userId'];
     if (isset($userId)) {
         $a_securityQuestions = [];
-        require 'admin/admin_functions.php';
+        require '../admin/admin_functions.php';
         $sqlConnection = createSql();
         $query = 'SELECT sque_question FROM security_questions';
         $result = mysqli_query($sqlConnection, $query);
