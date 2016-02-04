@@ -6,13 +6,7 @@ function getByName(name) {
 
 $(function() {
   if (getByName('c') === '') {
-    $.ajax({
-      type: 'POST',
-      url: 'resetutil.php',
-      success: function(data) {
-        $('#ajaxDiv').html(data);//.css('width', '286px').css('left', 'calc(50% - 143px)').css('top', 'calc(50% - 32px)');
-      }
-    });
+    $('#ajaxDiv').load('user_email.html');
   } else {
     $.ajax({
       type: 'GET',
@@ -20,7 +14,7 @@ $(function() {
       data: 'c=' + getByName('c'),
       success: function(data) {
         var loginForm = $('#loginForm');
-        $('#ajaxDiv').html(data);//.css('left', 'calc(50% - ' + loginForm.width() / 2 + 'px)').css('top', 'calc(50% - ' + loginForm.height() / 2 + 'px)');
+        $('#ajaxDiv').html(data);
       }
     });
   }
