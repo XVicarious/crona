@@ -20,12 +20,12 @@ $(function() {
   }
   $(document).on('click', '#subby', function() {
     var passwordConfirmationInput = $('#pwc');
-    var email = $('#email').val();
+    var email = $('#email').val(), username = $('#username').val();
     if ($('div#semail').length) {
       $.ajax({
         type: 'POST',
         url: 'resetutil.php',
-        data: 'email=' + email + '&function=sendEmail',
+        data: 'username=' + username + 'email=' + email + '&function=sendEmail',
         success: function() {
           Materialize.toast("If a user with that email exists, an email has been dispatched with a link to reset your" +
                             " password.",5000);
