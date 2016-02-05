@@ -2,7 +2,6 @@
 require '../function.php';
 require '../admin/admin_functions.php';
 require '../admin/SqlStatements.php';
-$sqlConnection = createSql();
 $function = $_POST['function'];
 if (isset($function)) {
     if ($function === 'checkReset') {
@@ -132,4 +131,3 @@ if (isset($function)) {
         }
     }
 }
-mysqli_close($sqlConnection);
