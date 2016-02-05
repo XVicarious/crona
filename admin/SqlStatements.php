@@ -194,4 +194,10 @@ class SqlStatements
     const GET_USER_ID_FROM_USERNAME_EMAIL = 'SELECT user_id FROM employee_list
                                              LEFT JOIN user_emails ON user_email_primary = user_emails.ueml_id
                                              WHERE user_name = :username AND user_emails.ueml_email = :email';
+    /**
+     * @param string :resetString
+     */
+    const GET_RESET_INFORMATION = 'SELECT reset_uid,reset_string,reset_date FROM reset_list
+                                   WHERE reset_string = :resetString';
+
 }
