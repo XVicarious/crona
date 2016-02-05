@@ -116,9 +116,5 @@ if (isset($function)) {
     } else {
         echo 'Invalid reset link.';
     }
-} elseif (!isset($_GET['c'])) {
-    // moved to user_email.html
-    // figure out how you want to put it back here.
-    // I feel like JavaScript and $().load would be good.
 }
 mysqli_close($sqlConnection);
