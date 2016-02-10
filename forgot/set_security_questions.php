@@ -29,71 +29,59 @@ $_SESSION["lastAction"] = time();
     <?php
     $userId = $_SESSION['userId'];
     if (isset($userId)) {
-        $a_securityQuestions = [];
         require '../admin/admin_functions.php';
-        $sqlConnection = createSql();
-        $query = 'SELECT sque_question FROM security_questions';
-        $result = mysqli_query($sqlConnection, $query);
-        while (list($question) = mysqli_fetch_row($result)) {
-            array_push($a_securityQuestions, $question);
-        }
-        $h_sel1 = '<select id="s1" name="securityQuestion1" class="browser-default">';
-        $h_sel2 = '<select id="s2" name="securityQuestion2" class="browser-default">';
-        $h_sel3 = '<select id="s3" name="securityQuestion3" class="browser-default">';
-        $html_select = '';
-        for ($i = 0; $i < count($a_securityQuestions); ++$i) {
-            $html_select .= "<option value=\"$i\">" . $a_securityQuestions[$i] . '</option>';
-        }
-        $html_select .= '</select>';
-        echo '<div class="container">
-               <div class="row">
-                <div class="col s12 l8 offset-l2">
+        require '../admin/SqlStatements.php';
+        $dbh = createPDO();
+        try {
+            $stmt = $dbh->prepare(SqlStatements::GET_ALL_QUESTIONS);
+            $stmt->execute();
+            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $h_sel1 = '<select id="s1" name="securityQuestion1" class="browser-default">';
+            $h_sel2 = '<select id="s2" name="securityQuestion2" class="browser-default">';
+            $h_sel3 = '<select id="s3" name="securityQuestion3" class="browser-default">';
+            $html_select = '';
+            foreach ($result as $key => $value) {
+                $html_select .= "<option value=\"$key\">".$value['sque_question'].'</option>';
+            }
+            $html_select .= '</select>';
+            echo '<div class="container">
+               <div class="row"><div class="col s12 l8 offset-l2">
                  '.$h_sel1.$html_select.'
-                </div>
-               </div>
+               </div></div>
                <div class="row">
-                <div class="col s6 l4 offset-l2">
-                 <input id="s1i" name="s1i" type="password">
-                </div>
-                <div class="col s6 l4">
-                 <input id="s1ic" name="s1ic" type="password">
-                </div>
+                <div class="col s6 l4 offset-l2"><input id="s1i" name="s1i" type="password"></div>
+                <div class="col s6 l4"><input id="s1ic" name="s1ic" type="password"></div>
                </div>
-               <div class="row">
-                <div class="col s12 l8 offset-l2">
+               <div class="row"><div class="col s12 l8 offset-l2">
                  '.$h_sel2.$html_select.'
-                </div>
-               </div>
+               </div></div>
                <div class="row">
-                <div class="col s6 l4 offset-l2">
-                 <input id="s2i" name="s2i" type="password">
-                </div>
-                <div class="col s6 l4">
-                 <input id="s2ic" name="s2ic" type="password">
-                </div>
+                <div class="col s6 l4 offset-l2"><input id="s2i" name="s2i" type="password"></div>
+                <div class="col s6 l4"><input id="s2ic" name="s2ic" type="password"></div>
                </div>
-               <div class="row">
-                <div class="col s12 l8 offset-l2">
+               <div class="row"><div class="col s12 l8 offset-l2">
                  '.$h_sel3.$html_select.'
-                </div>
+               </div></div>
+               <div class="row">
+                <div class="col s6 l4 offset-l2"><input id="s3i" name="s3i" type="password"></div>
+                <div class="col s6 l4"><input id="s3ic" name="s3ic" type="password"></div>
                </div>
                <div class="row">
-                <div class="col s6 l4 offset-l2">
-                 <input id="s3i" name="s3i" type="password">
-                </div>
-                <div class="col s6 l4">
-                 <input id="s3ic" name="s3ic" type="password">
-                </div>
-               </div>
-               <div class="row">
-                <div class="col s12 l8 offset-l2">
-                 <div class="center">
+                <div class="col s12 l8 offset-l2"><div class="center">
                   <a href="#" id="submit" class="btn cyan lighten-1">Save Answers <i class="mdi-content-save right"></i></a>
-                 </div>
-                </div>
+                </div></div>
                </div>
               </div>';
-        mysqli_close($sqlConnection);
+        } catch (PDOException $e) {
+            error_log($e->getMessage(), 0);
+        } catch (Exception $e) {
+            error_log($e->getMessage(), 0);
+        } finally {
+            $dbh = null;
+            if (!$success) {
+                die();
+            }
+        }
     }
     ?>
 </main>

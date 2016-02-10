@@ -199,5 +199,8 @@ class SqlStatements
      */
     const GET_RESET_INFORMATION = 'SELECT reset_uid,reset_string,reset_date FROM reset_list
                                    WHERE reset_string = :resetString';
-
+    /**
+     * Just get all the security questions.
+     */
+    const GET_ALL_QUESTIONS = 'SELECT sque_question FROM security_questions';
 }
