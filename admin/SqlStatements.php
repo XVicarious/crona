@@ -203,4 +203,17 @@ class SqlStatements
      * Just get all the security questions.
      */
     const GET_ALL_QUESTIONS = 'SELECT sque_question FROM security_questions';
+    /**
+     * @param int :userID
+     * @param int :questionOne
+     * @param int :questionTwo
+     * @param int :questionThree
+     * @param string :answerOne
+     * @param string :answerTwo
+     * @param string : answerThree
+     */
+    const INSERT_SECURITY_ANSWERS = 'INSERT INTO employee_questions (eque_number, eque_answer, eque_user)
+                                     VALUES (:questionOne,   :answerOne,   :userID),
+                                            (:questionTwo,   :answerTwo,   :userID),
+                                            (:questionThree, :answerThree, :userID);';
 }
