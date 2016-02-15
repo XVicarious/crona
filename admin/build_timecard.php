@@ -14,7 +14,6 @@ if (sessionCheck()) {
     $firstDate = $timestamps[0]['date'];
     $modifiable = true;
     if (count($timestamps) > 8) {
-        pre($timestamps);
         $modifiable = false;
     }
     $sundayYear = 0;
