@@ -1,5 +1,12 @@
+var VK_ENTER = 13;
 $(function() {
   $('select').material_select();
+  $(document).keyup(function(e){
+    if (e.which === VK_ENTER) {
+      e.preventDefault();
+      $('#submit-button').click();
+    }
+  });
   $('#submit-button').click(function() {
     var username = $('#uname'),
       password = $('input#drowp'),
