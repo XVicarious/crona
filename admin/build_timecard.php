@@ -79,7 +79,6 @@ if (sessionCheck()) {
         $timestampCount = count($tempStamp) - 2;
         if ($timestampCount > 0) {
             foreach ($tempStamp as $key => $stamp) {
-                pre($stamp);
                 // ['date'] counts as a stamp according to stuff, so we need to make sure we select an array!
                 if (is_array($stamp)) {
                     $miss = '';
