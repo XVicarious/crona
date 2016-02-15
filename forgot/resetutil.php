@@ -49,7 +49,7 @@ if (isset($function)) {
         $dbh = createPDO();
         $success = false;
         try {
-            $stmt = $dbh->prepare(SqlStatements::GET_USER_ID_FROM_USERNAME_EMAIL, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
+            $stmt = $dbh->prepare(SqlStatements::GET_USER_ID_FROM_USERNAME_EMAIL);
             $stmt->bindParam(':email', $email, PDO::PARAM_STR);
             $stmt->bindParam(':username', $username, PDO::PARAM_STR);
             $stmt->execute();
@@ -57,6 +57,7 @@ if (isset($function)) {
             if (count($result) > 0) {
                 $userID = $result[0]['user_id'];
                 $stmt = $dbh->prepare(SqlStatements::INSERT_NEW_RESET_STRING);
+                $stmt->bindParam(':userID', $userID, PDO::PARAM_INT);
                 $stmt->bindParam(':resetString', $resetString, PDO::PARAM_STR);
                 $stmt->execute();
                 $message = "Dear $username,\nPlease follow the following link to reset your password to the timestamp
@@ -100,12 +101,14 @@ if (isset($function)) {
                 echo 'The password reset link you gave has expired, please request a new password reset.';
                 return;
             } else {
+                $uid = $result['reset_uid'];
                 $stmt = $dbh->prepare(SqlStatements::SELECT_RANDOM_SECURITY_QUESTION);
                 $stmt->bindParam(':userID', $uid, PDO::PARAM_INT);
                 $stmt->execute();
-                $result = $stmt->fetchAll(PDO::FETCH_ASSOC)[0];
+                $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                $result = $result[0];
                 $securityQuestion = $result['sque_question'];
-                $securityId = 'sec_0'; // need to figure all this junk out...
+                $securityId = $result['sque_id'];
                 echo '<div id="rpassword" style="position:absolute;display:block"><form style="background-color:white">
               <input id="uid" type=hidden name="user" value="' . $uid . '"><input type=hidden name="function"
               value="checkReset"><table id="loginForm" style="border:solid thin black;table-layout:fixed;
