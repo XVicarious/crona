@@ -46,13 +46,13 @@ $(function() {
         myInt = parseInt(a[4]);
 
         // next is 7 because we want both the year and week
-        if (a.length > 6) {
+        /*if (a.length > 6) {
           year = parseInt(a[5]);
           week = parseInt(a[6]);
-          fetchSchedule({userId: myInt, year: year, week: week});
+          //fetchSchedule({userId: myInt, year: year, week: week});
         } else {
           fetchSchedule({userId: myInt});
-        }
+        }*/
       } else {
         getEmployees();
       }
@@ -363,12 +363,12 @@ $(function() {
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/');
     getEmployees();
   });
-  $('#manage-schedules').click(function() {
+  /*$('#manage-schedules').click(function() {
     mode = EditMode.SCHEDULE;
     $('a.page-title').text('Crona Timestamp - Schedule');
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/');
     getEmployees();
-  });
+  });*/
   $('#system-admin').click(function() {
     $.ajax({
       type: 'POST',
@@ -384,10 +384,10 @@ $(function() {
       year, week;
     if (trId) {
       if (mode === EditMode.SCHEDULE) {
-        year = moment().isoWeekYear();
-        week = moment().isoWeek();
-        History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
-        fetchSchedule({userId: trId, year: year, week: week});
+        //year = moment().isoWeekYear();
+        //week = moment().isoWeek();
+        //History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
+        //fetchSchedule({userId: trId, year: year, week: week});
       } else {
         getEmployee({id: trId});
       }
@@ -504,7 +504,7 @@ function getEmployees() {
   });
 }
 
-function fetchSchedule(parameters) {
+/*function fetchSchedule(parameters) {
   var userId = parameters.userId,
     week = parameters.week || moment().isoWeek(),
     year = parameters.year || moment().isoWeekYear(),
@@ -530,7 +530,7 @@ function fetchSchedule(parameters) {
       });
     }
   });
-}
+}*/
 
 function getOffsetString() {
   var offset = moment().utcOffset();
@@ -551,7 +551,7 @@ function createStamp(userId, stamp) {
   });
 }
 
-function createSchedulePair(userId, schedule) {
+/*function createSchedulePair(userId, schedule) {
   // schedule = {year: <year>, week: <week>, day: <day>}
   var year = schedule.year,
     week = schedule.week,
@@ -571,12 +571,12 @@ function createSchedulePair(userId, schedule) {
       fetchSchedule({userId: userId, week: week, year: year});
     }
   });
-}
+}*/
 
-function generateExceptions() {
+/*function generateExceptions() {
   $.ajax({
     type: 'POST',
     data: 'exceptionMode=gather',
     url: '/devel/time/admin/generate_exceptions.php'
   });
-}
+}*/

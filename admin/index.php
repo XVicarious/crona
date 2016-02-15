@@ -82,12 +82,12 @@ sessionCheck();
                 <span class="badge">0</span>
             </a>
         </li>
-        <li class="bold">
+        <!--<li class="bold">
             <a href="#" id="manage-schedules" class="waves-effect waves-light">Manage Schedules</a>
-        </li>
-        <li class="bold">
+        </li>-->
+        <!--<li class="bold">
             <a href="#" id="add-employees" class="waves-effect waves-light">Add Employees</a>
-        </li>
+        </li>-->
         <li class="bold">
             <a href="#" id="system-admin" class="waves-effect waves-light">System Administration</a>
         </li>
@@ -158,14 +158,11 @@ sessionCheck();
 </div>
 <div id="about-log" class="modal">
     <div class="modal-content">
-        <h4 class="modal-title">About Crona</h4>
+        <h4 class="modal-title">About Crona v0.3</h4>
         <p class="modal-text">
             Crona was written by Brian Maurer.  It uses technologies such as Javascript and PHP to create a quick and
             flexible timecard management system.
-            Crona uses libraries such as <a href="https://jquery.com/">jQuery</a>,
-            <a href="https://github.com/jashkenas/underscore">Underscore</a>,
-            <a href="https://github.com/jashkenas/backbone/">Backbone</a>, and
-            <a href="https://github.com/wyuenho/backgrid">Backgrid</a> to acomplish this.
+            Crona uses libraries such as <a href="https://jquery.com/">jQuery</a> to acomplish this.
             <a href="https://github.com/Dogfalo/materialize">Materialize</a> was used for the UI of Crona, and to make
             it mobile responsive.
             <br /><br />
@@ -174,6 +171,8 @@ sessionCheck();
             <hr />
             <ul class="collection with-header">
                 <li class="collection-header"><h6>Known Bugs</h6></li>
+                <li class="collection-header">All of these are currently being investigated.  They will be fixed as soon
+                    as possible.</li>
                 <li class="yellow lighten-4 collection-item">If the menu is opened while Crona's window is small, when
                     the window is made bigger the menu disappears until you resize it again.</li>
                 <li class="yellow lighten-4 collection-item">When Crona's window is small (or on mobile), the menu will
@@ -181,6 +180,9 @@ sessionCheck();
                 <li class="yellow lighten-4 collection-item">Logout button overlays the username</li>
                 <li class="yellow lighten-4 collection-item">If you are timed out, clicking "logout" will not bring
                     you to the signin screen.</li>
+                <li class="yellow lighten-4 collection-item">"Specific Date" and "Specific Period" are offset by 1.  To
+                    get the correct range you want: for Specific Date, click on the day before the one you want.  For
+                    Specific Period, choose the date before on both selections.</li>
             </ul>
             <ul class="collection with-header">
                 <li class="collection-header"><h6>Features In Development</h6></li>
