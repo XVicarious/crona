@@ -25,7 +25,7 @@ $(function() {
       $.ajax({
         type: 'POST',
         url: 'resetutil.php',
-        data: 'username=' + username + 'email=' + email + '&function=sendEmail',
+        data: 'username=' + username + '&email=' + email + '&function=sendEmail',
         success: function() {
           Materialize.toast("If a user with that email exists, an email has been dispatched with a link to reset your" +
                             " password.",5000);
