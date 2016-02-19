@@ -13,6 +13,7 @@ if (sessionCheck()) {
         $stmt->execute();
         // todo: get old department, if any
         logTransaction($dbh, $stampId, 'DEPT', 0, $department);
+        $success = true;
     } catch (PDOException $e) {
         error_log($e->getMessage(), 0);
     } catch (Exception $e) {
