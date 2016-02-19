@@ -6,6 +6,7 @@ $sqlConnection = createSql();
 $administrativeId = $_SESSION['userId'];
 $exportCompany = $_GET['companyCode'];
 if (isset($administrativeId)) {
+    // todo: this query has been rewritten for PDO, just need to implement it
     $query = "SELECT CASE WHEN EXISTS (
                   SELECT user_id FROM employee_supervisors
                   WHERE user_id = $administrativeId AND company_code = \"$exportCompany\"
@@ -14,7 +15,8 @@ if (isset($administrativeId)) {
     $adminResults = mysqli_query($sqlConnection, $query);
     list($isTrue) = mysqli_fetch_row($adminResults);
     //fixme: should I convert this ($isTrue) to an integer before I do this? Currently it is a string.
-    if ($isTrue == 1) {
+    if (intval($isTrue) == 1) {
+        // todo: this query has been rewritten for PDO, just need to implement it
         $peopleResults = mysqli_query($sqlConnection, "SELECT user_id,user_adpid FROM employee_list
                                                        WHERE user_companycode = '$exportCompany'");
         $dateFormat = 'Y-m-d H:i:s';

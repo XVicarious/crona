@@ -221,4 +221,17 @@ class SqlStatements
      * @param int :stampID
      */
     const CHANGE_DEPARTMENT = 'UPDATE timestamp_list SET stamp_department = :department WHERE stamp_id = :stampID';
+    /**
+     * @param int :userID
+     * @param string :companyCode
+     */
+    const IS_USER_ADMIN_OF_COMPANY = 'SELECT CASE WHEN EXISTS (
+                                       SELECT user_id FROM employee_supervisors
+                                       WHERE user_id = :userID and company_code = :companyCode
+                                      ) THEN 1 ELSE 0 END AS rowExists';
+    /**
+     * @param string :companyCode
+     */
+    const GET_EMPLOYEES_FROM_COMPANY = 'SELECT user_id, user_adpid FROM employee_list
+                                        WHERE user_companycode = :companyCode';
 }
