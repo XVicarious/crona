@@ -216,4 +216,9 @@ class SqlStatements
                                      VALUES (:questionOne,   :answerOne,   :userID),
                                             (:questionTwo,   :answerTwo,   :userID),
                                             (:questionThree, :answerThree, :userID);';
+    /**
+     * @param int :department
+     * @param int :stampID
+     */
+    const CHANGE_DEPARTMENT = 'UPDATE timestamp_list SET stamp_department = :department WHERE stamp_id = :stampID';
 }
