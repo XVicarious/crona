@@ -3,13 +3,10 @@
     <meta name="theme-color" content="#ff9800">
     <title>Crona Timestamp Login</title>
     <link rel="shortcut icon" href="favicon.ico"/>
-    <link rel="stylesheet" href="css/materialize.css">
+    <link rel="stylesheet" href="css/materialize.min.css">
     <link rel="stylesheet" href="css/material-extra.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="css/sticky-footer.css">
-    <script src="js/lib/jquery.js"></script>
-    <script src="js/lib/materialize.js"></script>
-    <script src="js/timeSubmit.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body>
@@ -52,7 +49,7 @@
         <div class="row">
             <div class="col s12 l6 offset-l3">
                 <div class="center">
-                    <a class="blue lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="mdi-action-lock-open right"></i></a>
+                    <a class="blue lighten-1 waves-effect waves-light btn-large" id="submit-button">Sign in<i class="material-icons right">lock_open</i></a>
                 </div>
             </div>
         </div>
@@ -82,5 +79,8 @@
         <a href="#" class="waves-effect waves-orange btn-flat modal-action modal-close">Okay</a>
     </div>
 </div>
+<script src="js/lib/jquery.js"></script>
+<script src="js/lib/materialize.js"></script>
+<script src="js/timeSubmit.js"></script>
 </body>
 </html>

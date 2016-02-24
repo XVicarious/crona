@@ -7,27 +7,13 @@ sessionCheck();
 <head>
     <title></title>
     <link rel="shortcut icon" href="/favicon.ico"/>
-    <link rel="stylesheet" href="/devel/time/css/jquery.contextMenu.css">
-    <link rel="stylesheet" href="/devel/time/css/jquery-ui.min.css">
-    <link rel="stylesheet" href="/devel/time/css/material-extra.css">
-    <link rel="stylesheet" href="/devel/time/css/xvss-logo.css">
-    <link rel="stylesheet" href="/devel/time/css/timecard.css">
-    <link rel="stylesheet" href="/devel/time/css/cellCases.css">
-    <link rel="stylesheet" href="/devel/time/css/sticky-footer.css">
-    <link rel="stylesheet" href="/devel/time/css/materialize.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/jquery.ui.contextMenu.min.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/material-extra.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/admin.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/sticky-footer.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <script src="/devel/time/js/lib/jquery.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled-uncompressed/html4+html5/jquery.history.js"></script>
-    <script src="/devel/time/js/lib/materialize.js?v=0.97"></script>
-    <script src="/devel/time/js/lib/jquery-ui.js"></script>
-    <script src="/devel/time/js/lib/jquery.contextMenu.js"></script>
-    <script src="/devel/time/js/lib/moment.min.js"></script>
-    <script src="/devel/time/js/timeConstants.js"></script>
-    <script src="/devel/time/js/modes.js"></script>
-    <script src="/devel/time/js/lib/jquery.pjax.js"></script>
-    <script src="/devel/time/js/testing/combinedSource.js"></script>
-    <script src="/devel/time/js/admin/adminConsole.js"></script>
     <script>
         $(function() {
             $('.button-collapse').sideNav();
@@ -57,7 +43,7 @@ sessionCheck();
         <li class="user-details orange">
             <div class="row">
                 <div class="col s4 m4 l4">
-                    <img alt class="circle responsive-img valign profile-image" src="/devel/time/images/generic_profile_image.png">
+                    <img alt class="circle responsive-img valign profile-image" src="https://xvicario.us/static/images/generic_profile_image.png">
                 </div>
                 <div class="col s8 m8 l8">
                     <a class="btn-flat dropdown-button white-text profile-button" href="#"
@@ -197,5 +183,16 @@ sessionCheck();
         </p>
     </div>
 </div>
+<script src="/devel/time/js/lib/jquery.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/history.js/1.8/bundled-uncompressed/html4+html5/jquery.history.js"></script>
+<script src="/devel/time/js/lib/materialize.js?v=0.97"></script>
+<script src="/devel/time/js/lib/jquery-ui.js"></script>
+<script src="/devel/time/js/lib/jquery.contextMenu.js"></script>
+<script src="/devel/time/js/lib/moment.min.js"></script>
+<script src="/devel/time/js/timeConstants.js"></script>
+<script src="/devel/time/js/modes.js"></script>
+<script src="/devel/time/js/lib/jquery.pjax.js"></script>
+<script src="/devel/time/js/testing/combinedSource.js"></script>
+<script src="/devel/time/js/admin/adminConsole.js"></script>
 </body>
 </html>
