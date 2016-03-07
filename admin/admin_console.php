@@ -6,7 +6,7 @@ $settings = json_decode($jsonString, true);
 ?>
 <ul class="collapsible popout" data-collapsible="accordion">
     <li>
-        <div class="collapsible-header active"><i class="mdi-action-schedule"></i>Timestamp Thresholds</div>
+        <div class="collapsible-header active"><i class="material-icons">schedule</i>Timestamp Thresholds</div>
         <div class="collapsible-body">
             <p>
             Stamp In Thresholds:<br/>
@@ -21,19 +21,19 @@ $settings = json_decode($jsonString, true);
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="mdi-communication-vpn-key"></i>Password Requirements</div>
+        <div class="collapsible-header"><i class="material-icons">vpn_key</i>Password Requirements</div>
         <div class="collapsible-body">
             NYI
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="mdi-image-timelapse"></i>Timezone Settings</div>
+        <div class="collapsible-header"><i class="material-icons">timelapse</i>Timezone Settings</div>
         <div class="collapsible-body">
             NYI
         </div>
     </li>
     <li>
-        <div class="collapsible-header"><i class="mdi-action-receipt"></i>Administration Logs</div>
+        <div class="collapsible-header"><i class="material-icons">receipt</i>Administration Logs</div>
         <div class="collapsible-body">
             <a class="cyan lighten-1 waves-effect waves-light btn" id="modlog-button">Open Modification Log</a><br/>
             <a class="cyan lighten-1 waves-effect waves-light btn" id="timestamp-button">Open Timestamp Log</a>
