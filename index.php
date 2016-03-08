@@ -2,11 +2,11 @@
 <head>
     <meta name="theme-color" content="#ff9800">
     <title>Crona Timestamp Login</title>
-    <link rel="shortcut icon" href="favicon.ico"/>
-    <link rel="stylesheet" href="css/materialize.min.css">
-    <link rel="stylesheet" href="css/material-extra.css">
+    <link rel="shortcut icon" href="https://xvicario.us/static/images/favicon.ico"/>
+    <link rel="stylesheet" href="https://xvicario.us/static/css/materialize.min.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/common.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/login.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="css/sticky-footer.css">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 </head>
 <body>

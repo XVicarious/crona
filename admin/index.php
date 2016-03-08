@@ -6,12 +6,11 @@ sessionCheck();
 <html>
 <head>
     <title></title>
-    <link rel="shortcut icon" href="/favicon.ico"/>
+    <link rel="shortcut icon" href="https://xvicario.us/static/images/favicon.ico"/>
     <link rel="stylesheet" href="https://xvicario.us/static/css/jquery.ui.contextMenu.min.css">
-    <link rel="stylesheet" href="https://xvicario.us/static/css/material-extra.css">
-    <link rel="stylesheet" href="https://xvicario.us/static/css/admin.css">
-    <link rel="stylesheet" href="https://xvicario.us/static/css/sticky-footer.css">
     <link rel="stylesheet" href="https://xvicario.us/static/css/materialize.min.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/common.css">
+    <link rel="stylesheet" href="https://xvicario.us/static/css/admin.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
     <script>

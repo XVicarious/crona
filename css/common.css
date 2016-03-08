@@ -1,0 +1,22 @@
+nav .nav-wrapper {
+    text-align: center
+}
+
+main {
+    padding-bottom: 20px !important;
+	flex: 1 0 auto
+}
+
+footer {
+    margin-top: -20px !important
+}
+
+div.col.s12 {
+    padding-top: 0.75rem
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column
+}
