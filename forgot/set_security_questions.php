@@ -67,7 +67,9 @@ $_SESSION["lastAction"] = time();
                </div>
                <div class="row">
                 <div class="col s12 l8 offset-l2"><div class="center">
-                  <a href="#" id="submit" class="btn cyan lighten-1">Save Answers <i class="mdi-content-save right"></i></a>
+                  <a href="#" id="submit" class="btn cyan lighten-1">Save Answers
+                   <i class="mdi-content-save right"></i>
+                  </a>
                 </div></div>
                </div>
               </div>';

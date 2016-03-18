@@ -115,8 +115,8 @@ if (isset($function)) {
               font-family:monospace"><tr></tr><tr><td>' . $securityQuestion . "</td><td>
               <input id=\"answer\" name=\"answer\" type=password></td></tr><tr><td>New Password:<input type=hidden
               id=\"resetId\" name=\"resetId\" value=\"$resetString\"><input id=\"qid\" type=hidden name=\"qid\"
-              value=\"$securityId\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td><td>
-              <input id=\"pwc\" type=password name=\"pword\"></td></tr><tr><th colspan=\"3\"><input id=\"subby\"
+              value=\"$securityId\"></td><td><input id=\"pw\" type=password></td></tr><tr><td>Confirm New Password:</td>
+              <td><input id=\"pwc\" type=password name=\"pword\"></td></tr><tr><th colspan=\"3\"><input id=\"subby\"
               style=\"width:100%\" type=submit value=\"Submit\"></th></tr></table></form></div>";
             }
         } else {

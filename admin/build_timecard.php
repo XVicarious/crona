@@ -45,7 +45,8 @@ if (sessionCheck()) {
     $countStamps = count($timestamps);
     $timestampTable = '<input type="date" id="date0" class="datepicker">
                        <input type="date" id="date1" class="datepicker">
-                       <table id="timecard" user-id="'.$timestamps['USER_INFO']['user_id'].'" year="'.$sundayYear.'" week="'.$sundayWeek.'">
+                       <table id="timecard" user-id="'.$timestamps['USER_INFO']['user_id'].'"
+                              year="'.$sundayYear.'" week="'.$sundayWeek.'">
                         <tr id="topTR">
                          <th id="topTH" colspan="100%">
                           '.$timestamps['USER_INFO']['user_first'].' '.$timestamps['USER_INFO']['user_last'].'\'s Timecard

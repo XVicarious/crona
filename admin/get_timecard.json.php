@@ -53,9 +53,12 @@ if (sessionCheck()) {
                 $thisTime = date($timeFormat12, $tslTime);
                 $thisUnix = date('U', $tslTime);
                 if ($timestamps[$i]['date'] === $thisDay || in_array($timestamp['stamp_partner'], $stamps)) {
-                    // push things for the current day.  they can either be actually for this day, or reference stamps from it
+                    // push things for the current day.  they can either be actually for this day,
+                    // or reference stamps from it
                     $timestampsCount = count($timestamps) - 1;
-                    array_push($timestamps[$i], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'], $timestamp['stamp_department'], $timestamp['stamp_partner'], $timestamp['tsl_comment']]);
+                    array_push($timestamps[$i], [$timestamp['stamp_id'], $thisUnix, $timestamp['stamp_special'],
+                                                 $timestamp['stamp_department'], $timestamp['stamp_partner'],
+                                                 $timestamp['tsl_comment']]);
                 }
             }
             array_push($stamps, $timestamp['stamp_id']);
