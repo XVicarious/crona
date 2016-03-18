@@ -42,7 +42,8 @@ sessionCheck();
         <li class="user-details orange">
             <div class="row">
                 <div class="col s4 m4 l4">
-                    <img alt class="circle responsive-img valign profile-image" src="https://xvicario.us/static/images/generic_profile_image.png">
+                    <img alt class="circle responsive-img valign profile-image"
+                         src="https://xvicario.us/static/images/generic_profile_image.png">
                 </div>
                 <div class="col s8 m8 l8">
                     <a class="btn-flat dropdown-button white-text profile-button" href="#"

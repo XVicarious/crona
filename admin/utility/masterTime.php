@@ -159,7 +159,8 @@ if (sessionCheck()) {
                     }
                 }
                 $echoMe .= "<td class=\"droppableTimes times tstable $tri $miss\">
-                             <input readonly disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\" id=\"$stamp[0]\" type=\"text\" value=\"$val\"></div>
+                             <input readonly disabled class=\"times context-menu\" stamp-id=\"$stamp[0]\"
+                                    id=\"$stamp[0]\" type=\"text\" value=\"$val\"></div>
                             </td>";
                 if ($key % 2) {
                     array_push($timeOut, $stamp[1]);
@@ -184,7 +185,6 @@ if (sessionCheck()) {
         $echoMe .= '</tr>';
         $runningTotal += $timeTotal;
     }
-    //$echoMe .= '<tr class="dataRow"><td class="newDate after" colspan="100%"><input class="newDate after" type="button" value="+"</td></tr>';
     $push = $maxStamps;
     $echoMe .= "<tr class=\"dataRow\"><td colspan=\"$push\"></td><td class=\"dailyHours\">";
     $echoMe .= number_format($runningTotal, 2);
@@ -192,4 +192,6 @@ if (sessionCheck()) {
     $echoMe .= '</table>';
     mysqli_close($sqlConnection);
     echo $echoMe;
-} else { echo "You are not authorized to access this information."; }
+} else {
+    echo "You are not authorized to access this information.";
+}

@@ -23,9 +23,10 @@ function getEmployee(parameters) {
     url: 'masterTime.php',
     data: 'range=' + range + extraString + '&id=' + id,
     success: function(data) {
+      var datepicker, secondDate;
       $('#ajaxDiv').html(data);
-      var datepicker = $('#date0');
-      var secondDate = $('#date1');
+      datepicker = $('#date0');
+      secondDate = $('#date1');
       $inputPicker[0] = datepicker.pickadate({
         selectMonths: true,
         selectYears: true,
@@ -35,7 +36,7 @@ function getEmployee(parameters) {
           var endOfDay = 0;
           var extraString = '';
           if (thing.select) {
-            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix();
+            fixedDate = moment(fixedDate + ' 00:00:00 ' + getOffsetString(), 'D MMMM, YYYY h:m:s Z').utc().unix();
             if (rangeChildren.val() === 'specificDate') {
               endOfDay += fixedDate + (TimeVar.SECONDS_IN_DAY - 1);
               extraString += '&date0=' + fixedDate + '&date1=' + endOfDay;
