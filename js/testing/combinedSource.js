@@ -106,7 +106,7 @@ $(function() {
       syear = momentTime.isoWeekYear();
       sweek = momentTime.isoWeek();
       sday = momentTime.isoWeekday();
-      createSchedulePair(userId, {year: syear, week: sweek, day: sday});
+      //createSchedulePair(userId, {year: syear, week: sweek, day: sday});
     } else if (mode === EditMode.TIMECARD) {
       trueTime = momentTime.unix();
       createStamp(userId, trueTime);
@@ -147,7 +147,7 @@ $(function() {
         if (meThis.hasClass('sched-out')) {
           changed = 'out';
         }
-        $.ajax({
+        /*$.ajax({
           type: 'POST',
           data: 'id=' + scheduleId + '&' + changed + '=' + formattedTime,
           url: '/devel/time/admin/timeEdit/change_schedule.php',
@@ -156,9 +156,9 @@ $(function() {
               userId = table.attr('user-id'),
               year = table.attr('year'),
               week = table.attr('week');
-            fetchSchedule({userId: userId, year: year, week: week});
+            //fetchSchedule({userId: userId, year: year, week: week});
           }
-        });
+        });*/
       }
     }
   });
@@ -380,16 +380,19 @@ $(function() {
     });
   });
   $(document).on('click', 'td', function() {
-    var trId = $(this).parent().attr('user-id'),
-      year, week;
+    var trId = $(this).parent().attr('user-id');//,
+      //year, week;
     if (trId) {
-      if (mode === EditMode.SCHEDULE) {
+      //if (mode === EditMode.SCHEDULE) {
         //year = moment().isoWeekYear();
         //week = moment().isoWeek();
         //History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
         //fetchSchedule({userId: trId, year: year, week: week});
-      } else {
-        getEmployee({id: trId});
+      //} else {
+      if (mode === EditMode.TIMECARD) {
+        if (!$(this).children().find('input')) {
+          getEmployee({id: trId});
+        }
       }
     }
   });

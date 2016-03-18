@@ -24,3 +24,7 @@ function randomString()
     }
     return $str;
 }
+function toast($string, $time = 2000)
+{
+    echo "Materialize.toast(\"$string\", $time)";
+}

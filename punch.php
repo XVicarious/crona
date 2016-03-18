@@ -6,6 +6,7 @@ if ($_POST) {
     $dbh = createPDO();
     try {
         $myUsername = $_POST['uname'];
+
         $stmt = $dbh->prepare(SqlStatements::GET_USER_CREDENTIALS, [PDO::ATTR_CURSOR => PDO::CURSOR_FWDONLY]);
         $stmt->bindParam(':username', $myUsername, PDO::PARAM_STR);
         $stmt->execute();
@@ -26,8 +27,8 @@ if ($_POST) {
                 $data = http_build_query(['function' => 'sendEmail', 'email' => $result['user_email']]);
                 $options = ['http' => ['method' => 'POST', 'content' => $data]];
                 $stream = stream_context_create($options);
-                $fileOpen = fopen('http://xvss.net/time/resetutil.php', 'rb', false, $stream);
-                echo 'Password Expired!  A link to reset your password has been sent to your email!';
+                $fileOpen = fopen('http://xvss.net/devel/time/forgot/resetutil.php', 'rb', false, $stream);
+                toast('Password Expired!  A link to reset your password has been sent to your email!');
                 return;
             }
             try {
@@ -53,13 +54,13 @@ if ($_POST) {
                             $stmt->bindParam(':now', $now, PDO::PARAM_STR); // Is really of type DATETIME
                             $dbh->beginTransaction(); // don't commit everything right away, does this work with this?
                             $stmt->execute();
-                            echo 'Materialize.toast("Timestamp Accepted!", 4000);';
+                            toast("Timestamp Accepted!", 4000);
                         } catch (Exception $e) {
                             $dbh->rollBack();
                             error_log('Failure: '.$e->getMessage(), 0);
                         }
                     } else {
-                        echo 'Materialize.toast("Timestamp NOT Accepted!", 4000);';
+                        toast("Timestamp NOT Accepted!", 4000);
                     }
                 } elseif ($_POST['loginType'] === 'cardAdmin') {
                     if (!isset($_SESSION)) {
@@ -72,6 +73,8 @@ if ($_POST) {
             } catch (Exception $e) {
                 error_log('Failed: '.$e->getMessage(), 0);
             }
+        } else {
+            toast("Your usename or password is incorrect.");
         }
     } catch (Exception $e) {
         error_log('Failed: '.$e->getMessage(), 0);
