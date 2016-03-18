@@ -9,9 +9,17 @@ $(function() {
   });
   $('#submit-button').click(function() {
     var username = $('#uname'),
-      password = $('input#drowp'),
-      dataString;
-    if (!(username.val().length && password.val().length)) {
+        password = $('input#drowp'),
+        usernameLength = username.val().length,
+        passwordLength = password.val().length,
+        dataString;
+    if (!(usernameLength && passwordLength)) {
+      if (!usernameLength) {
+        Materialize.toast("Please enter your username.", 2000);
+      }
+      if (!passwordLength) {
+        Materialize.toast("Please enter your password.", 2000);
+      }
       return false;
     }
     dataString = 'uname=' + username.val() + '&drowp=' + password.val() + '&loginType=' + $('#loginType').val();
