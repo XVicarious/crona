@@ -14,7 +14,6 @@ if (isset($administrativeId)) {
               THEN 1 ELSE 0 END AS rowExists";
     $adminResults = mysqli_query($sqlConnection, $query);
     list($isTrue) = mysqli_fetch_row($adminResults);
-    //fixme: should I convert this ($isTrue) to an integer before I do this? Currently it is a string.
     if (intval($isTrue) == 1) {
         // todo: this query has been rewritten for PDO, just need to implement it
         $peopleResults = mysqli_query($sqlConnection, "SELECT user_id,user_adpid FROM employee_list
@@ -38,9 +37,9 @@ if (isset($administrativeId)) {
                 }
             }
             // Retrieve the timestamps from the database
-            $whereUserId .= ") AND datetime BETWEEN '$date0' AND '$date1'";
+            $whereUserId .= ") AND tsl_stamp BETWEEN '$date0' AND '$date1'";
             $query = "SELECT user_id_stamp,tsl_stamp,stamp_special,stamp_department FROM timestamp_list
-                      $whereUserId ORDER BY datetime";
+                      $whereUserId ORDER BY tsl_stamp";
             $timestampResults = mysqli_query($sqlConnection, $query);
             if (mysqli_num_rows($timestampResults) !== 0) {
                 $a_timestamps = [];
