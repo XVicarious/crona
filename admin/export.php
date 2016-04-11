@@ -10,8 +10,7 @@ if (isset($administrativeId)) {
     $query = "SELECT CASE WHEN EXISTS (
                   SELECT user_id FROM employee_supervisors
                   WHERE user_id = $administrativeId AND company_code = \"$exportCompany\"
-              )
-              THEN 1 ELSE 0 END AS rowExists";
+              ) THEN 1 ELSE 0 END AS rowExists";
     $adminResults = mysqli_query($sqlConnection, $query);
     list($isTrue) = mysqli_fetch_row($adminResults);
     if (intval($isTrue) == 1) {
@@ -21,7 +20,6 @@ if (isset($administrativeId)) {
         $dateFormat = 'Y-m-d H:i:s';
         $date0 = date($dateFormat, strtotime('last sunday -1 weeks'));
         $date1 = date($dateFormat, strtotime('last sunday -1 days 23:59:59'));
-        $whereDate = "AND datetime BETWEEN '$date0' AND '$date1'";
         if (mysqli_num_rows($peopleResults) !== 0) {
             $a_people = [];
             while (list($userId, $adpId) = mysqli_fetch_row($peopleResults)) {
