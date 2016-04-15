@@ -1,13 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bmaurer
- * Date: 4/8/2016
- * Time: 11:59 AM
- */
+spl_autoload_register(function ($class_name) {
+    $class_name = str_replace('\\', DIRECTORY_SEPARATOR, $class_name).'.php';
+    include $class_name;
+});
 
-$model = new \xvmvc\model\ModelLogin();
-$controller = new \xvmvc\controller\ControllerLogin($model);
-$view = new \xvmvc\view\ViewLogin($controller, $model);
+$_SESSION['userMode'] = 0;
+
+$model = new xvmvc\model\ModelMenu();
+$controller = new xvmvc\controller\ControllerMenu($model);
+$view = new xvmvc\view\ViewMenu($controller, $model);
 
 echo $view->output();
