@@ -62,12 +62,16 @@ if ($_POST) {
                     } else {
                         toast("Timestamp NOT Accepted!", 4000);
                     }
-                } elseif ($_POST['loginType'] === 'cardAdmin') {
+                } elseif ($_POST['loginType'] === 'cardAdmin' || $_POST['loginType'] === 'viewCard') {
                     if (!isset($_SESSION)) {
                         session_start();
                     }
                     $_SESSION['lastAction'] = time();
                     $_SESSION['userId'] = $userId;
+                    $_SESSION['operationMode'] = 1;
+                    if ($_POST['loginType'] === 'cardAdmin') {
+                        $_SESSION['operationMode'] = 0;
+                    }
                     echo '$(location).attr("href", "admin");';
                 }
             } catch (Exception $e) {
