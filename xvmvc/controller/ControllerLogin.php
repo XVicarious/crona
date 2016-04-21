@@ -10,5 +10,8 @@ namespace xvmvc\controller;
 
 class ControllerLogin extends Controller
 {
+    function stampTime()
+    {
 
+    }
 }
