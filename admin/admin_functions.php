@@ -143,3 +143,13 @@ function readSetting(array $settings, $file = '/home2/bmaurer/public_html/xvss.n
     }
     return $settingsJson;
 }
+
+function logViolation($userId, $message) {
+    $dbh = createPDO();
+    try {
+        // commit the violation information here...
+    } catch (Exception $e) {
+        error_log('Error committing log violation: ' . $userId . ', ' . $message);
+    }
+    $dbh = null;
+}
