@@ -38,31 +38,31 @@ $(function() {
   a = a.filter(function(e) {
     return e.replace(/(\r\n|\n|\r)/gm, "");
   });
-  if (operationMode) {
-    if (a.length > 3 && a[3] === 'schedule') {
-      mode = 'schedule';
-      $('a.page-title').text('Crona Timestamp - Schedule');
-      if (a.length > 4) {
-        myInt = parseInt(a[4]);
+  if (operationMode.length === 0) {
+  getEmployee();
+} else {
+  if (a.length > 3 && a[3] === 'schedule') {
+    mode = 'schedule';
+    $('a.page-title').text('Crona Timestamp - Schedule');
+    if (a.length > 4) {
+      myInt = parseInt(a[4]);
 
-        // next is 7 because we want both the year and week
-        /*if (a.length > 6) {
-          year = parseInt(a[5]);
-          week = parseInt(a[6]);
-          //fetchSchedule({userId: myInt, year: year, week: week});
-        } else {
-          fetchSchedule({userId: myInt});
-        }*/
-      } else {
-        getEmployees();
-      }
+      // next is 7 because we want both the year and week
+      /*if (a.length > 6) {
+       year = parseInt(a[5]);
+       week = parseInt(a[6]);
+       //fetchSchedule({userId: myInt, year: year, week: week});
+       } else {
+       fetchSchedule({userId: myInt});
+       }*/
     } else {
       getEmployees();
     }
-    getPermissions();
-    getExportPermissions();
   } else {
-    getEmployee();
+    getEmployees();
+  }
+  getPermissions();
+    getExportPermissions();
   }
   $('.modal-trigger').leanModal();
   //$('#logout-button').click(function() {});
