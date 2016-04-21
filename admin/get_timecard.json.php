@@ -9,6 +9,10 @@ $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $employeeId = intval($_POST['employee']);
+    // Insurance to make sure that employees don't view timecards that aren't their own.
+    if ($_SESSION['operationMode'] === 1 && $_SESSION['userId'] !== $employeeId) {
+        die();
+    }
     $range = $_POST['range'];
     // todo: this might be a tad screwy because of timezones
     $day = date('w') + 1;
