@@ -63,6 +63,7 @@ sessionCheck();
                 </div>
             </div>
         </li>
+        <? if ($_SESSION['operationMode'] === 0) { ?>
         <li class="bold">
             <a href="#" id="view-employees" class="waves-effect waves-light">Manage Timecards
                 <span class="badge">0</span>
@@ -82,6 +83,7 @@ sessionCheck();
                 Export CSV
             </a>
         </li>
+        <? } ?>
         <li class="bold">
             <a href="#about-log" id="about-log-button" class="waves-effect waves-light modal-trigger">
                 About Crona

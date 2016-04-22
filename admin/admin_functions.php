@@ -148,6 +148,7 @@ function logViolation($userId, $message) {
     $dbh = createPDO();
     try {
         // commit the violation information here...
+        error_log('Error committing log violation: ' . $userId . ', ' . $message);
     } catch (Exception $e) {
         error_log('Error committing log violation: ' . $userId . ', ' . $message);
     }

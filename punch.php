@@ -62,7 +62,7 @@ if ($_POST) {
                     } else {
                         toast("Timestamp NOT Accepted!", 4000);
                     }
-                } elseif ($_POST['loginType'] === 'cardAdmin' || $_POST['loginType'] === 'viewCard') {
+                } elseif ($_POST['loginType'] === 'cardAdmin' || $_POST['loginType'] === 'viewCards') {
                     if (!isset($_SESSION)) {
                         session_start();
                     }
@@ -70,6 +70,7 @@ if ($_POST) {
                     $_SESSION['userId'] = $userId;
                     $_SESSION['operationMode'] = 1;
                     if ($_POST['loginType'] === 'cardAdmin') {
+                        // todo: better handling of cardAdmin mode, make it kick non admins out?
                         $_SESSION['operationMode'] = 0;
                     }
                     echo '$(location).attr("href", "admin");';

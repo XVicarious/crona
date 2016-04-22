@@ -10,7 +10,7 @@ $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $employeeId = intval($_POST['employee']);
     // Insurance to make sure that employees don't view timecards that aren't their own.
-    if ($_SESSION['operationMode'] === 1 && $_SESSION['userId'] !== $employeeId) {
+    if ($_SESSION['operationMode'] === 1 && intval($_SESSION['userId']) !== $employeeId) {
         logViolation($_SESSION['userId'], 'Attempted to view card of employee with internal id of ' . $employeeId . ' illegally.');
         die();
     }
