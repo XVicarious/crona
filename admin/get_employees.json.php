@@ -15,6 +15,7 @@ if (sessionCheck()) {
         }
         array_push($permissionsArray[$companyCode], $departmentId);
     }
+    if (empty($permissionsArray)) { die(); }
     $adminPermissionPart = 'WHERE ';
     $indexNumber = 0;
     $permissionsArrayCount = count($permissionsArray);

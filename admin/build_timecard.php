@@ -9,7 +9,7 @@ $timeFormat12 = 'h:i:s a';
 $dateTimeFormat24 = $dateFormat.' '.$timeFormat24;
 if (sessionCheck()) {
     $json = $_POST['timestamps'];
-    $mode = intval($_POST['mode']); // todo: insecure, need to check permissions for this
+    $mode = intval($_SESSION['operationMode']);
     $timestamps = json_decode($json, true);
     $firstDate = $timestamps[0]['date'];
     $modifiable = true;

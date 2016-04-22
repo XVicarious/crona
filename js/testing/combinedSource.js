@@ -1,4 +1,5 @@
-var operationMode = getPermissions(),
+var operationMode = getOpMode(),
+  user = getUserId();
   $inputPicker = [],
   picker = [],
   saveTheDate = 0,
@@ -38,8 +39,8 @@ $(function() {
   a = a.filter(function(e) {
     return e.replace(/(\r\n|\n|\r)/gm, "");
   });
-  if (operationMode.length === 0) {
-  getEmployee();
+  if (operationMode === 1) {
+  getEmployee({id: parseInt(user)});
 } else {
   if (a.length > 3 && a[3] === 'schedule') {
     mode = 'schedule';
@@ -430,7 +431,7 @@ function getEmployee(parameters) {
   var range = parameters.range;
   var extraString = parameters.extraString;
   //todo: when all is set with the new system, fix this
-  var mode = 2; //parameters.mode;
+  //var mode = 2; //parameters.mode;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
   // todo: convert to stuff
@@ -443,7 +444,7 @@ function getEmployee(parameters) {
         replace: true,
         type: 'POST',
         url: '/devel/time/admin/build_timecard.php',
-        data: 'timestamps=' + data + '&mode=' + mode,
+        data: 'timestamps=' + data,
         success: function(data) {
           var datepicker, secondDate;
           $('#ajaxDiv').html(data);
@@ -552,6 +553,32 @@ function createStamp(userId, stamp) {
       getEmployee({id: userId});
     }
   });
+}
+
+function getUserId() {
+  $.ajax({
+    type: 'GET',
+    async: false,
+    url: '/devel/time/admin/lazy_stuff.php',
+    data: 'action=userId',
+    success: function(data) {
+      user = parseInt(data);
+    }
+  });
+  return user;
+}
+
+function getOpMode() {
+  $.ajax({
+    type: 'GET',
+    async: false,
+    url: '/devel/time/admin/lazy_stuff.php',
+    data: 'action=operationMode',
+    success: function(data) {
+      operationMode = parseInt(data);
+    }
+  });
+  return operationMode;
 }
 
 /*function createSchedulePair(userId, schedule) {
