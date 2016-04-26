@@ -6,8 +6,8 @@ spl_autoload_register(function ($class_name) {
 
 $_SESSION['userMode'] = 0;
 
-$model = new xvmvc\model\ModelMenu();
-$controller = new xvmvc\controller\ControllerMenu($model);
-$view = new xvmvc\view\ViewMenu($controller, $model);
+$model = new xvmvc\model\ModelLogin();
+$controller = new xvmvc\controller\ControllerLogin($model);
+$view = new xvmvc\view\ViewLogin($controller, $model);
 
 echo $view->output();
