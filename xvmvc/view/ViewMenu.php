@@ -1,15 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bmaurer
- * Date: 4/11/2016
- * Time: 12:04 PM
- */
 
 namespace xvmvc\view;
 
+/**
+ * Class ViewMenu
+ * @package xvmvc\view
+ */
 class ViewMenu extends View
 {
+    /**
+     * @return string
+     */
     public function output()
     {
         $output = '<ul id="nav-mobile" class="side-nav fixed" style="overflow: hidden">';
