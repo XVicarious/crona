@@ -1,22 +1,27 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bmaurer
- * Date: 4/8/2016
- * Time: 11:52 AM
- */
 
 namespace xvmvc\view;
 
+/**
+ * Class View
+ * @package xvmvc\view
+ */
 class View
 {
     protected $model;
     protected $controller;
+
+    /**
+     * View constructor.
+     * @param $controller
+     * @param $model
+     */
     public function __construct($controller, $model)
     {
         $this->controller = $controller;
         $this->model = $model;
     }
+
     public function output()
     {
     }

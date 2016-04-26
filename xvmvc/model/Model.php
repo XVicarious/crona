@@ -1,15 +1,16 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bmaurer
- * Date: 4/8/2016
- * Time: 11:51 AM
- */
 
 namespace xvmvc\model;
 
+/**
+ * Class Model
+ * @package xvmvc\model
+ */
 class Model
 {
+    /**
+     * Model constructor.
+     */
     public function __construct()
     {
     }

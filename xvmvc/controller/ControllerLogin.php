@@ -2,8 +2,16 @@
 
 namespace xvmvc\controller;
 
+/**
+ * Class ControllerLogin
+ * @package xvmvc\controller
+ */
 class ControllerLogin extends Controller
 {
+    /**
+     * Creates a timestamp for now for the user from validateLogin
+     * @return bool
+     */
     public function stampTime()
     {
         $userId = $this->validateLogin();
@@ -24,6 +32,11 @@ class ControllerLogin extends Controller
         $dbh = null;
         return true;
     }
+
+    /**
+     * @param $type string the log type, 'lastAction' and 'view' are the valid options
+     * @return bool
+     */
     public function portalLogin($type)
     {
         $userId = $this->validateLogin();
@@ -45,6 +58,10 @@ class ControllerLogin extends Controller
         }
         return true;
     }
+
+    /**
+     * @return int 0 if the login fails, the userId if it succeeds
+     */
     private function validateLogin()
     {
         $dbh = createPDO();
@@ -62,13 +79,13 @@ class ControllerLogin extends Controller
                     $passwordGood = ($result['user_hash'] === sha1($result['user_salt'] . $_POST['password']));
                 }
                 if (!$passwordGood) {
-                    return false;
+                    return 0;
                 }
                 $passwordSetLapse = time() - $result['user_created'];
                 // todo: make password expiry time configurable
                 if ($passwordSetLapse >= 15742080) {
                     // todo: handle password expiration
-                    return false;
+                    return 0;
                 }
                 $statement = $dbh->prepare(\SQLStatements::GET_SECURITY_QUESTIONS, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
                 $userId = $result['user_id'];
@@ -77,7 +94,7 @@ class ControllerLogin extends Controller
                 $result = $statement->fetchAll(\PDO::FETCH_ASSOC);
                 if (!is_array($result) || count($result) < 3) {
                     // todo: handle no security questions answered
-                    return false;
+                    return 0;
                 }
                 $dbh = null;
                 return $userId;
@@ -86,6 +103,6 @@ class ControllerLogin extends Controller
             $dbh = null;
             error_log('Failed: '.$exception->getMessage(), 0);
         }
-        return false;
+        return 0;
     }
 }

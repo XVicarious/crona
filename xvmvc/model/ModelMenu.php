@@ -5,6 +5,10 @@ namespace xvmvc\model;
 class ModelMenu extends Model
 {
     public $entries = [];
+
+    /**
+     * ModelMenu constructor.
+     */
     public function __construct()
     {
         // [<entry_text>,<entry_id>,<entry_href>]
