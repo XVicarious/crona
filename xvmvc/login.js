@@ -13,6 +13,7 @@ $(function() {
       }
       return false;
     }
+    // todo: convert username and password to a json data variable
     $.ajax({
       url: 'controller/ControllerLogin.php',
       type: 'POST',
