@@ -2,6 +2,13 @@
 <project version="4">
   <component name="PublishConfigData" autoUpload="Always" serverName="TimeDevel">
     <serverData>
+      <paths name="BERDevel">
+        <serverdata>
+          <mappings>
+            <mapping local="$PROJECT_DIR$" web="/" />
+          </mappings>
+        </serverdata>
+      </paths>
       <paths name="GasAPI">
         <serverdata>
           <mappings>
@@ -18,6 +25,7 @@
             <excludedPath path="/admin/tmp" />
             <excludedPath path="/.ftpquota" />
             <excludedPath path="/.htaccess" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css" />
           </excludedPaths>
         </serverdata>
       </paths>
@@ -30,6 +38,7 @@
             <excludedPath path="/admin/tmp" />
             <excludedPath path="/.ftpquota" />
             <excludedPath path="/.htaccess" />
+            <excludedPath local="true" path="$PROJECT_DIR$/css" />
           </excludedPaths>
         </serverdata>
       </paths>
@@ -38,6 +47,18 @@
           <mappings>
             <mapping local="$PROJECT_DIR$" web="/" />
           </mappings>
+        </serverdata>
+      </paths>
+      <paths name="XVicariousStatic">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/css/" local="$PROJECT_DIR$/css/" web="/css/" />
+          </mappings>
+          <excludedPaths>
+            <excludedPath path="/admin/tmp" />
+            <excludedPath path="/.ftpquota" />
+            <excludedPath path="/.htaccess" />
+          </excludedPaths>
         </serverdata>
       </paths>
     </serverData>
