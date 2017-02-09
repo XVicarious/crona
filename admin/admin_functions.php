@@ -25,7 +25,7 @@ function createSql()
 {
     $sql_server = 'localhost';
     $sql_username = 'bmaurer_pciven';
-    $sql_password = '3al12of4ut25';
+    $sql_password = '';
     $sql_database = 'bmaurer_hhemployee';
     return mysqli_connect($sql_server, $sql_username, $sql_password, $sql_database);
 }
@@ -33,7 +33,7 @@ function createSql()
 function createPDO()
 {
     $sql_username = 'bmaurer_pciven';
-    $sql_password = '3al12of4ut25';
+    $sql_password = '';
     try {
         return new PDO('mysql:host=localhost;dbname=bmaurer_hhemployee', $sql_username, $sql_password);
     } catch (Exception $e) {
