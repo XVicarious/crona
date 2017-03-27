@@ -1,10 +1,12 @@
-function getByName(name) {
+function getByName (name) {
   var getName = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-  var regexS = '[\\?&]' + getName + '=([^&#]*)', regex = new RegExp(regexS), results = regex.exec(window.location.href);
+  var regexS = '[\\?&]' + getName + '=([^&#]*)';
+  var regex = new RegExp(regexS);
+  var results = regex.exec(window.location.href);
   return (results === null ? '' : results[1]);
 }
 
-$(function() {
+$(function () {
   if (getByName('c') === '') {
     $('#ajaxDiv').load('user_email.html');
   } else {
@@ -12,24 +14,25 @@ $(function() {
       type: 'GET',
       url: 'resetutil.php',
       data: 'c=' + getByName('c'),
-      success: function(data) {
-        var loginForm = $('#loginForm');
+      success: function (data) {
+        // var loginForm = $('#loginForm');
         $('#ajaxDiv').html(data);
       }
     });
   }
-  $(document).on('click', '#subby', function() {
+  $(document).on('click', '#subby', function () {
     var passwordConfirmationInput = $('#pwc');
-    var email = $('#email').val(), username = $('#username').val();
+    var email = $('#email').val();
+    var username = $('#username').val();
     if ($('div#semail').length) {
       $.ajax({
         type: 'POST',
         url: 'resetutil.php',
         data: 'username=' + username + '&email=' + email + '&function=sendEmail',
-        success: function() {
-          Materialize.toast("If a user with that email exists, an email has been dispatched with a link to reset your" +
-                            " password.",5000);
-          //$('#ajaxDiv').html(data);
+        success: function () {
+          Materialize.toast('If a user with that email exists, an email has been dispatched with a link to reset your' +
+                            ' password.', 5000);
+          // $('#ajaxDiv').html(data);
         }
       });
     } else if ($('div#rpassword').length && ($('#pw').val() === passwordConfirmationInput.val())) {
@@ -41,7 +44,7 @@ $(function() {
             url: 'resetutil.php',
             data: 'function=checkReset&resetId=' + $('#resetId').val() + '&pword=' + passwordConfirmationInput.val() + '&answer=' +
             $('#answer').val() + '&qid=' + $('#qid').val() + '&user=' + $('#uid').val(),
-            success: function(data) {
+            success: function (data) {
               $('#ajaxDiv').html(data);
             }
           });
@@ -50,14 +53,14 @@ $(function() {
     }
     return false;
   });
-  $(document).on('keydown', '#pwc', function() {
+  $(document).on('keydown', '#pwc', function () {
     var pw = $('#pw');
     if ($(this).val() !== pw.val()) {
       $(this).css('box-shadow', 'inset 0 0 7px rgba(255,0,0,1');
       pw.css('box-shadow', 'inset 0 0 7px rgba(255,0,0,1');
     }
   });
-  $(document).on('keyup', '#pwc', function() {
+  $(document).on('keyup', '#pwc', function () {
     var pw = $('#pw');
     if ($(this).val() === pw.val()) {
       $(this).css('box-shadow', 'none');

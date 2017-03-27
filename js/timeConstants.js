@@ -1,4 +1,4 @@
-function TimeVar() {}
+function TimeVar () {}
 TimeVar.SECONDS_IN_MINUTE = 60;
 TimeVar.MINUTES_IN_HOUR = 60;
 TimeVar.SECONDS_IN_HOUR = TimeVar.MINUTES_IN_HOUR * TimeVar.SECONDS_IN_MINUTE; // 3600

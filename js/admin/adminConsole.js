@@ -1,13 +1,13 @@
-$(function() {
-  $(document).on('click', '#modlog-button', function() {
+$(function () {
+  $(document).on('click', '#modlog-button', function () {
     var modLogModal = $('#dialog');
     var modLogText = modLogModal.find('.modal-text');
     modLogModal.find('.modal-footer').html(
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close<\/a>' +
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh<\/a>'
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close</a>' +
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh</a>'
     );
     modLogModal.openModal({
-      ready: function() {
+      ready: function () {
         var ModificationList = Backbone.Model.extend({});
         var ModificationListList = Backbone.Collection.extend({
           model: ModificationList,
@@ -40,25 +40,25 @@ $(function() {
           collection: modList
         });
         modLogText.html(grid.render().el);
-        modList.fetch({reset:true});
-        modLogModal.find('.modal-close').click(function() {
+        modList.fetch({reset: true});
+        modLogModal.find('.modal-close').click(function () {
           modLogModal.close();
         });
-        modLogModal.find('.modal-refresh').click(function() {
-          modList.fetch({reset:true});
+        modLogModal.find('.modal-refresh').click(function () {
+          modList.fetch({reset: true});
         });
       }
     });
   });
-  $(document).on('click', '#timestamp-button', function() {
+  $(document).on('click', '#timestamp-button', function () {
     var modLogModal = $('#dialog');
     var modLogText = modLogModal.find('.modal-text');
     modLogModal.find('.modal-footer').html(
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close<\/a>' +
-      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh<\/a>'
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close">Close</a>' +
+      '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-refresh">Refresh</a>'
     );
     modLogModal.openModal({
-      ready: function() {
+      ready: function () {
         var ModificationList = Backbone.Model.extend({});
         var ModificationListList = Backbone.Collection.extend({
           model: ModificationList,
@@ -81,12 +81,12 @@ $(function() {
           collection: modList
         });
         modLogText.html(grid.render().el);
-        modList.fetch({reset:true});
-        modLogModal.find('.modal-close').click(function() {
+        modList.fetch({reset: true});
+        modLogModal.find('.modal-close').click(function () {
           modLogModal.close();
         });
-        modLogModal.find('.modal-refresh').click(function() {
-          modList.fetch({reset:true});
+        modLogModal.find('.modal-refresh').click(function () {
+          modList.fetch({reset: true});
         });
       }
     });

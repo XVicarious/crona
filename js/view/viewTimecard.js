@@ -1,6 +1,8 @@
-var $inputPicker = [], picker = [], saveTheDate = 0;
-$(function() {
-  $(document).on('change', '#range', function() {
+var $inputPicker = [];
+var picker = [];
+var saveTheDate = 0;
+$(function () {
+  $(document).on('change', '#range', function () {
     var userId = $('#timecard').attr('user-id');
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
       picker[0].open(false);
@@ -12,7 +14,7 @@ $(function() {
   });
   getEmployee({range: 'this'});
 });
-function getEmployee(parameters) {
+function getEmployee (parameters) {
   var id = parameters.id;
   var range = parameters.range;
   var extraString = parameters.extraString;
@@ -22,7 +24,7 @@ function getEmployee(parameters) {
     type: 'POST',
     url: 'masterTime.php',
     data: 'range=' + range + extraString + '&id=' + id,
-    success: function(data) {
+    success: function (data) {
       var datepicker, secondDate;
       $('#ajaxDiv').html(data);
       datepicker = $('#date0');
@@ -30,7 +32,7 @@ function getEmployee(parameters) {
       $inputPicker[0] = datepicker.pickadate({
         selectMonths: true,
         selectYears: true,
-        onSet: function(thing) {
+        onSet: function (thing) {
           var fixedDate = this.get('value');
           var rangeChildren = $('#range').children(':selected');
           var endOfDay = 0;
@@ -52,20 +54,20 @@ function getEmployee(parameters) {
       $inputPicker[1] = secondDate.pickadate({
         selectMonths: true,
         selectYears: true,
-        onSet: function(thing) {
+        onSet: function (thing) {
           var fixedDate = this.get('value');
           var extraString = '';
           if (thing.select) {
-            fixedDate = moment(fixedDate+' 00:00:00 '+getOffsetString(),'D MMMM, YYYY h:m:s Z').utc().unix() + (TimeVar.SECONDS_IN_DAY - 1);
-            extraString += '&date0='+saveTheDate+'&date1='+fixedDate;
+            fixedDate = moment(fixedDate + ' 00:00:00 ' + getOffsetString(), 'D MMMM, YYYY h:m:s Z').utc().unix() + (TimeVar.SECONDS_IN_DAY - 1);
+            extraString += '&date0=' + saveTheDate + '&date1=' + fixedDate;
             getEmployee({id: id, range: 'specificDate', extraString: extraString});
             this.close();
           }
         }
       });
-      $inputPicker[1].css('display','none');
+      $inputPicker[1].css('display', 'none');
       picker[1] = $inputPicker[1].pickadate('picker');
-      $inputPicker[0].css('display','none');
+      $inputPicker[0].css('display', 'none');
       picker[0] = $inputPicker[0].pickadate('picker');
       $('#range').val(range);
     }

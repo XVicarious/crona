@@ -1,13 +1,13 @@
 var i = 0;
-$(function() {
-  $('#saveRules').click(function() {
-    //var lowercase = '/.*[a-z].*/';
-    //var uppercase = '/.*[A-Z].*/';
-    //var digits = '/.*[0-9].*/';
-    //var specials = '/.*[\`\~\!\@\#\$\%\^\&\*\(\)\_\+\-\=].*/';
-    var requireData = 'minLength=' + $('#minLength').val() + '&requires=',
-      requireArray = [];
-    $('.requires:checked').each(function() {
+$(function () {
+  $('#saveRules').click(function () {
+    // var lowercase = '/.*[a-z].*/';
+    // var uppercase = '/.*[A-Z].*/';
+    // var digits = '/.*[0-9].*/';
+    // var specials = '/.*[\`\~\!\@\#\$\%\^\&\*\(\)\_\+\-\=].*/';
+    var requireData = 'minLength=' + $('#minLength').val() + '&requires=';
+    var requireArray = [];
+    $('.requires:checked').each(function () {
       requireArray.push($(this).val());
     });
     for (i = 0; i < requireArray.length; i++) {

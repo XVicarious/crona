@@ -1,47 +1,46 @@
-var operationMode = getOpMode(),
-  user = getUserId();
-  $inputPicker = [],
-  picker = [],
-  saveTheDate = 0,
-  mode = EditMode.TIMECARD,
-  i = 0,
-  offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE,
-  offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR,
-  timeDateFormats = ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z',
-    'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'];
-/*companyCodes = [["48N", "HNB Venture Ptrs LLC"],
- ["49C", "Hampton Inn Boston/Natick"],
- ["49D", "Crowne Plaza Boston"],
- ["49E", "Holiday Inn Somervil"],
- ["7IS", "Skybokx 109 Natick"],
- ["9NI", "Hart Hotels DLC, LLC"],
- ["ANY", "FLH Development, LLC"],
- ["FB1", "Madison Beach Hotel"],
- ["GE3", "Distinctive Hospitality Group"],
- ["GG8", "Seneca Market 1"],
- ["H4G", "DDH Hotel Mystic LLC"],
- ["HUG", "ATA Associates"],
- ["HXH", "Portland Harbor Hotel"],
- ["KZH", "Clayton Harbor Hotel"],
- ["L99", "Lenroc, L.P."],
- ["NPJ", "WPH Midtown Associates"],
- ["NPM", "WPH Airport Associates"],
- ["PPP", "Golden Triangle Associates"],
- ["Q56", "Hart Management Group"],
- ["RK3", "HBK Restaurant LLC"],
- ["ZVT", "Twenty Flint Rd LLC"]];*/
+var operationMode = getOpMode();
+var user = getUserId();
+var $inputPicker = [];
+var picker = [];
+var saveTheDate = 0;
+var mode = EditMode.TIMECARD;
+var i = 0;
+var offsetInSeconds = (new Date()).getTimezoneOffset() * TimeVar.SECONDS_IN_MINUTE;
+var offsetInHours = offsetInSeconds / TimeVar.SECONDS_IN_HOUR;
+var timeDateFormats = ['YYYY-MM-DD hh:mm:ss a Z', 'YYYY-MM-DD hh:mm a Z', 'YYYY-MM-DD hh: a Z', 'YYYY-MM-DD HH:mm:ss Z', 'YYYY-MM-DD HH:mm Z', 'YYYY-MM-DD HH: Z'];
+/* companyCodes = [['48N', 'HNB Venture Ptrs LLC'],
+ ['49C', 'Hampton Inn Boston/Natick'],
+ ['49D', 'Crowne Plaza Boston'],
+ ['49E', 'Holiday Inn Somervil'],
+ ['7IS', 'Skybokx 109 Natick'],
+ ['9NI', 'Hart Hotels DLC, LLC'],
+ ['ANY', 'FLH Development, LLC'],
+ ['FB1', 'Madison Beach Hotel'],
+ ['GE3', 'Distinctive Hospitality Group'],
+ ['GG8', 'Seneca Market 1'],
+ ['H4G', 'DDH Hotel Mystic LLC'],
+ ['HUG', 'ATA Associates'],
+ ['HXH', 'Portland Harbor Hotel'],
+ ['KZH', 'Clayton Harbor Hotel'],
+ ['L99', 'Lenroc, L.P.'],
+ ['NPJ', 'WPH Midtown Associates'],
+ ['NPM', 'WPH Airport Associates'],
+ ['PPP', 'Golden Triangle Associates'],
+ ['Q56', 'Hart Management Group'],
+ ['RK3', 'HBK Restaurant LLC'],
+ ['ZVT', 'Twenty Flint Rd LLC']]; */
 
-$(function() {
-  var a = location.pathname.split('/'),
-    myInt,
-    week,
-    year;
-  a = a.filter(function(e) {
-    return e.replace(/(\r\n|\n|\r)/gm, "");
+$(function () {
+  var a = location.pathname.split('/');
+  var myInt;
+  var week;
+  var year;
+  a = a.filter(function (e) {
+    return e.replace(/(\r\n|\n|\r)/gm, '');
   });
   if (operationMode === 1) {
-  getEmployee({id: parseInt(user)});
-} else {
+    getEmployee({id: parseInt(user)});
+  } else {
   if (a.length > 3 && a[3] === 'schedule') {
     mode = 'schedule';
     $('a.page-title').text('Crona Timestamp - Schedule');
@@ -49,13 +48,13 @@ $(function() {
       myInt = parseInt(a[4]);
 
       // next is 7 because we want both the year and week
-      /*if (a.length > 6) {
+      /* if (a.length > 6) {
        year = parseInt(a[5]);
        week = parseInt(a[6]);
        //fetchSchedule({userId: myInt, year: year, week: week});
        } else {
        fetchSchedule({userId: myInt});
-       }*/
+       } */
     } else {
       getEmployees();
     }
@@ -66,23 +65,23 @@ $(function() {
     getExportPermissions();
   }
   $('.modal-trigger').leanModal();
-  //$('#logout-button').click(function() {});
+  // $('#logout-button').click(function() {});
   $(document).tooltip();
-  $(document).on('click', '#lock-card', function() {
+  $(document).on('click', '#lock-card', function () {
     var timecard = $('#timecard');
     var userId = timecard.attr('user-id');
     var week = timecard.attr('week');
     var year = timecard.attr('year');
     $.ajax({
-      type: "POST",
-      url: "/devel/time/admin/lock_timecard.php",
-      data: "user=" + userId + "&week=" + week + "&year=" + year,
-      success: function() {
+      type: 'POST',
+      url: '/devel/time/admin/lock_timecard.php',
+      data: 'user=' + userId + '&week=' + week + '&year=' + year,
+      success: function () {
         getEmployee({id: userId});
       }
     });
   });
-  $(document).on('change', '#range', function() {
+  $(document).on('change', '#range', function () {
     var userId = $('#timecard').attr('user-id');
     if ($(this).val() === 'specificDate' || $(this).val() === 'special') {
       picker[0].open(false);
@@ -90,12 +89,12 @@ $(function() {
       getEmployee({id: userId});
     }
   });
-  $(document).on('click', 'button.addButton', function() {
-    var thisParent = $(this).parent(),
-      thisPrevChild = thisParent.prev().children(':first-child'),
-      thisNextChild = thisParent.next().children(':first-child'),
-      userId = $('#timecard').attr('user-id'),
-      timestamp, validTimestamp, trueTime, syear, sweek, sday, momentTime;
+  $(document).on('click', 'button.addButton', function () {
+    var thisParent = $(this).parent();
+    var thisPrevChild = thisParent.prev().children(':first-child');
+    var thisNextChild = thisParent.next().children(':first-child');
+    var userId = $('#timecard').attr('user-id');
+    var timestamp, validTimestamp, trueTime, syear, sweek, sday, momentTime;
     if (thisPrevChild.is('input')) {
       timestamp = thisPrevChild.val();
     } else if (thisNextChild.is('input')) {
@@ -107,16 +106,16 @@ $(function() {
       syear = momentTime.isoWeekYear();
       sweek = momentTime.isoWeek();
       sday = momentTime.isoWeekday();
-      //createSchedulePair(userId, {year: syear, week: sweek, day: sday});
+      // createSchedulePair(userId, {year: syear, week: sweek, day: sday});
     } else if (mode === EditMode.TIMECARD) {
       trueTime = momentTime.unix();
       createStamp(userId, trueTime);
     }
   });
-  $(document).on('focus', 'input.times', function() {
+  $(document).on('focus', 'input.times', function () {
     $(this).select();
   });
-  $(document).on('keyup', 'input[type=text].times', function(e) {
+  $(document).on('keyup', 'input[type=text].times', function (e) {
     var validTimestamp;
     e.preventDefault();
     if (e.keyCode === $.ui.keyCode.ENTER) {
@@ -127,19 +126,19 @@ $(function() {
       $(this).css('color', moment(validTimestamp, timeDateFormats).isValid() ? 'inherit' : 'red');
     }
   });
-  $(document).on('keydown', '.times', function(e) {
+  $(document).on('keydown', '.times', function (e) {
     if (e.keyCode === 9) {
       e.preventDefault();
       $(this).parent().next('td').children('input.times').focus();
     }
   });
-  $(document).on('blur', 'input[type=text].times.sched', function() {
-    var meThis = $(this),
-      fieldContents = meThis.val(),
-      defaultTime = meThis.attr('default-time'),
-      scheduleId = meThis.attr('stamp-id'),
-      changed = 'in',
-      validTimestamp, myMoment, formattedTime;
+  $(document).on('blur', 'input[type=text].times.sched', function () {
+    var meThis = $(this);
+    var fieldContents = meThis.val();
+    var defaultTime = meThis.attr('default-time');
+    var scheduleId = meThis.attr('stamp-id');
+    var changed = 'in';
+    var validTimestamp, myMoment, formattedTime;
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
         validTimestamp = fieldContents + ' ' + getOffsetString();
@@ -148,7 +147,7 @@ $(function() {
         if (meThis.hasClass('sched-out')) {
           changed = 'out';
         }
-        /*$.ajax({
+        /* $.ajax({
           type: 'POST',
           data: 'id=' + scheduleId + '&' + changed + '=' + formattedTime,
           url: '/devel/time/admin/timeEdit/change_schedule.php',
@@ -159,17 +158,17 @@ $(function() {
               week = table.attr('week');
             //fetchSchedule({userId: userId, year: year, week: week});
           }
-        });*/
+        }); */
       }
     }
   });
-  $(document).on('blur', 'input[type=text].times.ts-card', function() {
-    var fieldContents = $(this).val(),
-      me = $(this),
-      stampId = $(this).attr('stamp-id'),
-      userId = $('#timecard').attr('user-id'),
-      defaultTime = $(this).attr('default-time'),
-      validTimestamp, myMoment, trueTime, confirmModal;
+  $(document).on('blur', 'input[type=text].times.ts-card', function () {
+    var fieldContents = $(this).val();
+    var me = $(this);
+    var stampId = $(this).attr('stamp-id');
+    var userId = $('#timecard').attr('user-id');
+    var defaultTime = $(this).attr('default-time');
+    var validTimestamp, myMoment, trueTime, confirmModal;
     if (fieldContents.length) {
       if (fieldContents !== defaultTime) {
         validTimestamp = $(this).closest('tr').attr('stamp-day') + ' ' + fieldContents + ' -' + offsetInHours + '00';
@@ -182,7 +181,7 @@ $(function() {
           type: 'POST',
           url: '/devel/time/admin/timeEdit/change_stamp.php',
           data: 'sid=' + stampId + '&time=' + trueTime + '&dtime=' + defaultTime,
-          success: function() {
+          success: function () {
             getEmployee({id: userId});
           }
         });
@@ -191,22 +190,22 @@ $(function() {
       confirmModal = $('#dialog');
       confirmModal.find('.modal-text').text('Are you sure you want to delete this time stamp?  This action cannot be undone!');
       confirmModal.find('.modal-footer').html(
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay<\/a>' +
-        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel<\/a>'
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-okay">Okay</a>' +
+        '<a href="#" class="waves-effect waves-light btn-flat modal-action modal-close modal-cancel">Cancel</a>'
       );
       confirmModal.openModal({
         dismissible: false,
-        ready: function() {
-          confirmModal.find('.modal-cancel').click(function() {
+        ready: function () {
+          confirmModal.find('.modal-cancel').click(function () {
             me.val(defaultTime);
             getEmployee({id: userId});
           });
-          confirmModal.find('.modal-okay').click(function() {
+          confirmModal.find('.modal-okay').click(function () {
             $.ajax({
               type: 'POST',
               url: '/devel/time/admin/timeEdit/delete_stamp.php',
               data: 'sid=' + stampId + '&dtime=' + defaultTime,
-              success: function() {
+              success: function () {
                 getEmployee({id: userId});
               }
             });
@@ -218,10 +217,10 @@ $(function() {
   $.contextMenu({
     selector: '.context-menu',
     className: 'timeMenu',
-    build: function($trigger) {
+    build: function ($trigger) {
       return {
         className: 'mod' + $trigger.attr('id'),
-        callback: function(key) {
+        callback: function (key) {
           var stamp, dialog, dialogContent, commentDiv;
           if (key === 'add-comment') {
             stamp = $trigger.attr('id');
@@ -246,7 +245,7 @@ $(function() {
             type: 'text',
             value: $trigger.parent().attr('department-special'),
             events: {
-              keyup: function(e) {
+              keyup: function (e) {
                 var stampId, userId;
                 if (e.keyCode === $.ui.keyCode.ENTER) {
                   stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
@@ -255,7 +254,7 @@ $(function() {
                     type: 'POST',
                     url: '/devel/time/admin/timeEdit/change_department.php',
                     data: 'sid=' + stampId + '&modifier=' + $(this).val(),
-                    success: function() {
+                    success: function () {
                       getEmployee({id: userId});
                     }
                   });
@@ -303,14 +302,14 @@ $(function() {
       };
     }
   });
-  $(document).on('click', 'li.context-menu-item label input[type=radio]', function() {
+  $(document).on('click', 'li.context-menu-item label input[type=radio]', function () {
     // This is *insane*
-    var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1],
-      modifier = $(this).val(),
-      userId = $('#timecard').attr('user-id');
+    var stampId = $(this).parent().parent().parent().attr('class').match(/\bmod(\d+)\b/)[1];
+    var modifier = $(this).val();
+    var userId = $('#timecard').attr('user-id');
     // We need to traverse the row to find more stamps
     var stampString = '' + stampId;
-    $('#' + stampId).parent().parent().parent().children().children().each(function() {
+    $('#' + stampId).parent().parent().parent().children().children().each(function () {
       var hopefulInput = $(this).children(':first-child');
       if (hopefulInput.is('input') && hopefulInput.attr('stamp-id') && hopefulInput.attr('stamp-id') !== stampId) {
         stampString += ',' + hopefulInput.attr('stamp-id');
@@ -320,12 +319,12 @@ $(function() {
       type: 'POST',
       url: '/devel/time/admin/timeEdit/change_modifier.php',
       data: 'sids=' + stampString + '&modifier=' + modifier,
-      success: function() {
+      success: function () {
         getEmployee({id: userId});
       }
     });
   });
-  $(document).on('click', '.modal-save-comment', function() {
+  $(document).on('click', '.modal-save-comment', function () {
     var textArea = $('#dialog').find('.modal-content').find('.modal-text').find('textarea');
     var stampid = textArea.attr('stamp-id');
     var oldText = $('#timecard').find('input#' + stampid).attr('title');
@@ -334,7 +333,7 @@ $(function() {
         type: 'POST',
         url: '/devel/time/admin/timeEdit/delete_comment.php',
         data: 'stampid=' + stampid,
-        success: function() {
+        success: function () {
           getEmployee({id: $('#timecard').attr('user-id')});
         }
       });
@@ -343,7 +342,7 @@ $(function() {
         type: 'POST',
         url: '/devel/time/admin/timeEdit/add_comment.php',
         data: 'stampid=' + stampid + '&comment=' + textArea.val(),
-        success: function() {
+        success: function () {
           getEmployee({id: $('#timecard').attr('user-id')});
         }
       });
@@ -352,44 +351,44 @@ $(function() {
         type: 'POST',
         url: '/devel/time/admin/timeEdit/edit_comment.php',
         data: 'stampid=' + stampid + '&comment=' + textArea.val(),
-        success: function() {
+        success: function () {
           getEmployee({id: $('#timecard').attr('user-id')});
         }
       });
     }
   });
-  $('#view-employees').click(function() {
+  $('#view-employees').click(function () {
     mode = EditMode.TIMECARD;
     $('a.page-title').text('Crona Timestamp');
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/');
     getEmployees();
   });
-  /*$('#manage-schedules').click(function() {
+  /* $('#manage-schedules').click(function() {
     mode = EditMode.SCHEDULE;
     $('a.page-title').text('Crona Timestamp - Schedule');
     History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/');
     getEmployees();
-  });*/
-  $('#system-admin').click(function() {
+  }); */
+  $('#system-admin').click(function () {
     $.ajax({
       type: 'POST',
       url: 'admin_console.php',
-      success: function(data) {
+      success: function (data) {
         $('#ajaxDiv').html(data);
         $('.collapsible').collapsible();
       }
     });
   });
-  $(document).on('click', 'td', function() {
-    var trId = $(this).parent().attr('user-id');//,
-      //year, week;
+  $(document).on('click', 'td', function () {
+    var trId = $(this).parent().attr('user-id'); // ,
+      // year, week;
     if (trId) {
-      //if (mode === EditMode.SCHEDULE) {
-        //year = moment().isoWeekYear();
-        //week = moment().isoWeek();
-        //History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
-        //fetchSchedule({userId: trId, year: year, week: week});
-      //} else {
+      // if (mode === EditMode.SCHEDULE) {
+        // year = moment().isoWeekYear();
+        // week = moment().isoWeek();
+        // History.pushState(null, null, 'https://xvss.net/devel/time/admin/schedule/' + trId + '/');
+        // fetchSchedule({userId: trId, year: year, week: week});
+      // } else {
       if (mode === EditMode.TIMECARD) {
         if (!$(this).children().find('input')) {
           getEmployee({id: trId});
@@ -398,40 +397,39 @@ $(function() {
     }
   });
   /* Schedule buttons */
-
 });
 
-function getPermissions() {
+function getPermissions () {
   var permissions = null;
   $.ajax({
     url: '/devel/time/admin/get_permissions.php',
     async: false,
-    success: function(data) {
+    success: function (data) {
       permissions = JSON.parse(data);
     }
   });
   return permissions;
 }
 
-function getExportPermissions() {
+function getExportPermissions () {
   $.ajax({
     type: 'POST',
     url: '/devel/time/admin/export_permissions.php',
-    success: function(data) {
+    success: function (data) {
       $('#exportC').html(data);
-      $('#export-times').find('.modal-export').click(function() {
+      $('#export-times').find('.modal-export').click(function () {
         $.getScript('/devel/time/admin/export.php?companyCode=' + $('#companyCode').val());
       });
     }
   });
 }
 
-function getEmployee(parameters) {
+function getEmployee (parameters) {
   var id = parameters.id;
   var range = parameters.range;
   var extraString = parameters.extraString;
-  //todo: when all is set with the new system, fix this
-  //var mode = 2; //parameters.mode;
+  // todo: when all is set with the new system, fix this
+  // var mode = 2; //parameters.mode;
   range = range || $('#range').children(':selected').val();
   extraString = extraString || '';
   // todo: convert to stuff
@@ -439,13 +437,13 @@ function getEmployee(parameters) {
     type: 'POST',
     url: '/devel/time/admin/get_timecard.json.php',
     data: 'employee=' + id + '&range=' + range + extraString,
-    success: function(data) {
+    success: function (data) {
       $.ajax({
         replace: true,
         type: 'POST',
         url: '/devel/time/admin/build_timecard.php',
         data: 'timestamps=' + data,
-        success: function(data) {
+        success: function (data) {
           var datepicker, secondDate;
           $('#ajaxDiv').html(data);
           datepicker = $('#date0');
@@ -453,7 +451,7 @@ function getEmployee(parameters) {
           $inputPicker[0] = datepicker.pickadate({
             selectMonths: true,
             selectYears: true,
-            onSet: function(thing) {
+            onSet: function (thing) {
               var fixedDate = this.get('value');
               var rangeChildren = $('#range').children(':selected');
               var endOfDay = 0;
@@ -475,7 +473,7 @@ function getEmployee(parameters) {
           $inputPicker[1] = secondDate.pickadate({
             selectMonths: true,
             selectYears: true,
-            onSet: function(thing) {
+            onSet: function (thing) {
               var fixedDate = this.get('value');
               var extraString = '';
               if (thing.select) {
@@ -498,17 +496,17 @@ function getEmployee(parameters) {
   });
 }
 
-function getEmployees() {
+function getEmployees () {
   $.ajax({
     type: 'POST',
     url: '/devel/time/admin/get_employees.json.php',
-    success: function(data) {
+    success: function (data) {
       $('#ajaxDiv').html(data);
     }
   });
 }
 
-/*function fetchSchedule(parameters) {
+/* function fetchSchedule(parameters) {
   var userId = parameters.userId,
     week = parameters.week || moment().isoWeek(),
     year = parameters.year || moment().isoWeekYear(),
@@ -523,7 +521,7 @@ function getEmployees() {
     url: '/devel/time/admin/get_schedule.php',
     data: 'userId=' + userId + '&ustart=' + unixStart + '&uend=' + unixEnd,
     success: function(data) {
-      console.log("schedule", data);
+      console.log('schedule', data);
       $.ajax({
         type: 'POST',
         url: '/devel/time/admin/build_schedule.php',
@@ -534,9 +532,9 @@ function getEmployees() {
       });
     }
   });
-}*/
+} */
 
-function getOffsetString() {
+function getOffsetString () {
   var offset = moment().utcOffset();
   if (offset > 0) {
     offset = '+' + offset;
@@ -544,44 +542,44 @@ function getOffsetString() {
   return offset;
 }
 
-function createStamp(userId, stamp) {
+function createStamp (userId, stamp) {
   $.ajax({
     type: 'POST',
     url: '/devel/time/admin/timeEdit/create_stamp.php',
     data: 'user=' + userId + '&date=' + stamp,
-    success: function() {
+    success: function () {
       getEmployee({id: userId});
     }
   });
 }
 
-function getUserId() {
+function getUserId () {
   $.ajax({
     type: 'GET',
     async: false,
     url: '/devel/time/admin/lazy_stuff.php',
     data: 'action=userId',
-    success: function(data) {
+    success: function (data) {
       user = parseInt(data);
     }
   });
   return user;
 }
 
-function getOpMode() {
+function getOpMode () {
   $.ajax({
     type: 'GET',
     async: false,
     url: '/devel/time/admin/lazy_stuff.php',
     data: 'action=operationMode',
-    success: function(data) {
+    success: function (data) {
       operationMode = parseInt(data);
     }
   });
   return operationMode;
 }
 
-/*function createSchedulePair(userId, schedule) {
+/* function createSchedulePair(userId, schedule) {
   // schedule = {year: <year>, week: <week>, day: <day>}
   var year = schedule.year,
     week = schedule.week,
@@ -601,12 +599,12 @@ function getOpMode() {
       fetchSchedule({userId: userId, week: week, year: year});
     }
   });
-}*/
+} */
 
-/*function generateExceptions() {
+/* function generateExceptions() {
   $.ajax({
     type: 'POST',
     data: 'exceptionMode=gather',
     url: '/devel/time/admin/generate_exceptions.php'
   });
-}*/
+} */
